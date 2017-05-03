@@ -1,10 +1,24 @@
 package WindChuckers_Main;
 
 
-
 import Client.ClientController;
 import Client.ClientThreadForServer;
 import Client.ClientView;
+import Friends.AddFriendsView;
+import Friends.FriendsController;
+import Friends.FriendsView;
+import Lobby.LobbyController;
+import Lobby.LobbyView;
+import Login.LoginController;
+import Login.LoginView;
+import MainMenu.MainMenuController;
+import MainMenu.MainMenuView;
+import WindChuckers_Main.Model_Extend.Board;
+import WindChuckers_Main.Model_Extend.Movement;
+import WindChuckers_Main.Model_Extend.Position;
+import WindChuckers_Main.Model_Extend.normalTower;
+import WindChuckers_Main.Model_Extend.sumoTower;
+import WindChuckers_Main.AI.AI;
 import commonClasses.ServiceLocator;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -22,18 +36,59 @@ import splashScreen.Splash_View;
  */
 public class WindChuckers extends Application {
     private static WindChuckers mainProgram; // singleton
+    
+    //Splash
     private Splash_View splashView;
-    private GameMenu_View view;
-    private ClientView clientView;
-    private GameMenu_Model model;
-    private ClientThreadForServer clientserver;
 
+    //Views
+    private LobbyView lobbyView;
+    private LoginView loginView;
+    private FriendsView friendsView;
+    private AddFriendsView addFriendsView;
+    private MainMenuView mainMenuView;
+    
+    //Game
+    private GameMenu_View view;
+    private GameMenu_Controller controller;
+    private GameMenu_Model model;
+    
+    //client
+    private ClientView clientView;
+    private ClientThreadForServer clientserver;
+    
+    //Model extended
+    private Board board;
+    private Movement movement;
+    private normalTower normalTower;
+    private sumoTower sumoTower;
+    private Position position;
+    
+    //AI
+    private AI ai;
+    
     private ServiceLocator serviceLocator; // resources, after initialization
 
     public static void main(String[] args) {
         launch(args);
     }
+    
+    public WindChuckers(){
+    	
+    }
 
+	/**
+	 * Factory method for returning the singleton board
+	 * 
+	 * @param mainClass
+	 *            The main class of this program
+	 * @return WindChuckers
+	 */
+	public static WindChuckers getWindChuckers() {
+		if (mainProgram == null)
+			mainProgram = new WindChuckers();
+		return mainProgram;
+	}
+    
     /**
      * Note: This method is called on the main thread, not the JavaFX
      * Application Thread. This means that we cannot display anything to the
@@ -99,8 +154,14 @@ public class WindChuckers extends Application {
         // resources initialized by the splash screen
         model = GameMenu_Model.getGameModel();
         view = new GameMenu_View(appStage, model);
-        new GameMenu_Controller(model, view);
-
+        controller = new GameMenu_Controller(model, view);
+        controller.setBoard(board);
+        controller.setMovement(movement);
+        controller.setPosition(position);
+        controller.setTower(normalTower);
+        controller.setTower(sumoTower);
+        controller.setAI(ai);
+        
         // Resources are now initialized
         serviceLocator = ServiceLocator.getServiceLocator();
 
@@ -112,6 +173,10 @@ public class WindChuckers extends Application {
         view.start();
     }
     
+    /**
+     * Start the View and Controller for the Client
+     * @author L.Weber
+     */
     public void startClient() {
     	Stage clientStage = new Stage();
     	model = GameMenu_Model.getGameModel();
@@ -123,6 +188,70 @@ public class WindChuckers extends Application {
     	
     	clientView.start();
     }
+    
+    /**
+     * Start the View and Controller for the Lobby
+     * @author L.Weber
+     */
+    public void startLobby() {
+    	Stage lobbyStage = new Stage();
+    	model = GameMenu_Model.getGameModel();
+    	lobbyView = new LobbyView(lobbyStage, model);
+    	new LobbyController(model,lobbyView);
+    	
+    	serviceLocator = ServiceLocator.getServiceLocator();
+    	
+    	lobbyView.start();
+    }
+    
+    /**
+     * Start the View and Controller for the Login
+     * @author L.Weber
+     */
+    public void startLogin() {
+    	Stage loginStage = new Stage();
+    	model = GameMenu_Model.getGameModel();
+    	loginView = new LoginView(loginStage, model);
+    	new LoginController(model,loginView);
+    	
+    	serviceLocator = ServiceLocator.getServiceLocator();
+    	
+    	loginView.start();
+    	
+    }
+    
+    /**
+     * Start the View and Controller for the FriendMenu
+     * @author L.Weber
+     */
+    public void startFriends() {
+    	Stage friendsStage = new Stage();
+    	Stage addFriendsStage = new Stage();
+    	model = GameMenu_Model.getGameModel();
+    	friendsView = new FriendsView(friendsStage, model);
+    	addFriendsView = new AddFriendsView(addFriendsStage, model);
+    	new FriendsController(model,friendsView);
+    	
+    	serviceLocator = ServiceLocator.getServiceLocator();
+    	
+    	friendsView.start();
+    }
+    
+    /**
+     * Start the View and Controller for the Main Menu
+     * @author L.Weber
+     */
+	public void startMainMenu() {
+		Stage mainMenuStage = new Stage();
+		model = GameMenu_Model.getGameModel();
+		mainMenuView = new MainMenuView(mainMenuStage, model);
+		new MainMenuController(model,mainMenuView);
+		
+		serviceLocator = ServiceLocator.getServiceLocator();
+		
+		mainMenuView.start();
+		
+	}
 
     /**
      * The stop method is the opposite of the start method. It provides an
@@ -139,6 +268,12 @@ public class WindChuckers extends Application {
         if (view != null) {
             // Make the view invisible
             view.stop();
+            clientView.stop();
+            lobbyView.stop();
+            loginView.stop();
+            friendsView.stop();
+            mainMenuView.stop();
+            addFriendsView.stop();
         }
 
         // More cleanup code as needed
@@ -150,4 +285,6 @@ public class WindChuckers extends Application {
     protected static WindChuckers getMainProgram() {
         return mainProgram;
     }
+
+
 }

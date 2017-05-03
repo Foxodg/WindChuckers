@@ -24,15 +24,18 @@ import javafx.stage.Stage;
  * @author Brad Richards
  */
 public class GameMenu_View extends View<GameMenu_Model> {
-	Menu menuFile;
-	Menu menuFileLanguage;
-	Menu menuHelp;
-	Menu menuClient;
-	MenuItem menuHelpAbout;
-	MenuItem menuFileRestart;
-	MenuItem menuFileExit;
-	MenuItem menuClientGUI;
-
+	private Menu menuFile;
+	private Menu menuFileLanguage;
+	private Menu menuHelp;
+	private Menu menuClient;
+	public MenuItem menuHelpAbout;
+	public MenuItem menuFileRestart;
+	public MenuItem menuFileExit;
+	public MenuItem menuClientGUI;
+	public MenuItem menuFileLobby;
+	public MenuItem menuFileLogin;
+	public MenuItem menuFileFriends;
+	public MenuItem menuMainMenu;
 
 	public GameMenu_View(Stage stage, GameMenu_Model model) {
 		super(stage, model);
@@ -52,7 +55,11 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		menuFileLanguage = new Menu();
 		menuFileRestart = new MenuItem();
 		menuFileExit = new MenuItem();
-		menuFile.getItems().addAll(menuFileRestart,menuFileLanguage,menuFileExit);
+		menuFileLobby = new MenuItem();
+		menuFileLogin = new MenuItem();
+		menuFileFriends = new MenuItem();
+		menuMainMenu = new MenuItem();
+		menuFile.getItems().addAll(menuFileRestart,menuFileLanguage,menuFileLobby, menuFileLogin, menuFileFriends, menuMainMenu,menuFileExit);
 
 		for (Locale locale : sl.getLocales()) {
 			MenuItem language = new MenuItem(locale.getLanguage());
@@ -97,6 +104,10 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		menuHelpAbout.setText(t.getString("program.menu.help.helpabout"));
 		menuClient.setText(t.getString("program.menu.client"));
 		menuClientGUI.setText(t.getString("program.menu.clientGUI"));
+		menuFileLobby.setText(t.getString("program.menu.file.lobby"));
+		menuFileLogin.setText(t.getString("program.menu.file.login"));
+		menuFileFriends.setText(t.getString("program.menu.file.friends"));
+		menuMainMenu.setText(t.getString("program.menu.file.mainmenu"));
 		
 		// Buttons
 
