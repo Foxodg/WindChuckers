@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="Client"/>
+	<classpathentry kind="src" path="Server"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/wel/WindChuckers/LibraryForInstall/h2-1.4.194.jar"/>
+	<classpathentry kind="lib" path="C:/Users/wel/WindChuckers/LibraryForInstall/simple-xml-2.7.1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
