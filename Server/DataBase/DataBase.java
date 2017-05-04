@@ -23,8 +23,18 @@ public class DataBase {
 
 	// only for test the DB and show the tables
 	public static void main(String[] args) throws Exception {
-		// deleteDB();
-		// selectPreparedStatement("select * from PLAYER");
+//		deleteDB();
+//		createDB();
+//		ArrayList<String> answer = selectPlayer();
+//		for (String s : answer){
+//			System.out.println(s);
+//		}
+		
+//		insertPlayer(1,"lukas","weber",1);
+//		isTheEntryThere(1);
+//		update("UPDATE PLAYER SET WINS = 2 WHERE PLAYERID = 1");
+		System.out.println(select("select * from player where playerid = 1"));
+		
 	}
 
 	public DataBase() {
@@ -47,20 +57,21 @@ public class DataBase {
 
 	/*********************************************************************************************
 	 * Select Statements
+	 * @author L.Weber
 	 *********************************************************************************************/
 
 	/**
-	 * becomes a whole statement for the Table Player
+	 * becomes a whole statement for the Table 
 	 * 
 	 * @param statement
-	 * @return gives all back in the Table Player
+	 * @return gives id back 
 	 * @throws SQLException
 	 */
-	public static ArrayList<String> selectPlayer(String statement) throws SQLException {
+	public static int select(String input) throws SQLException {
 		Connection connection = getDBConnection();
 		PreparedStatement selectPreparedStatement = null;
-		String SelectQuery = statement;
-		ArrayList<String> answerList = new ArrayList<String>();
+		String SelectQuery = input;
+		int answer = 0;
 
 		try {
 			connection.setAutoCommit(false);
@@ -69,11 +80,162 @@ public class DataBase {
 			ResultSet rs = selectPreparedStatement.executeQuery();
 			logger.info("H2 Database select through PreparedStatement");
 			while (rs.next()) {
-				logger.info("Select:" + statement);
-				answerList.add(rs.getString("id").toString());
+				logger.info("Select:" + SelectQuery);
+				answer = rs.getInt("playerid");
+			}
+			selectPreparedStatement.close();
+
+			connection.commit();
+		} catch (SQLException e) {
+			logger.warning("Exception Message " + e.getLocalizedMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			connection.close();
+		}
+		return answer;
+	}
+	
+	/**
+	 * becomes a whole statement for the Table Player
+	 * 
+	 * @param statement
+	 * @return gives all back in the Table Player
+	 * @throws SQLException
+	 */
+	public static ArrayList<String> selectPlayer() throws SQLException {
+		Connection connection = getDBConnection();
+		PreparedStatement selectPreparedStatement = null;
+		String SelectQuery = "select * from PLAYER";
+		ArrayList<String> answerList = new ArrayList<String>();
+
+		try {
+			connection.setAutoCommit(false);
+
+			selectPreparedStatement = connection.prepareStatement(SelectQuery);
+			ResultSet rs = selectPreparedStatement.executeQuery();
+			logger.info("H2 Database selectPlayer through PreparedStatement");
+			while (rs.next()) {
+				logger.info("Select:" + SelectQuery);
+				answerList.add(rs.getString("playerid").toString());
 				answerList.add(rs.getString("prename"));
 				answerList.add(rs.getString("surname"));
 				answerList.add(rs.getString("wins").toString());
+			}
+			selectPreparedStatement.close();
+
+			connection.commit();
+		} catch (SQLException e) {
+			logger.warning("Exception Message " + e.getLocalizedMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			connection.close();
+		}
+		return answerList;
+	}
+	
+	/**
+	 * becomes a whole statement for the Table Friends
+	 * 
+	 * @param statement
+	 * @return gives all back in the Table Friends
+	 * @throws SQLException
+	 */
+	public static ArrayList<String> selectFriends() throws SQLException {
+		Connection connection = getDBConnection();
+		PreparedStatement selectPreparedStatement = null;
+		String SelectQuery = "select * from FRIENDS";
+		ArrayList<String> answerList = new ArrayList<String>();
+
+		try {
+			connection.setAutoCommit(false);
+
+			selectPreparedStatement = connection.prepareStatement(SelectQuery);
+			ResultSet rs = selectPreparedStatement.executeQuery();
+			logger.info("H2 Database selectfriends through PreparedStatement");
+			while (rs.next()) {
+				logger.info("Select:" + SelectQuery);
+				answerList.add(rs.getString("id").toString());
+				answerList.add(rs.getString("prename"));
+				answerList.add(rs.getString("surname"));
+			}
+			selectPreparedStatement.close();
+
+			connection.commit();
+		} catch (SQLException e) {
+			logger.warning("Exception Message " + e.getLocalizedMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			connection.close();
+		}
+		return answerList;
+	}
+	
+	/**
+	 * becomes a whole statement for the Table Tower
+	 * 
+	 * @param statement
+	 * @return gives all back in the Table Tower
+	 * @throws SQLException
+	 */
+	public static ArrayList<String> selectTower() throws SQLException {
+		Connection connection = getDBConnection();
+		PreparedStatement selectPreparedStatement = null;
+		String SelectQuery = "select * from TOWER";
+		ArrayList<String> answerList = new ArrayList<String>();
+
+		try {
+			connection.setAutoCommit(false);
+
+			selectPreparedStatement = connection.prepareStatement(SelectQuery);
+			ResultSet rs = selectPreparedStatement.executeQuery();
+			logger.info("H2 Database selectTower through PreparedStatement");
+			while (rs.next()) {
+				logger.info("Select:" + SelectQuery);
+				answerList.add(rs.getString("id").toString());
+				answerList.add(rs.getString("normalTower"));
+				answerList.add(rs.getString("summoTower"));
+				answerList.add(rs.getString("playerid").toString());
+			}
+			selectPreparedStatement.close();
+
+			connection.commit();
+		} catch (SQLException e) {
+			logger.warning("Exception Message " + e.getLocalizedMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			connection.close();
+		}
+		return answerList;
+	}
+	
+	/**
+	 * becomes a whole statement for the Table Points
+	 * 
+	 * @param statement
+	 * @return gives all back in the Table Points
+	 * @throws SQLException
+	 */
+	public static ArrayList<Integer> selectPoints() throws SQLException {
+		Connection connection = getDBConnection();
+		PreparedStatement selectPreparedStatement = null;
+		String SelectQuery = "select * from POINTS";
+		ArrayList<Integer> answerList = new ArrayList<Integer>();
+
+		try {
+			connection.setAutoCommit(false);
+
+			selectPreparedStatement = connection.prepareStatement(SelectQuery);
+			ResultSet rs = selectPreparedStatement.executeQuery();
+			logger.info("H2 Database selectPoints through PreparedStatement");
+			while (rs.next()) {
+				logger.info("Select:" + SelectQuery);
+				answerList.add(rs.getInt("id"));
+				answerList.add(rs.getInt("points"));
+				answerList.add(rs.getInt("playerid"));
 			}
 			selectPreparedStatement.close();
 
@@ -96,7 +258,7 @@ public class DataBase {
 	 * @return - yes or no
 	 * @throws SQLException
 	 */
-	public boolean isTheEntryThere(int id) throws SQLException {
+	public static boolean isTheEntryThere(int id) throws SQLException {
 		Connection connection = getDBConnection();
 		PreparedStatement selectPreparedStatement = null;
 		String SelectQuery = ("SELECT * FROM PLAYER WHERE ID = ?");
@@ -109,7 +271,7 @@ public class DataBase {
 			ResultSet rs = selectPreparedStatement.executeQuery();
 			String entry = null;
 			while (rs.next()) {
-				entry = rs.getString("name");
+				entry = rs.getString("prename");
 			}
 			if (entry != null) {
 				logger.info("EntryThere");
@@ -171,6 +333,7 @@ public class DataBase {
 
 	/*********************************************************************************************
 	 * Update Statements
+	 * @author L.Weber
 	 *********************************************************************************************/
 	
 	/**
@@ -180,7 +343,7 @@ public class DataBase {
 	 *            - input the whole SQL-Query
 	 * @throws SQLException
 	 */
-	public void updateWithPreparedStatement(String update) throws SQLException {
+	public static void update(String update) throws SQLException {
 		Connection connection = getDBConnection();
 		PreparedStatement updatePreparedStatement = null;
 
@@ -202,6 +365,7 @@ public class DataBase {
 	
 	/*********************************************************************************************
 	 * Insert Statements
+	 * @author L.Weber
 	 *********************************************************************************************/
 	
 	/**
@@ -215,10 +379,10 @@ public class DataBase {
 	 *            - points that given
 	 * @throws SQLException
 	 */
-	public static void insertWithPreparedStatement(int id, String prename, String surname, int win) throws SQLException {
+	public static void insertPlayer(int id, String prename, String surname, int win) throws SQLException {
 		Connection connection = getDBConnection();
 		PreparedStatement insertPreparedStatement = null;
-		String InsertQuery = "INSERT INTO PLAYER" + "(id, prename, surname, wins) values" + "(?,?,?,?)";
+		String InsertQuery = "INSERT INTO PLAYER" + "(playerid, prename, surname, wins) values" + "(?,?,?,?)";
 
 		try {
 			connection.setAutoCommit(false);
@@ -227,7 +391,7 @@ public class DataBase {
 			insertPreparedStatement.setInt(1, id);
 			insertPreparedStatement.setString(2, prename);
 			insertPreparedStatement.setString(3, surname);
-			insertPreparedStatement.setInt(3, win);
+			insertPreparedStatement.setInt(4, win);
 
 			logger.info("Insert: " + id + " " + prename + " " + surname + " " + win);
 			insertPreparedStatement.executeUpdate();
@@ -245,6 +409,7 @@ public class DataBase {
 	
 	/*********************************************************************************************
 	 * Prepare Statements
+	 * @author L.Weber
 	 *********************************************************************************************/
 	
 	/**
@@ -254,8 +419,8 @@ public class DataBase {
 		// delete the H2 database named 'test' in the user home directory
 		DeleteDbFiles.execute("~", "WindChuckers", true);
 		try {
-			createTableWithPreparedStatement();
-			insertWithPreparedStatement(1, "default", "muster", 00);
+			createDB();
+			insertPlayer(1, "default", "muster", 00);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -266,29 +431,84 @@ public class DataBase {
 	 * 
 	 * @throws SQLException
 	 */
-	public static void createTableWithPreparedStatement() throws SQLException {
+	public static void createDB() throws SQLException {
 		Connection connection = getDBConnection();
-		PreparedStatement createPreparedStatement = null;
-		String CreateQueryPlayer = "CREATE TABLE PLAYER(id int primary key, prename varchar(255), surname varchar(255), wins int)";
-		String CreateQueryFriends = "CREATE TABLE FRIENDS(id int primary key, prename varchar(255), surname varchar(255)";
-		String CreateQueryTower = "CREATE TABLE TOWER(id int primary key, normalTower int, summoTower int, playerid int foreign key)";
-		String CreateQueryPoints = "CREATE TABLE POINTS(id int primary key, points int, playerId int foreign key)";
-		String CreateQueryFriendPlayer = "CREATE TABLE POINTS(id int primary key, friendId1 int foreign key, friendId2 int foreign key, request boolean)";
+		PreparedStatement createPreparedStatementPLAYER = null;
+		PreparedStatement createPreparedStatementFRIENDS = null;
+		PreparedStatement createPreparedStatementTOWER = null;
+		PreparedStatement createPreparedStatementPOINTS = null;
+		PreparedStatement createPreparedStatementFRIENDSPLAYER= null;
+		PreparedStatement alterTower=null;
+		PreparedStatement alterPoints=null;
+		PreparedStatement alterFriendPlayer1=null;
+		PreparedStatement alterFriendPlayer2=null;
+		
+		
+		String CreateQueryPlayer = "CREATE TABLE PLAYER("
+				+ "playerid int primary key, "
+				+ "prename varchar(255), "
+				+ "surname varchar(255), "
+				+ "wins int)";
+		String CreateQueryFriends = "CREATE TABLE FRIENDS("
+				+ "id int primary key, "
+				+ "prename varchar(255), "
+				+ "surname varchar(255))";
+		String CreateQueryTower = "CREATE TABLE TOWER("
+				+ "id int primary key, "
+				+ "normalTower int, "
+				+ "summoTower int, "
+				+ "playerid int)";
+		String CreateQueryPoints = "CREATE TABLE POINTS("
+				+ "id int primary key, "
+				+ "points int, "
+				+ "playerid int)";
+		String CreateQueryFriendPlayer = "CREATE TABLE FRIENDSPOINTS("
+				+ "id int primary key, "
+				+ "friendId1 int, "
+				+ "friendId2 int, "
+				+ "request boolean)";
+		
+		String AlterTower = "ALTER TABLE TOWER"
+				+ " ADD FOREIGN KEY (playerid) REFERENCES PLAYER (playerid)";
+		
+		String AlterPoints = "ALTER TABLE POINTS"
+				+ " ADD FOREIGN KEY (playerId) REFERENCES PLAYER (playerid)";
+		
+		String AlterFriendPlayer1 = "ALTER TABLE FRIENDSPOINTS"
+				+ " ADD FOREIGN KEY (friendId1) REFERENCES FRIENDS (id)";
+		
+		String AlterFriendPlayer2 = "ALTER TABLE FRIENDSPOINTS"
+				+ " ADD FOREIGN KEY (friendId2) REFERENCES FRIENDS (id)";
 
 		try {
 			connection.setAutoCommit(false);
 
-			createPreparedStatement = connection.prepareStatement(CreateQueryPlayer);
-			createPreparedStatement.executeUpdate();
-			createPreparedStatement = connection.prepareStatement(CreateQueryFriends);
-			createPreparedStatement.executeUpdate();
-			createPreparedStatement = connection.prepareStatement(CreateQueryTower);
-			createPreparedStatement.executeUpdate();
-			createPreparedStatement = connection.prepareStatement(CreateQueryPoints);
-			createPreparedStatement.executeUpdate();
-			createPreparedStatement = connection.prepareStatement(CreateQueryFriendPlayer);
-			createPreparedStatement.executeUpdate();
-			createPreparedStatement.close();
+			createPreparedStatementPLAYER = connection.prepareStatement(CreateQueryPlayer);
+			createPreparedStatementPLAYER.executeUpdate();
+			createPreparedStatementPLAYER.close();
+			createPreparedStatementFRIENDS = connection.prepareStatement(CreateQueryFriends);
+			createPreparedStatementFRIENDS.executeUpdate();
+			createPreparedStatementFRIENDS.close();
+			createPreparedStatementTOWER = connection.prepareStatement(CreateQueryTower);
+			createPreparedStatementTOWER.executeUpdate();
+			createPreparedStatementTOWER.close();
+			createPreparedStatementPOINTS = connection.prepareStatement(CreateQueryPoints);
+			createPreparedStatementPOINTS.executeUpdate();
+			createPreparedStatementFRIENDSPLAYER = connection.prepareStatement(CreateQueryFriendPlayer);
+			createPreparedStatementFRIENDSPLAYER.executeUpdate();
+			createPreparedStatementFRIENDSPLAYER.close();
+			alterTower = connection.prepareStatement(AlterTower);
+			alterTower.executeUpdate();
+			alterTower.close();
+			alterPoints = connection.prepareStatement(AlterPoints);
+			alterPoints.executeUpdate();
+			alterPoints.close();
+			alterFriendPlayer1 = connection.prepareStatement(AlterFriendPlayer1);
+			alterFriendPlayer1.executeUpdate();
+			alterFriendPlayer1.close();
+			alterFriendPlayer2 = connection.prepareStatement(AlterFriendPlayer2);
+			alterFriendPlayer2.executeUpdate();
+			alterFriendPlayer2.close();
 
 			connection.commit();
 		} catch (SQLException e) {
