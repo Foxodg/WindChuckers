@@ -22,7 +22,7 @@ public class DataBase {
 	private static final String DB_PASSWORD = "";
 
 	// only for test the DB and show the tables
-	public static void main(String[] args) throws Exception {
+//	public static void main(String[] args) throws Exception {
 //		deleteDB();
 //		createDB();
 //		ArrayList<String> answer = selectPlayer();
@@ -33,19 +33,17 @@ public class DataBase {
 //		insertPlayer(1,"lukas","weber",1);
 //		isTheEntryThere(1);
 //		update("UPDATE PLAYER SET WINS = 2 WHERE PLAYERID = 1");
-		System.out.println(select("select * from player where playerid = 1"));
+//		System.out.println(selectWithName("weber"));
 		
-	}
+//	}
 
 	public DataBase() {
 	}
 
 	/**
-	 * Factory method for returning the singleton board
-	 * 
-	 * @param mainClass
-	 *            The main class of this program
-	 * @return The singleton resource locator
+	 * Factory method for returning the singleton database
+	 * @param DataBase
+	 * @return The singleton database
 	 */
 	public static DataBase getDB() {
 		if (h2 == null)
@@ -67,16 +65,17 @@ public class DataBase {
 	 * @return gives id back 
 	 * @throws SQLException
 	 */
-	public static int select(String input) throws SQLException {
+	public static int selectWithName(String surname) throws SQLException {
 		Connection connection = getDBConnection();
 		PreparedStatement selectPreparedStatement = null;
-		String SelectQuery = input;
+		String SelectQuery =  ("SELECT * FROM PLAYER WHERE SURNAME = ?");
 		int answer = 0;
 
 		try {
 			connection.setAutoCommit(false);
 
 			selectPreparedStatement = connection.prepareStatement(SelectQuery);
+			selectPreparedStatement.setString(1, surname);
 			ResultSet rs = selectPreparedStatement.executeQuery();
 			logger.info("H2 Database select through PreparedStatement");
 			while (rs.next()) {
