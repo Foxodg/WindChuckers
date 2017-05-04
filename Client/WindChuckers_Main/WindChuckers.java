@@ -66,6 +66,9 @@ public class WindChuckers extends Application {
     //AI
     private AI ai;
     
+    //Friends
+    private FriendsController friendscontroller;
+    
     private ServiceLocator serviceLocator; // resources, after initialization
 
     public static void main(String[] args) {
@@ -230,7 +233,8 @@ public class WindChuckers extends Application {
     	model = GameMenu_Model.getGameModel();
     	friendsView = new FriendsView(friendsStage, model);
     	addFriendsView = new AddFriendsView(addFriendsStage, model);
-    	new FriendsController(model,friendsView);
+    	friendscontroller = new FriendsController(model,friendsView);
+    	friendscontroller.setAddFriends(addFriendsView);
     	
     	serviceLocator = ServiceLocator.getServiceLocator();
     	
