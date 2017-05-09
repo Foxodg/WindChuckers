@@ -56,6 +56,7 @@ public class ClientView {
         topBox.getChildren().addAll(lblIP, txtIP, spacer, lblPort, txtPort, spacer2, btnGo);
         txtIP.setId("IP");
         txtPort.setId("Port");
+        topBox.getStyleClass().add("box");
         
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
@@ -65,10 +66,12 @@ public class ClientView {
         root.setCenter(scrollPane);
         scrollPane.setContent(txtMessages);
         txtMessages.setWrapText(true);
+        txtMessages.getStyleClass().add("text-area");
 
         HBox bottomBox = new HBox();
         topBox.setId("BottomBox");
         bottomBox.getChildren().addAll(txtChat,cbchoice, btnSendOther);
+        bottomBox.getStyleClass().add("box");
         HBox.setHgrow(spacer, Priority.ALWAYS);
         root.setBottom(bottomBox);
         

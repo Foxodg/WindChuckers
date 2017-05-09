@@ -33,9 +33,11 @@ public class ServerView {
 
         HBox topBox = new HBox();
         topBox.setId("TopBox");
+        topBox.getStyleClass().add("box");
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         root.setTop(topBox);
+        txtLog.getStyleClass().add("text-area");
         
         topBox.getChildren().addAll(lblPort, txtPort, spacer, btnGo);
         txtPort.setId("Port");
