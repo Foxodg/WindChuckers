@@ -3,8 +3,11 @@ package WindChuckers_Main;
 import WindChuckers_Main.WindChuckers;
 import WindChuckers_Main.Model_Extend.Board;
 import WindChuckers_Main.Model_Extend.Movement;
+import WindChuckers_Main.Model_Extend.Player;
 import WindChuckers_Main.Model_Extend.Position;
 import WindChuckers_Main.Model_Extend.Tower;
+import WindChuckers_Main.Model_Extend.normalTower;
+import WindChuckers_Main.Model_Extend.sumoTower;
 import WindChuckers_Main.AI.AI;
 import abstractClasses.Controller;
 import commonClasses.ServiceLocator;
@@ -26,12 +29,22 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	private Board board;
 	private Movement movement;
 	private Tower tower;
+	private normalTower normalTower;
+	private sumoTower sumoTower;
 	private Position position;
 	private AI ai;
+	private Player player;
 	
 
-	public GameMenu_Controller(GameMenu_Model model, GameMenu_View view) {
+	public GameMenu_Controller(GameMenu_Model model, GameMenu_View view, Board board, Movement movement, Position position, normalTower normalTower, sumoTower sumoTower, AI ai, Player player) {
 		super(model, view);
+		this.board = board;
+		this.movement = movement;
+		this.position = position;
+		this.normalTower = normalTower;
+		this.sumoTower = sumoTower;
+		this.ai = ai;
+		this.player = player;
 		serviceLocator = ServiceLocator.getServiceLocator();
 		
 		
@@ -124,24 +137,24 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	}
 
 
-	/**
-	 * Setters for Model-Extend
-	 * @author L.Weber
-	 */
-	public void setBoard(Board board){
-		this.board = board;
-	}
-	public void setMovement(Movement movement){
-		this.movement = movement;
-	}
-	public void setTower(Tower tower){
-		this.tower = tower;
-	}
-	public void setPosition(Position position){
-		this.position = position;
-	}
-	public void setAI(AI ai){
-		this.ai = ai;
-	}
+//	/**
+//	 * Setters for Model-Extend
+//	 * @author L.Weber
+//	 */
+//	public void setBoard(Board board){
+//		this.board = board;
+//	}
+//	public void setMovement(Movement movement){
+//		this.movement = movement;
+//	}
+//	public void setTower(Tower tower){
+//		this.tower = tower;
+//	}
+//	public void setPosition(Position position){
+//		this.position = position;
+//	}
+//	public void setAI(AI ai){
+//		this.ai = ai;
+//	}
 
 }

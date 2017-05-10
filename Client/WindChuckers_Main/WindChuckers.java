@@ -15,6 +15,7 @@ import MainMenu.MainMenuController;
 import MainMenu.MainMenuView;
 import WindChuckers_Main.Model_Extend.Board;
 import WindChuckers_Main.Model_Extend.Movement;
+import WindChuckers_Main.Model_Extend.Player;
 import WindChuckers_Main.Model_Extend.Position;
 import WindChuckers_Main.Model_Extend.normalTower;
 import WindChuckers_Main.Model_Extend.sumoTower;
@@ -62,6 +63,7 @@ public class WindChuckers extends Application {
     private normalTower normalTower;
     private sumoTower sumoTower;
     private Position position;
+    private Player player;
     
     //AI
     private AI ai;
@@ -156,14 +158,8 @@ public class WindChuckers extends Application {
         // can only be initialized now, because they may depend on the
         // resources initialized by the splash screen
         model = GameMenu_Model.getGameModel();
-        view = new GameMenu_View(appStage, model);
-        controller = new GameMenu_Controller(model, view);
-        controller.setBoard(board);
-        controller.setMovement(movement);
-        controller.setPosition(position);
-        controller.setTower(normalTower);
-        controller.setTower(sumoTower);
-        controller.setAI(ai);
+        view = new GameMenu_View(appStage, model,board,movement,position,normalTower,sumoTower,ai,player);
+        controller = new GameMenu_Controller(model, view,board,movement,position,normalTower,sumoTower,ai,player);
         
         // Resources are now initialized
         serviceLocator = ServiceLocator.getServiceLocator();
@@ -233,8 +229,8 @@ public class WindChuckers extends Application {
     	model = GameMenu_Model.getGameModel();
     	friendsView = new FriendsView(friendsStage, model);
     	addFriendsView = new AddFriendsView(addFriendsStage, model);
-    	friendscontroller = new FriendsController(model,friendsView);
-    	friendscontroller.setAddFriends(addFriendsView);
+    	friendscontroller = new FriendsController(model,friendsView, addFriendsView);
+
     	
     	serviceLocator = ServiceLocator.getServiceLocator();
     	
