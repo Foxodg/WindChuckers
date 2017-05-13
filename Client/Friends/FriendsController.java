@@ -10,8 +10,9 @@ public class FriendsController extends Controller<GameMenu_Model, FriendsView>{
 	private WindChuckers windChuckers;
 	private AddFriendsView addview;
 	
-	public FriendsController (GameMenu_Model model, FriendsView view){
+	public FriendsController (GameMenu_Model model, FriendsView view, AddFriendsView addview){
 		super(model,view);
+		this.addview = addview;
 		
 		/**
 		 * Close the Friend Menu
@@ -31,15 +32,6 @@ public class FriendsController extends Controller<GameMenu_Model, FriendsView>{
 		});
 
 		
-	}
-	
-	/**
-	 * Setter for the AddFriendView
-	 * @param addview
-	 * @author L.Weber
-	 */
-	public void setAddFriends(AddFriendsView addview){
-		this.addview = addview;
 	}
 
 }

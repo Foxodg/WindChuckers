@@ -6,6 +6,13 @@ import WindChuckers_Main.Model_Extend.Board;
 import WindChuckers_Main.Model_Extend.Field;
 import WindChuckers_Main.Model_Extend.Tower;
 import WindChuckers_Main.Model_Extend.normalTower;
+import WindChuckers_Main.AI.AI;
+import WindChuckers_Main.Model_Extend.Board;
+import WindChuckers_Main.Model_Extend.Movement;
+import WindChuckers_Main.Model_Extend.Player;
+import WindChuckers_Main.Model_Extend.Position;
+import WindChuckers_Main.Model_Extend.normalTower;
+import WindChuckers_Main.Model_Extend.sumoTower;
 import abstractClasses.View;
 import commonClasses.ServiceLocator;
 import commonClasses.Translator;
@@ -27,6 +34,14 @@ import javafx.stage.Stage;
  * @author Brad Richards
  */
 public class GameMenu_View extends View<GameMenu_Model> {
+	private Board board;
+	private Movement movement;
+	private Position position;
+	private normalTower normalTower;
+	private sumoTower sumoTower;
+	private AI ai;
+	private Player player;
+	
 	private Menu menuFile;
 	private Menu menuFileLanguage;
 	private Menu menuHelp;
@@ -40,9 +55,16 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	public MenuItem menuFileFriends;
 	public MenuItem menuMainMenu;
 
-	
-	public GameMenu_View(Stage stage, GameMenu_Model model) {
+	public GameMenu_View(Stage stage, GameMenu_Model model, Board board, Movement movement, Position position, normalTower normalTower, sumoTower sumoTower, AI ai, Player player) {
 		super(stage, model);
+		this.board = board;
+		this.movement = movement;
+		this.position = position;
+		this.normalTower = normalTower;
+		this.sumoTower = sumoTower;
+		this.ai = ai;
+		this.player = player;
+		
 		stage.setTitle("WindChuckers Kamisado");
 
 		ServiceLocator.getServiceLocator().getLogger().info("Application view initialized");
