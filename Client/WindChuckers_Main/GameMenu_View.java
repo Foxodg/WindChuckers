@@ -2,7 +2,10 @@ package WindChuckers_Main;
 
 import java.util.Locale;
 import java.util.logging.Logger;
-
+import WindChuckers_Main.Model_Extend.Board;
+import WindChuckers_Main.Model_Extend.Field;
+import WindChuckers_Main.Model_Extend.Tower;
+import WindChuckers_Main.Model_Extend.normalTower;
 import abstractClasses.View;
 import commonClasses.ServiceLocator;
 import commonClasses.Translator;
@@ -37,6 +40,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	public MenuItem menuFileFriends;
 	public MenuItem menuMainMenu;
 
+	
 	public GameMenu_View(Stage stage, GameMenu_Model model) {
 		super(stage, model);
 		stage.setTitle("WindChuckers Kamisado");
@@ -50,6 +54,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		Logger logger = sl.getLogger();
 		Translator t = sl.getTranslator();
 
+		
 		MenuBar menuBar = new MenuBar();
 		menuFile = new Menu();
 		menuFileLanguage = new Menu();
@@ -83,7 +88,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 
 		GridPane root = new GridPane();
 		root.add(menuBar, 0, 0);
-		
+			
 		updateTexts();
 
 		Scene scene = new Scene(root);
@@ -115,5 +120,31 @@ public class GameMenu_View extends View<GameMenu_Model> {
 
 		// Other controls
 
+	}
+	
+	protected GridPane getCompleteGameBoard(){
+		GridPane gameBoard = new GridPane();
+		Field[][] fields = this.getGameFields();
+		
+		for (int column = 1; column<=GameMenu_Model.totalFields; column++){
+			for(int row = 1; row<=GameMenu_Model.totalFields; row++){
+			gameBoard.add(fields[column-1][row-1], column, row);
+			}}
+		
+		return gameBoard;
+	}
+	
+	protected Field[][] getGameFields(){
+		Field[][] fields = new Field[GameMenu_Model.totalColumns][GameMenu_Model.totalRows];
+		for (int column = 1; column<=GameMenu_Model.totalFields; column++){
+		for(int row = 1; row<=GameMenu_Model.totalFields; row++){
+		fields[column][row] = new Field();
+		}}
+		return fields;
+	}
+
+	
+	protected normalTower[][] getTowers(){
+		return null;
 	}
 }

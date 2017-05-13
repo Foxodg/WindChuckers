@@ -17,6 +17,11 @@ import commonClasses.ServiceLocator;
  * @author Brad Richards
  */
 public class GameMenu_Model extends Model {
+	
+	protected static final int totalFields = 64;
+	protected static final int totalRows = 8;
+	protected static final int totalColumns = 8;
+	
 	protected ServiceLocator serviceLocator;
 	private static GameMenu_Model gameModel;
 
@@ -124,4 +129,6 @@ public class GameMenu_Model extends Model {
 		Message message = new Message(MessageType.Error);
 		sendMessage(message);
 	}
+	
+	
 }
