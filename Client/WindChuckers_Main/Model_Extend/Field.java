@@ -1,5 +1,6 @@
 package WindChuckers_Main.Model_Extend;
 
+import WindChuckers_Main.GameMenu_Model;
 import javafx.scene.control.Button;
 
 public class Field extends Button{
@@ -12,16 +13,18 @@ public class Field extends Button{
 	
 	public Field(String color){
 		super();
-		this.color=color;
+		this.color=color;		
 	}
 
 	public static Field getOrangeField(int xPosition, int yPosition){
 			Field orangeField = new Field("orange");
+			
 			orangeField.setxPosition(xPosition);
 			orangeField.setyPosition(yPosition);
 			orangeField.setStyle(" -fx-background-color: #FF8C00;");
 			orangeField.setId("gameField");
 			return orangeField;
+			
 	}
 	public static Field getBlueField(int xPosition, int yPosition){
 		Field blueField = new Field("blue");

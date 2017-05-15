@@ -135,7 +135,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	 * Each element of the GameBoard will be set to the right place on the GridPane
 	 * @author robin
 	 */
-	private GridPane getCompleteGameBoard(Field[][] fields, WindChuckers_Main.Model_Extend.normalTower[][] towersP1,WindChuckers_Main.Model_Extend.normalTower[][] towersP2) {
+	private GridPane getCompleteGameBoard(Field[][] fields, normalTower[][] towersP1,normalTower[][] towersP2) {
 		GridPane pane = new GridPane();
 		pane.setAlignment(Pos.CENTER);
 		
@@ -160,7 +160,6 @@ public class GameMenu_View extends View<GameMenu_Model> {
 			towersP2[x][8].setText(""+towersP2[x][8].getNumber());
 			pane.add(towersP2[x][8], x, 8);
 		}
-
 		return pane;
 	}
 	
@@ -168,16 +167,23 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	 * An Array with all towers of Player 1 will be created
 	 * @author robin
 	 */
-	private WindChuckers_Main.Model_Extend.normalTower[][] getTowersP1Array() {
+	private normalTower[][] getTowersP1Array() {
 		normalTower[][]towersP1 = new normalTower[GameMenu_Model.DIMENSION+1][GameMenu_Model.DIMENSION+1];
-		normalTower[]towersTemp = this.getTowersTemp();
 		
-		for(int i = 0; i<towersTemp.length; i++){
-			towersP1[i+1][1] = towersTemp[i];
-			towersP1[i+1][1].setPlayerNumber(1);
-			towersP1[i+1][1].setId("towersP1");
-			towersP1[i+1][1].setDisable(false);
-			GridPane.setHalignment(towersP1[i+1][1], HPos.CENTER);
+		towersP1[1][1] = normalTower.getOrangeTower(1, 1);
+		towersP1[2][1] = normalTower.getBlueTower(2, 1);
+		towersP1[3][1] = normalTower.getVioletTower(3, 1);
+		towersP1[4][1] = normalTower.getPinkTower(4, 1);
+		towersP1[5][1] = normalTower.getYellowTower(5, 1);
+		towersP1[6][1] = normalTower.getRedTower(6, 1);
+		towersP1[7][1] = normalTower.getGreenTower(7, 1);
+		towersP1[8][1] = normalTower.getBrownTower(8, 1);
+		
+		for(int i = 1; i<=GameMenu_Model.DIMENSION; i++){
+			towersP1[i][1].setPlayerNumber(1);
+			towersP1[i][1].setId("towersP1");
+			towersP1[i][1].setDisable(false);
+			GridPane.setHalignment(towersP1[i][1], HPos.CENTER);
 		}
 		return towersP1;
 	}
@@ -186,61 +192,26 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	 * An Array with all towers of Player 2 will be created
 	 * @author robin
 	 */
-	private WindChuckers_Main.Model_Extend.normalTower[][] getTowersP2Array() {
+	private normalTower[][] getTowersP2Array() {
 		normalTower[][]towersP2 = new normalTower[GameMenu_Model.DIMENSION+1][GameMenu_Model.DIMENSION+1];
-		normalTower[]towersTemp = this.getTowersTemp();
+
+		towersP2[8][8] = normalTower.getOrangeTower(8, 8);
+		towersP2[7][8] = normalTower.getBlueTower(7, 8);
+		towersP2[6][8] = normalTower.getVioletTower(6, 8);
+		towersP2[5][8] = normalTower.getPinkTower(5, 8);
+		towersP2[4][8] = normalTower.getYellowTower(4, 8);
+		towersP2[3][8] = normalTower.getRedTower(3, 8);
+		towersP2[2][8] = normalTower.getGreenTower(2, 8);
+		towersP2[1][8] = normalTower.getBrownTower(1, 8);
 		
-		for(int i = 0; i<GameMenu_Model.DIMENSION;i++){
-			towersP2[GameMenu_Model.DIMENSION-i][8] = towersTemp[i];
-			towersP2[GameMenu_Model.DIMENSION-i][8].setPlayerNumber(2);
-			towersP2[GameMenu_Model.DIMENSION-i][8].setId("towersP2");
-			towersP2[GameMenu_Model.DIMENSION-i][8].setDisable(false);
-			GridPane.setHalignment(towersP2[GameMenu_Model.DIMENSION-i][8], HPos.CENTER);
+		for(int i = 1; i<=GameMenu_Model.DIMENSION;i++){
+			towersP2[i][8].setPlayerNumber(2);
+			towersP2[i][8].setId("towersP2");
+			towersP2[i][8].setDisable(false);
+			GridPane.setHalignment(towersP2[i][8], HPos.CENTER);
 		}
 		return towersP2;
 	}
-	
-	/**
-	 * This method offers an Array with sample Towers in all colors. The reason for this method is to reduce double code.  
-	 * @author robin
-	 */
-	protected normalTower[] getTowersTemp(){
-		normalTower[]  towersTemp = new normalTower[GameMenu_Model.DIMENSION];
-		
-		normalTower towerOrange = new normalTower("orange");
-		towerOrange.setStyle("-fx-background-color:"+GameMenu_Model.ORANGE+";");
-		towersTemp[0] = towerOrange;
-		
-		normalTower towerBlue = new normalTower("blue");
-		towerBlue.setStyle("-fx-background-color:"+GameMenu_Model.BLUE+";");
-		towersTemp[1] = towerBlue;
-		
-		normalTower towerViolet = new normalTower("violet");
-		towerViolet.setStyle("-fx-background-color:"+GameMenu_Model.VIOLET+";");
-		towersTemp[2] = towerViolet;
-		
-		normalTower towerPink = new normalTower("pink");
-		towerPink.setStyle("-fx-background-color:"+GameMenu_Model.PINK+";");
-		towersTemp[3] = towerPink;
-		
-		normalTower towerYellow = new normalTower("yellow");
-		towerYellow.setStyle("-fx-background-color:"+GameMenu_Model.YELLOW+";");
-		towersTemp[4] = towerYellow;
-		
-		normalTower towerRed = new normalTower("red");
-		towerRed.setStyle("-fx-background-color:"+GameMenu_Model.RED+";");
-		towersTemp[5] = towerRed;
-		
-		normalTower towerGreen = new normalTower("green");
-		towerGreen.setStyle("-fx-background-color:"+GameMenu_Model.GREEN+";");
-		towersTemp[6] = towerGreen;
-		
-		normalTower towerBrown = new normalTower("brown");
-		towerBrown.setStyle("-fx-background-color:"+GameMenu_Model.BROWN+";");
-		towersTemp[7] = towerBrown;
-		
-		return towersTemp;
-		}
 	
 	/**
 	 * This method offers an Array with all fields. The right color is set on the right place. 
@@ -370,7 +341,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		this.fields = fields;
 	}
 
-	public normalTower[][] getTowersP1() {
+	public Tower[][] getTowersP1() {
 		return towersP1;
 	}
 
@@ -378,7 +349,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		this.towersP1 = towersP1;
 	}
 
-	public normalTower[][] getTowersP2() {
+	public Tower[][] getTowersP2() {
 		return towersP2;
 	}
 
