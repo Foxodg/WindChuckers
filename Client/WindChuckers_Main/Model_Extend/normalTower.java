@@ -9,6 +9,13 @@ public class normalTower extends Tower{
 		// TODO Auto-generated constructor stub
 	}
 	
+	/**
+	 * Following methods will provide the towers in each color
+	 * @param xPosition
+	 * @param yPosition
+	 * @return
+	 * @author robin
+	 */
 	public static normalTower getOrangeTower(int xPosition, int yPosition){
 		normalTower orangeTower = new normalTower("orange");
 		orangeTower.setxPosition(xPosition);

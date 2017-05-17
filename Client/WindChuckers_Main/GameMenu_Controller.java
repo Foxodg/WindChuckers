@@ -2,6 +2,7 @@ package WindChuckers_Main;
 
 import WindChuckers_Main.WindChuckers;
 import WindChuckers_Main.Model_Extend.Board;
+import WindChuckers_Main.Model_Extend.Field;
 import WindChuckers_Main.Model_Extend.Movement;
 import WindChuckers_Main.Model_Extend.Player;
 import WindChuckers_Main.Model_Extend.Position;
@@ -12,6 +13,8 @@ import WindChuckers_Main.AI.AI;
 import abstractClasses.Controller;
 import commonClasses.ServiceLocator;
 import commonClasses.Translator;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
@@ -33,8 +36,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	private sumoTower sumoTower;
 	private Position position;
 	private AI ai;
-	private Player player;
-	
+	private Player player; 
 
 	public GameMenu_Controller(GameMenu_Model model, GameMenu_View view, Board board, Movement movement, Position position, normalTower normalTower, sumoTower sumoTower, AI ai, Player player) {
 		super(model, view);
@@ -46,6 +48,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		this.ai = ai;
 		this.player = player;
 		serviceLocator = ServiceLocator.getServiceLocator();
+		TowerHandler towerHandler = new TowerHandler(); // Anonym Class to handle the tower events
 		
 		
 		/**
@@ -123,7 +126,27 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			windChuckers = WindChuckers.getWindChuckers();
 			windChuckers.startClient();
 		});
+		
+		
+		/**
+		 * Set Towers on action
+		 * @author robin
+		 */
 
+		for(int y = 1; y<=GameMenu_Model.DIMENSION; y++){
+			for(int x = 1; x<=GameMenu_Model.DIMENSION; x++){
+				if(view.getTowersP1()[x][y]!=null){
+					view.getTowersP1()[x][y].setOnAction(towerHandler);}
+			}}
+		
+		for(int y = 1; y<=GameMenu_Model.DIMENSION; y++){
+			for(int x = 1; x<=GameMenu_Model.DIMENSION; x++){
+				if(view.getTowersP2()[x][y]!=null){
+					view.getTowersP2()[x][y].setOnAction(towerHandler);}
+			}}
+		
+		
+		
 	}
 	
 	/**
@@ -156,5 +179,37 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 //	public void setAI(AI ai){
 //		this.ai = ai;
 //	}
+	
+	protected class TowerHandler implements EventHandler<ActionEvent>{
+		@Override
+		public void handle(ActionEvent event){
+			Tower tower = (Tower) event.getSource();
+			model.getPlayer1().setOnTurn(true);
+			model.getPlayer2().setOnTurn(false);
+			
+			if(model.getPlayer1().isOnTurn()){	
+				for(int y = 1; y<=GameMenu_Model.DIMENSION; y++){
+					for(int x = 1; x<=GameMenu_Model.DIMENSION; x++){
+						if(view.getTowersP2()[x][y]!=null){
+							view.getTowersP2()[x][y].setDisable(true);
+					}}}
+				
+				// Activate possible fields where the tower can be moved to
+				tower.showPossibleMoves(view.getFields(), view.getGameBoard());
+			
+			}
+			
+	if(model.getPlayer2().isOnTurn()){	
+				for(int y = 1; y<=GameMenu_Model.DIMENSION; y++){
+					for(int x = 1; x<=GameMenu_Model.DIMENSION; x++){
+						if(view.getTowersP1()[x][y]!=null){
+							view.getTowersP1()[x][y].setDisable(true);
+					}}}
+				
+				// Activate possible fields where the tower can be moved to
+				tower.showPossibleMoves(view.getFields(), view.getGameBoard());
+				
+			}
 
-}
+		}}}
+

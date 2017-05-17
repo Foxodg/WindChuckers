@@ -16,6 +16,13 @@ public class Field extends Button{
 		this.color=color;		
 	}
 
+	/**
+	 * Following methods will provide the fields in each color
+	 * @param xPosition
+	 * @param yPosition
+	 * @return
+	 * @author robin
+	 */
 	public static Field getOrangeField(int xPosition, int yPosition){
 			Field orangeField = new Field("orange");
 			

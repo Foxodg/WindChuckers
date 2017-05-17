@@ -1,6 +1,8 @@
 package WindChuckers_Main.Model_Extend;
 
+import WindChuckers_Main.GameMenu_Model;
 import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
 
 public class Tower extends Button {
 	private int playerNumber;
@@ -46,5 +48,26 @@ public class Tower extends Button {
 
 	public void setxPosition(int xPosition) {
 		this.xPosition = xPosition;
+	}
+
+	public void showPossibleMoves(Field[][] fields, GridPane gridPane) {
+		if(this.getPlayerNumber()==1){
+
+					// Enable possible fields for a front move
+				
+					// Enable possible fields for a diagonal move bottom right
+				
+					// Enable possible fields for a diagonal move bottom left
+				}
+	
+		if(this.getPlayerNumber()==2){
+
+					// Enable possible fields for a front move
+					
+					// Enable possible fields for a diagonal move bottom right
+				
+					// Enable possible fields for a diagonal move bottom left
+		}
+		
 	}
 }
