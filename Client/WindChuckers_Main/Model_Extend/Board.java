@@ -4,5 +4,5 @@ import abstractClasses.Model;
 
 public class Board extends Model {
 
-
-}
+	}
+	

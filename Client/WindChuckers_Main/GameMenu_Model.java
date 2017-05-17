@@ -17,6 +17,18 @@ import commonClasses.ServiceLocator;
  * @author Brad Richards
  */
 public class GameMenu_Model extends Model {
+	
+	protected static final int DIMENSION = 8;
+	protected static final int MAX_FIELDS = DIMENSION*DIMENSION;
+	protected static final String ORANGE = "#FF8C00";
+	protected static final String BLUE = "#4169E1";
+	protected static final String VIOLET = "#663399";
+	protected static final String PINK = "#FF69B4";
+	protected static final String YELLOW = "#FFD700";
+	protected static final String RED = "#B22222";
+	protected static final String GREEN = "#008000";
+	protected static final String BROWN = "#8B4513";
+
 	protected ServiceLocator serviceLocator;
 	private static GameMenu_Model gameModel;
 
@@ -124,4 +136,6 @@ public class GameMenu_Model extends Model {
 		Message message = new Message(MessageType.Error);
 		sendMessage(message);
 	}
+	
+	
 }
