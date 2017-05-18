@@ -96,66 +96,19 @@ public class Board {
 		board[h][8 - 1] = new Tile(new Tower(Color.Brown, Type.normalTower, PlayerType.TWO,0), Color.Brown);
 	}
 
-	@Override
-	public String toString() {
-		String str = "";
-		for (int i = 7; i >= 0; i--) {
-			str += (i + 1) + "  ";
-			for (int j = 0; j < 8; j++) {
-				str += board[j][i] + " ";
-			}
-			str += "\n";
-		}
-
-		str += "\n   a b c d e f g h";
-
-		return str;
-	}
-
-	private Tile getTileColor(int x, int y) {
-		return board[x][y];
-	}
-
-	public Tile getTile(int x, int y) {
-		return board[x][y];
-	}
-
-	public ArrayList<Move> topBottomList() {
-		// List for Bottom or Top Line
-		ArrayList<Move> topBottomLine = new ArrayList<Move>();
-
-		// bottom
-		for (int i = 0; i < 8; i++) {
-			topBottomLine.add(new Move(i, 1));
-		}
-
-		// top
-		for (int i = 0; i < 8; i++) {
-			topBottomLine.add(new Move(i, 8));
-		}
-		return topBottomLine;
-	}
+	/** *************************************************************************************************************************************** **/
 	
-	// split the list in top or bottom
-	// true for topList, false for bottomList
-	public ArrayList<Move> splitTopBottomList(ArrayList<Move> topBottomList, boolean topBottom){
-		ArrayList<Move> bottomList = new ArrayList<Move>();
-		ArrayList<Move> topList = new ArrayList<Move>();		
-		
-		for (int i = 0; i < topBottomList.size(); i++) {
-			if (topBottomList.get(i).getY1() == 1) {
-				bottomList.add(topBottomList.get(i));
-			} else {
-				topList.add(topBottomList.get(i));
-			}
-		}
-		if(topBottom == true){
-			return topList;
-		} else {
-			return bottomList;
-		}
-	}
+	/**
+	 * GamePlay-Methods
+	 * @author 
+	 */
 
+	/**
+	 * Do a Move
+	 * @author L.Weber
+	 * @param move
+	 * @return Move
+	 */
 	public Move makeMove(Move move) {
 		Tile oldTile = board[move.getX1()][move.getY1()];
 		Tile goalTile = board[move.getX2()][move.getY2()];
@@ -176,12 +129,8 @@ public class Board {
 
 			return new Move(move.getX1(), move.getY1(), move.getX2(), move.getY2());
 		} else {
-			System.err.println("***************** SUMO-PUSH **********************");
-			System.err.println("The move was to an other tower -> must be an Sumo");
-			System.err.println(board[move.getX1()][move.getY1()].getTower() + " -->> " + board[move.getX2()][move.getY2()].getTower());
-			System.err.println("Move from: " + move.getX1() + " " + move.getY1() + " Move to: " + move.getX2() + " " + move.getY2());
-			System.err.println("***************** SUMO-PUSH **********************");
-			
+			//print the PUSH out
+			getSumoMessage(move);
 			// make the move 
 			board[move.getX2()][move.getY2()] = new Tile(oldTile.getTower(), board[move.getX2()][move.getY2()].getColor());
 			// set the beginner Tile back 
@@ -190,12 +139,16 @@ public class Board {
 			if(move.getY1()< move.getY2()){
 				//push Nord
 				board[move.getX2()][move.getY2()+1] = new Tile(goalTile.getTower(), board[move.getX2()][move.getY2()+1].getColor());
+				//when the Sumo-Push is done the Player that PUSH has the next try with the color that the opposite tower was pushed
+				makeMove(minimax.decision(getTempBoard(), oldTile.getTower().getPlayerType()));
+				System.err.println("The same Player get a new Move " + lastMove);
 			} else {
 				//push South
 				board[move.getX2()][move.getY2()-1] = new Tile(goalTile.getTower(), board[move.getX2()][move.getY2()-1].getColor());
+				//when the Sumo-Push is done the Player that PUSH has the next try with the color that the opposite tower was pushed
+				makeMove(minimax.decision(getTempBoard(), oldTile.getTower().getPlayerType()));
+				System.err.println("The same Player get a new Move " + lastMove);
 			}
-
-			
 			System.out.println(getTempBoard());
 			
 		}
@@ -203,41 +156,12 @@ public class Board {
 
 	}
 
-	private Move getARandomMove(PlayerType playerType) {
-		ArrayList<Move> randomMoves = getAllMoves(playerType);
-		int random = rand.nextInt(randomMoves.size());
-		return randomMoves.get(random);
-	}
-
-	public Move checkIsWinChance(PlayerType playerType, Tower tower) {
-		if (playerType == PlayerType.TWO) {
-			for (int i = 0; i < 8; i++) {
-				if (!this.board[i][1 - 1].isOccupied() && this.board[i][1].getColor() == tower.getColor()) {
-					return new Move(i, 1);
-				}
-			}
-		} else {
-			for (int i = 0; i < 8; i++) {
-				if (!this.board[i][8 - 1].isOccupied() && this.board[i][8].getColor() == tower.getColor()) {
-					return new Move(i, 8);
-				}
-			}
-		}
-		return null;
-	}
-
-	public Board getTempBoard() {
-		Tile[][] temp = new Tile[8][8];
-
-		for (int y = 0; y < 8; y++) {
-			for (int x = 0; x < 8; x++) {
-				temp[x][y] = new Tile(this.board[x][y], this.board[x][y].getColor());
-			}
-		}
-
-		return new Board(temp);
-	}
-
+	/**
+	 * Get all Moves that possible for this Player and is the right color 
+	 * @author L.Weber
+	 * @param playerType
+	 * @return ArrayList<Move> for the possible Moves
+	 */
 	public ArrayList<Move> getAllMoves(PlayerType playerType) {
 		ArrayList<Move> allPossibleMoves = new ArrayList<Move>();
 
@@ -252,7 +176,12 @@ public class Board {
 		return allPossibleMoves;
 	}
 
-	//when none of the Player made a move before
+	/**
+	 * When none of the Player made a move before
+	 * Do the Move direct
+	 * @author L.Weber
+	 * @param playerType
+	 */
 	public void firstMove(PlayerType playerType) {
 
 		ArrayList<Move> thisPlayerMoves = new ArrayList<Move>();
@@ -262,68 +191,12 @@ public class Board {
 		Move move = new Move(thisPlayerMoves.get(randomPick), true);
 		makeMove(move);
 	}
-
-	//calling by the buildHeuristic and decision class for getting the possible Moves
-	public ArrayList<Move> getNextPossibleMoves(PlayerType playerType) {
-		ArrayList<Move> thisPlayerMoves = new ArrayList<Move>();
-
-		// Check this players moves
-		for (int y = 0; y < 8; y++) {
-			for (int x = 0; x < 8; x++) {
-				// pick a own tower && check the possible Moves with it
-				// the tile must be occupied && the same playerType && the color
-				// of the new Tower must have the same color like the last-Move
-				// Tile color
-				if (board[y][x].isOccupied() && board[y][x].getTower().getPlayerType() == playerType
-						&& board[y][x].getTower().getColor() == board[lastMove.getX2()][lastMove.getY2()].getColor()) {
-					thisPlayerMoves.addAll(board[y][x].getTower().getMoves(this, y, x));
-				}
-			}
-		}
-		if(thisPlayerMoves.isEmpty()){
-			//there is no move less for this tower - patt-Situation
-			//like the rules is now the turn for the other player with the same tower-color
-			System.err.println("No more moves for the tower: " + board[lastMove.getX2()][lastMove.getY2()].getTower() + " X: " + lastMove.getX2() + " Y: " + lastMove.getY2());
-			thisPlayerMoves = getNextPossibleMoves(changePlayerType(playerType));
-		}
-
-		return thisPlayerMoves;
-	}
-
-	// calling by the maxValue and the minValue in the MiniMaxAlphaBeta-Pruning
-	public ArrayList<Move> getNextPossibleMoves(PlayerType playerType, ArrayList<Move> moves) {
-
-		ArrayList<Move> possibleMoves = new ArrayList<Move>();
-
-		for (int y = 0; y < 8; y++) {
-			for (int x = 0; x < 8; x++) {
-				// pick a own tower && check the possible Moves with it
-				// the tile must be occupied && the same playerType && the color
-				// of the new Tower must have the same color like the last-Move
-				// Tile color
-				if (board[x][y].isOccupied() && board[x][y].getTower().getPlayerType() == playerType
-						&& board[x][y].getTower().getColor() == board[lastMove.getX2()][lastMove.getY2()].getColor()) {
-					possibleMoves.addAll(board[x][y].getTower().getMoves(this, x, y));
-				}
-			}
-		}
-		return possibleMoves;
-	}
-
-	public ArrayList<Move> getNextPossibleMovesWithOneMove(PlayerType playerType, Move move) {
-		ArrayList<Move> moves = new ArrayList<Move>();
-
-		for (int y = 0; y < 8; y++) {
-			for (int x = 0; x < 8; x++) {
-				if (board[x][y].isOccupied() && board[x][y].getTower().getPlayerType() == playerType
-						&& board[x][y].getTower().getColor() == board[move.getX2()][move.getY2()].getColor()) {
-					moves.addAll(board[x][y].getTower().getMoves(this, x, y));
-				}
-			}
-		}
-		return moves;
-	}
-
+	
+	/**
+	 * Check is this a winning Situation for the while-loop
+	 * @author L.Weber
+	 * @return
+	 */
 	public boolean isWinSituation() {
 		boolean winning = false;
 		ArrayList<Move> topBottomList = topBottomList();
@@ -359,6 +232,7 @@ public class Board {
 	
 	/**
 	 * for update the tower
+	 * @author L.Weber
 	 * @param tower
 	 */
 	public void upgradeTower(Tower tower){
@@ -374,10 +248,102 @@ public class Board {
 		}
 	}
 	
+	/** *************************************************************************************************************************************** **/
+	
+	/**
+	 * Heuristic-Methods
+	 * @author L.Weber
+	 */
+	
+	/**
+	 * Heuristic-Method
+	 * Get the possible Moves
+	 * calling by the buildHeuristic and decision class 
+	 * @author L.Weber
+	 * @param playerType
+	 * @return
+	 */
+	public ArrayList<Move> getNextPossibleMoves(PlayerType playerType) {
+		ArrayList<Move> thisPlayerMoves = new ArrayList<Move>();
+
+		// Check this players moves
+		for (int y = 0; y < 8; y++) {
+			for (int x = 0; x < 8; x++) {
+				// pick a own tower && check the possible Moves with it
+				// the tile must be occupied && the same playerType && the color
+				// of the new Tower must have the same color like the last-Move
+				// Tile color
+				if (board[y][x].isOccupied() && board[y][x].getTower().getPlayerType() == playerType
+						&& board[y][x].getTower().getColor() == board[lastMove.getX2()][lastMove.getY2()].getColor()) {
+					thisPlayerMoves.addAll(board[y][x].getTower().getMoves(this, y, x));
+				}
+			}
+		}
+		if(thisPlayerMoves.isEmpty()){
+			//there is no move less for this tower - patt-Situation
+			//like the rules is now the turn for the other player with the same tower-color
+			System.err.println("No more moves for the tower: " + board[lastMove.getX2()][lastMove.getY2()].getTower() + " X: " + lastMove.getX2() + " Y: " + lastMove.getY2());
+			thisPlayerMoves = getNextPossibleMoves(changePlayerType(playerType));
+		}
+
+		return thisPlayerMoves;
+	}
 
 	/**
+	 * Heuristic-Method
+	 * Is for check with the Algorithm MniMax Alpha Beta
+	 * calling by the maxValue and the minValue in the MiniMaxAlphaBeta-Pruning
+	 * @author L.Weber
+	 * @param playerType
+	 * @param moves
+	 * @return
+	 */
+	public ArrayList<Move> getNextPossibleMoves(PlayerType playerType, ArrayList<Move> moves) {
+
+		ArrayList<Move> possibleMoves = new ArrayList<Move>();
+
+		for (int y = 0; y < 8; y++) {
+			for (int x = 0; x < 8; x++) {
+				// pick a own tower && check the possible Moves with it
+				// the tile must be occupied && the same playerType && the color
+				// of the new Tower must have the same color like the last-Move
+				// Tile color
+				if (board[x][y].isOccupied() && board[x][y].getTower().getPlayerType() == playerType
+						&& board[x][y].getTower().getColor() == board[lastMove.getX2()][lastMove.getY2()].getColor()) {
+					possibleMoves.addAll(board[x][y].getTower().getMoves(this, x, y));
+				}
+			}
+		}
+		return possibleMoves;
+	}
+
+	/**
+	 * Heuristic-Method
+	 * called by isBlockMove, numberOfPossibleMoves, removeMoves
+	 * Give the Moves beginning from one move
+	 * @author L.Weber
+	 * @param playerType
+	 * @param move
+	 * @return ArrayList<Move>
+	 */
+	public ArrayList<Move> getNextPossibleMovesWithOneMove(PlayerType playerType, Move move) {
+		ArrayList<Move> moves = new ArrayList<Move>();
+
+		for (int y = 0; y < 8; y++) {
+			for (int x = 0; x < 8; x++) {
+				if (board[x][y].isOccupied() && board[x][y].getTower().getPlayerType() == playerType
+						&& board[x][y].getTower().getColor() == board[move.getX2()][move.getY2()].getColor()) {
+					moves.addAll(board[x][y].getTower().getMoves(this, x, y));
+				}
+			}
+		}
+		return moves;
+	}
+
+	/**
+	 * Heuristic-Method
 	 * for the f1 heuristic number of vertical moves of the tower
-	 * 
+	 * @author L.Weber
 	 * @param move
 	 * @param playerType
 	 * @return vertical moves
@@ -395,8 +361,9 @@ public class Board {
 	}
 
 	/**
+	 * Heuristic-Method
 	 * For the f2 heuristic number of possible moves
-	 * 
+	 * @author L.Weber
 	 * @param moves
 	 * @return
 	 */
@@ -409,8 +376,9 @@ public class Board {
 	}
 
 	/**
+	 * Heuristic-Method
 	 * For the f3 heuristic Moves that possible to win
-	 * 
+	 * @author L.Weber
 	 * @param moves
 	 * @return
 	 */
@@ -419,8 +387,8 @@ public class Board {
 
 		// is the Move in the top or Bottom line?
 		for(int i = 0; i < topBottomList.size(); i++){
-			if(topBottomList.get(i).getX1() == move.getX2() && topBottomList.get(i).getY1()-1 == move.getY2()){
-				return 15;
+			if(topBottomList.get(i).getX1() == move.getX2() && topBottomList.get(i).getY1() == move.getY2()){
+				return 30;
 			} else {
 				return 0;
 			}
@@ -429,8 +397,9 @@ public class Board {
 	}
 
 	/**
+	 * Heuristic-Method
 	 * For the f4 heuristic Move that possible to block
-	 * 
+	 * @author L.Weber
 	 * @param playerType
 	 * @param move
 	 * @return
@@ -444,7 +413,7 @@ public class Board {
 
 		for (int i = 0; i < nextPossibleMoves.size(); i++) {
 			// is one of the nextPossibleMoves in the topBottomList
-			if (topBottomLine.containsAll(nextPossibleMoves)) {
+			if (topBottomLine.get(i).getX1() == nextPossibleMoves.get(i).getX2() && topBottomLine.get(i).getY1() == nextPossibleMoves.get(i).getY2()) {
 				// is the Goal for the nextPossibleMoves free
 				if (!board[nextPossibleMoves.get(i).getX2()][nextPossibleMoves.get(i).getY2()].isOccupied()) {
 					// is this move between the next Possible Moves
@@ -459,28 +428,62 @@ public class Board {
 		return 0;
 
 	}
+	
+	/**
+	 * Heuristic-Method
+	 * For the f5 heuristic Move
+	 * Sumo-Push, only do it when it gives advantage
+	 * @author L.Weber
+	 * @param move
+	 * @param playerType
+	 * @return
+	 */
+	public int sumoPush(Move move,PlayerType playerType){
+		
+		ArrayList<Move> nextPossibleMoves =  new ArrayList<Move>();
+		if(move.getY1() < move.getY2()){
+			//North
+			nextPossibleMoves =	getNextPossibleMovesWithOneMove(playerType, new Move(move.getX1(), move.getY1(),move.getX2(), move.getY2()+1));
+		} else {
+			//South
+			nextPossibleMoves = getNextPossibleMovesWithOneMove(playerType, new Move(move.getX1(), move.getY1(),move.getX2(), move.getY2()-1));			
+		}
 
-	// Check is one Tile free for the other Player when doing the Move
-	public ArrayList<Move> removeMoves(PlayerType playerType, Move move) {
-		ArrayList<Move> removeThis = new ArrayList<Move>();
-
-		// List for Bottom or Top Line
-		ArrayList<Move> topBottomLine = topBottomList();
-		ArrayList<Move> nextPossibleMoves = getNextPossibleMovesWithOneMove(playerType, move);
-
-		for (int i = 0; i < nextPossibleMoves.size(); i++) {
-			// is the start-position then empty
-			// is the move in the top or bottom line
-			// is the start-tile the same like the goal-tile after the move
-			if (!board[move.getX1()][move.getY1()].isOccupied()
-					&& !board[move.getX1()][move.getY1()].equals(topBottomLine) && board[move.getX1()][move
-							.getY1()] == board[nextPossibleMoves.get(i).getX2()][nextPossibleMoves.get(i).getY2()]) {
-				removeThis.add(move);
+		//is the tower a sumo-Tower?
+		if(board[move.getX1()][move.getY1()].getTower().getType() == Type.sumoTower){
+			//is it really the move who push
+			if(board[move.getX2()][move.getY2()].isOccupied()){
+				if(board[move.getX2()][move.getY2()].getTower().getPlayerType() == changePlayerType(playerType)){
+					for(int i = 0; i < nextPossibleMoves.size(); i++){
+						// is a winning Move possible when i push it?
+						if(isItAWinningMove(nextPossibleMoves.get(i)) == 30){
+							return 5;
+						}
+						// is a BlockMove possible when i push it?
+						if(isABlockMove(playerType, nextPossibleMoves.get(i)) == 10){
+							return 3;
+						}
+					}
+				}
 			}
 		}
-		return removeThis;
+		return 0;
 	}
 	
+	/** *************************************************************************************************************************************** **/
+	
+	/**
+	 * Help-Methods
+	 * @author L.Weber
+	 */
+	
+	/**
+	 * Help-Method
+	 * Build a new Game
+	 * @author L.Weber
+	 * @param playerType
+	 * @param newRound
+	 */
 	public void newRound(PlayerType playerType, NewRound newRound){
 		ArrayList<Tile> bottomTiles = new ArrayList<Tile>();
 		ArrayList<Tile> topTiles = new ArrayList<Tile>();
@@ -548,6 +551,109 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Help-Method
+	 * Check is one Tile free for the other Player when doing the Move
+	 * @author L.Weber
+	 * @param playerType
+	 * @param move
+	 * @return
+	 */
+	public ArrayList<Move> removeMoves(PlayerType playerType, Move move) {
+		ArrayList<Move> removeThis = new ArrayList<Move>();
+
+		// List for Bottom or Top Line
+		ArrayList<Move> topBottomLine = topBottomList();
+		ArrayList<Move> nextPossibleMoves = getNextPossibleMovesWithOneMove(playerType, move);
+
+		for (int i = 0; i < nextPossibleMoves.size(); i++) {
+			// is the start-position then empty
+			// is the move in the top or bottom line
+			// is the start-tile the same like the goal-tile after the move
+			if (!board[move.getX1()][move.getY1()].isOccupied()
+					&& !board[move.getX1()][move.getY1()].equals(topBottomLine) && board[move.getX1()][move
+							.getY1()] == board[nextPossibleMoves.get(i).getX2()][nextPossibleMoves.get(i).getY2()]) {
+				removeThis.add(move);
+			}
+		}
+		return removeThis;
+	}
+	
+	/**
+	 * Help-Method for check the Win-Chance
+	 * @author L.Weber
+	 * @param playerType
+	 * @param tower - the actual Tower
+	 * @return Move
+	 */
+	public Move checkIsWinChance(PlayerType playerType, Tower tower) {
+		if (playerType == PlayerType.TWO) {
+			for (int i = 0; i < 8; i++) {
+				if (!this.board[i][1 - 1].isOccupied() && this.board[i][1].getColor() == tower.getColor()) {
+					return new Move(i, 1);
+				}
+			}
+		} else {
+			for (int i = 0; i < 8; i++) {
+				if (!this.board[i][8 - 1].isOccupied() && this.board[i][8].getColor() == tower.getColor()) {
+					return new Move(i, 8);
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Help-Method for get the top and bottom Line
+	 * @author L.Weber
+	 * @return ArrayList<Move> Top and Bottom List
+	 */
+	public ArrayList<Move> topBottomList() {
+		// List for Bottom or Top Line
+		ArrayList<Move> topBottomLine = new ArrayList<Move>();
+		// bottom
+		for (int i = 0; i < 8; i++) {
+			topBottomLine.add(new Move(i, 1));
+		}
+		// top
+		for (int i = 0; i < 8; i++) {
+			topBottomLine.add(new Move(i, 8));
+		}
+		return topBottomLine;
+	}
+	
+	/**
+	 * Help-Method for Splitting to top and bottom Line
+	 * @author L.Weber
+	 * @param topBottomList
+	 * @param topBottom true = topList / false = bottomList
+	 * @return
+	 */
+	public ArrayList<Move> splitTopBottomList(ArrayList<Move> topBottomList, boolean topBottom){
+		ArrayList<Move> bottomList = new ArrayList<Move>();
+		ArrayList<Move> topList = new ArrayList<Move>();		
+		
+		for (int i = 0; i < topBottomList.size(); i++) {
+			if (topBottomList.get(i).getY1() == 1) {
+				bottomList.add(topBottomList.get(i));
+			} else {
+				topList.add(topBottomList.get(i));
+			}
+		}
+		if(topBottom == true){
+			return topList;
+		} else {
+			return bottomList;
+		}
+	}
+	
+	/**
+	 * Help-Method
+	 * Change the Playe
+	 * @author L.Weber
+	 * @param playerType
+	 * @return
+	 */
 	public static PlayerType changePlayerType(PlayerType playerType) {
 		if (playerType == PlayerType.ONE) {
 			playerType = PlayerType.TWO;
@@ -555,5 +661,78 @@ public class Board {
 			playerType = PlayerType.ONE;
 		}
 		return playerType;
+	}
+	
+	/** *************************************************************************************************************************************** **/
+	
+	/**
+	 * Visualise the Board
+	 */
+	
+	/**
+	 * Help-Method for getting The Board to printing
+	 * @author L.Weber
+	 * @return Tile[][]
+	 */
+	public Board getTempBoard() {
+		Tile[][] temp = new Tile[8][8];
+
+		for (int y = 0; y < 8; y++) {
+			for (int x = 0; x < 8; x++) {
+				temp[x][y] = new Tile(this.board[x][y], this.board[x][y].getColor());
+			}
+		}
+
+		return new Board(temp);
+	}
+	
+	/**
+	 * For Visualise the Sumo-PUSH
+	 * @author L.Weber
+	 * @param move
+	 */
+	public void getSumoMessage(Move move){
+		System.err.println("***************** SUMO-PUSH **********************");
+		System.err.println("The move was to an other tower -> must be an Sumo");
+		System.err.println(board[move.getX1()][move.getY1()].getTower() + " -->> " + board[move.getX2()][move.getY2()].getTower());
+		System.err.println("Move from: " + move.getX1() + " " + move.getY1() + " Move to: " + move.getX2() + " " + move.getY2());
+		System.err.println("***************** SUMO-PUSH **********************");
+	}
+	
+	
+	
+	/**
+	 * To giv the board out in the console
+	 * @author L.Weber
+	 */
+	@Override
+	public String toString() {
+		String str = "";
+		for (int i = 7; i >= 0; i--) {
+			str += (i + 1) + "  ";
+			for (int j = 0; j < 8; j++) {
+				str += board[j][i] + " ";
+			}
+			str += "\n";
+		}
+
+		str += "\n   a b c d e f g h";
+
+		return str;
+	}
+	
+	/** *************************************************************************************************************************************** **/
+	
+	/**
+	 * Getter and Setter
+	 * @author L.Weber
+	 */
+	
+	private Tile getTileColor(int x, int y) {
+		return board[x][y];
+	}
+
+	public Tile getTile(int x, int y) {
+		return board[x][y];
 	}
 }

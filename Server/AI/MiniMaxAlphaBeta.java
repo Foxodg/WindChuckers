@@ -22,6 +22,17 @@ public class MiniMaxAlphaBeta {
 		rand = new Random();
 	}
 
+	/**
+	 * For Building the Decision-Tree with the mini Max
+	 * MaxValue
+	 * @author L.Weber
+	 * @param board
+	 * @param state
+	 * @param alpha
+	 * @param beta
+	 * @param depth at this Moment 5
+	 * @return
+	 */
 	private static double maxValue(Board b, ArrayList<Move> state, double alpha, double beta, int depth) {
 		int maxDepth = 5;
 		if(depth > maxDepth)
@@ -47,6 +58,17 @@ public class MiniMaxAlphaBeta {
 		return alpha;
 	}
 	
+	/**
+	 * For Building the Decision-Tree with the mini Max
+	 * minValue
+	 * @author L.Weber
+	 * @param b
+	 * @param state
+	 * @param alpha
+	 * @param beta
+	 * @param depth
+	 * @return
+	 */
 	private static double minValue(Board b, ArrayList<Move> state, double alpha, double beta, int depth) {
 		int maxDepth = 5;
 		if(depth > maxDepth)
@@ -72,6 +94,14 @@ public class MiniMaxAlphaBeta {
 		return beta;
 	}
 	
+	/**
+	 * Main-Method for make a Decision
+	 * Calculate with each Move as a own Thread
+	 * @author L.Weber
+	 * @param board
+	 * @param playerType
+	 * @return
+	 */
 	public static Move decision(final Board board, PlayerType playerType) {
 		Random rand = new Random();
 		
@@ -146,18 +176,27 @@ public class MiniMaxAlphaBeta {
  			}
  		}
  		if(maxi == -1){
- 			rand.nextInt(moves.size());
+ 			maxi = rand.nextInt(moves.size());
  		}
  		Move endMove = new Move(moves.get(maxi),true);
  		return endMove;
 	}
 	
+	/**
+	 * Main-Method for build the Heuristic to rating the move
+	 * Now we calculate 4 points: Vertical moves / Winning Moves / Possible Moves / Block Moves
+	 * @author L.Weber
+	 * @param playerType
+	 * @param board
+	 * @return double to rate the move
+	 */
 	public static double buildHeuristic(PlayerType playerType, Board board){
 		double heuristic = 0;
 		ArrayList<Integer> listofVertialMoves = new ArrayList<Integer>(); 
 		ArrayList<Integer> listofWinningMoves = new ArrayList<Integer>();
 		ArrayList<Integer> listOfPossibleMoves = new ArrayList<Integer>();
 		ArrayList<Integer> listOfBlockMoves = new ArrayList<Integer>();
+		ArrayList<Integer> listOfSumoPushMoves = new ArrayList<Integer>();
 		
 		ArrayList<Move> getMoves = board.getNextPossibleMoves(playerType);
 		
@@ -170,23 +209,35 @@ public class MiniMaxAlphaBeta {
 			listOfPossibleMoves.add(possibleMoves);
 			int possibleBlock = board.isABlockMove(playerType, getMoves.get(i));
 			listOfBlockMoves.add(possibleBlock);
+			int possibleSumoPush = board.sumoPush(getMoves.get(i), playerType);
+			listOfSumoPushMoves.add(possibleSumoPush);
 
 		}
-		heuristic = heuristic(listofVertialMoves, listofWinningMoves, listOfPossibleMoves);
+		heuristic = heuristic(listofVertialMoves, listofWinningMoves, listOfPossibleMoves, listOfSumoPushMoves);
 		
 		listofVertialMoves.clear();
 		listofWinningMoves.clear();
 		listOfPossibleMoves.clear();
+		listOfSumoPushMoves.clear();
 		
 		return heuristic;
 	}
 	
+	/**
+	 * Calculating-Method for the Heuristic
+	 * @author L.Weber
+	 * @param listofVertialMoves
+	 * @param listofWinningMoves
+	 * @param listOfPossibleMoves
+	 * @return double for rate the Move
+	 */
 	private static double heuristic(ArrayList<Integer> listofVertialMoves, ArrayList<Integer> listofWinningMoves,
-			ArrayList<Integer> listOfPossibleMoves) {
+			ArrayList<Integer> listOfPossibleMoves, ArrayList<Integer> listOfSumoPushMoves) {
 		
 		double sumVertical = 0;
 		double sumWinning = 0;
 		double sumOfFurther = 0;
+		double sumOfPushs = 0;
 		
 		for (int i = 0; i < listofVertialMoves.size(); i++) {
 			sumVertical += listofVertialMoves.get(i);
@@ -198,8 +249,11 @@ public class MiniMaxAlphaBeta {
 		for (int i = 0; i < listOfPossibleMoves.size(); i++) {
 			sumOfFurther += listOfPossibleMoves.get(i);
 		}
+		for (int i = 0; i < listOfSumoPushMoves.size(); i++) {
+			sumOfPushs += listOfSumoPushMoves.get(i);
+		}
 		
-		double temp = sumVertical + sumWinning + sumOfFurther;
+		double temp = sumVertical + sumWinning + sumOfFurther + sumOfPushs;
 		double totalHeuristic = 0.0;
 		
 		return totalHeuristic = temp / 100;

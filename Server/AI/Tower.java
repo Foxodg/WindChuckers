@@ -1,4 +1,8 @@
 package AI;
+/**
+ * @author L.Weber
+ */
+
 import java.util.ArrayList;
 
 public class Tower {
@@ -7,8 +11,14 @@ public class Tower {
 	public PlayerType playerType;
 	public int gems;
 
-	// possible moves
-
+	/**
+	 * Make a new Tower with color, type, playerType, and gems
+	 * @author L.Weber
+	 * @param color
+	 * @param type
+	 * @param playerType
+	 * @param gems
+	 */
 	public Tower(Color color, Type type, PlayerType playerType, int gems) {
 		this.color = color;
 		this.type = type;
@@ -16,10 +26,11 @@ public class Tower {
 		this.gems = gems;
 	}
 
-	public Color getColor() {
-		return this.color;
-	}
 
+	/**
+	 * Visualise the Towers
+	 * @author L.Weber
+	 */
 	public String toString() {
 		if (this.getType() == Type.normalTower) {
 			// this is for the normal-Tower
@@ -110,6 +121,14 @@ public class Tower {
 		return ".";
 	}
 
+	/**
+	 * All Possible Moves that a Tower can do
+	 * @author L.Weber
+	 * @param board
+	 * @param x
+	 * @param y
+	 * @return ArrayList<Move>
+	 */
 	public ArrayList<Move> getMoves(Board board, int x, int y) {
 		ArrayList<Move> moves = new ArrayList<Move>();
 
@@ -127,13 +146,17 @@ public class Tower {
 							break;
 						}
 					} else {
-						//then it must be an Sumo-Tower and it can push put not if the field behind is not valid
-						if (!board.getTile(x, y + i).isOccupied() && valid(x, y + i+1)) {
+						//then it must be an Sumo-Tower and it can push put not if the field behind is not valid 
+						int tempy = y+(i+1);
+						if (!board.getTile(x, y + i).isOccupied() && valid(x,tempy)) {
 							moves.add(new Move(x, y, x, y + i));
 						} else {
-							// push is possible also get the last move then skip
-							moves.add(new Move(x, y, x, y + i));
-							break;
+							//SUMO-PUSH is only possible when the opposite Tower is on the next Tile && the Player must be the opposite
+							if(i == 1 && board.getTile(x, y).getTower().getPlayerType() == PlayerType.TWO){
+								// push is possible also get the last move then skip
+								moves.add(new Move(x, y, x, y + i));
+								break;
+							}
 						}
 					}
 				}
@@ -176,13 +199,17 @@ public class Tower {
 							break;
 						}
 					} else {
-						//then it must be an Sumo-Tower and it can push put not if the field behind is not valid
-						if (!board.getTile(x, y - i).isOccupied() && valid(x, y - i-1)) {
+						//then it must be an Sumo-Tower and it can push put not if the field behind is not valid 
+						int tempy = y-(i-1);
+						if (!board.getTile(x, y - i).isOccupied() && valid(x,tempy)) {
 							moves.add(new Move(x, y, x, y - i));
 						} else {
-							// push is possible also get the last move then skip
-							moves.add(new Move(x, y, x, y - i));
-							break;
+							//SUMO-PUSH is only possible when the opposite Tower is on the next Tile && the Player must be the opposite
+							if(i == 1 && board.getTile(x, y).getTower().getPlayerType() == PlayerType.ONE){
+								// push is possible also get the last move then skip
+								moves.add(new Move(x, y, x, y - i));
+								break;
+							}
 						}
 					}
 
@@ -217,6 +244,9 @@ public class Tower {
 	}
 
 	/**
+	 * Help-Method
+	 * Must be in the Board
+	 * @author L.Weber
 	 * @param b
 	 *            Board
 	 * @param x
@@ -232,6 +262,11 @@ public class Tower {
 			return true;
 	}
 
+	/**
+	 * Getter and Setter
+	 * @author L.Weber
+	 */
+	
 	public PlayerType getPlayerType() {
 		return this.playerType;
 	}
@@ -250,6 +285,10 @@ public class Tower {
 
 	public int getGems() {
 		return this.gems;
+	}
+	
+	public Color getColor() {
+		return this.color;
 	}
 
 	/**

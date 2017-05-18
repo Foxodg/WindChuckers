@@ -1,4 +1,9 @@
 package AI;
+/**
+ * Super-Class for Players
+ * @author L.Weber
+ *
+ */
 
 public class Player {
 	

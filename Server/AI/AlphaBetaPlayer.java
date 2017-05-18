@@ -8,6 +8,10 @@ public class AlphaBetaPlayer extends Player {
 		minimax = new MiniMaxAlphaBeta(playerType, maxDepth);
 	}
 	
+	/**
+	 * Make a new Decision
+	 * @author L.Weber
+	 */
 	@Override
 	public Move getNextMove(Board board, PlayerType playerType) {
 		Move move = minimax.decision(board, playerType);

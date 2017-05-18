@@ -1,5 +1,11 @@
 package AI;
 
+/**
+ * Div. Enmums
+ * @author L.Weber
+ *
+ */
+
 public enum Color {
 	Orange,
 	Blue,
