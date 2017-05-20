@@ -1,6 +1,7 @@
 package WindChuckers_Main.Model_Extend;
 
 import WindChuckers_Main.GameMenu_Model;
+import abstractClasses.Model;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
@@ -42,15 +43,15 @@ public class Tower extends Button {
 		this.xPosition = xPosition;
 	}
 
-	public void showPossibleMoves(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {
+	public void showMoves(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {
 		
 		if(this.getPlayerNumber()==1){
 
 				// Down move
-				for(int y = this.getyPosition()-1; y>=0; y--){
-						if(fields[this.getxPosition()][y].isEmpty()){
-						fields[this.getxPosition()][y].setDisable(false);
-						} if(!fields[this.getxPosition()][y].isEmpty()){
+				for(int i = 1; i<8 ; i++){
+						if(fields[this.getxPosition()][this.getyPosition()-i].isEmpty()){
+						fields[this.getxPosition()][this.getyPosition()-i].setDisable(false);
+						} if(!fields[this.getxPosition()][this.getyPosition()-i].isEmpty()){
 							break;
 						}
 					}
@@ -75,7 +76,7 @@ public class Tower extends Button {
 								}
 							}
 	
-				// Disable Towers of Player1 and enable Towers of Player 2
+				// Disable Towers of Player1
 				for(int y = 0; y < 8; y++){
 					for(int x = 0; x < 8; x++){
 						if(towersP1[x][y]!=null){
@@ -89,10 +90,10 @@ public class Tower extends Button {
 		if(this.getPlayerNumber()==2){
 
 				// Up move
-				for(int y = this.getyPosition()+1; y<=7; y++){
-					if(fields[this.getxPosition()][y].isEmpty()){
-					fields[this.getxPosition()][y].setDisable(false);
-					} if(!fields[this.getxPosition()][y].isEmpty()){
+				for(int i = 1; i<8; i++){
+					if(fields[this.getxPosition()][this.getyPosition()+i].isEmpty()){
+					fields[this.getxPosition()][this.getyPosition()+i].setDisable(false);
+					} if(!fields[this.getxPosition()][this.getyPosition()+i].isEmpty()){
 						break;
 					}
 				}
@@ -112,19 +113,47 @@ public class Tower extends Button {
 					for(int i = 1; i<8; i++){
 							if(fields[this.getxPosition()-i][this.getyPosition()+i].isEmpty() && (this.getxPosition()+i >= 0) && (this.getyPosition()+i <= 7)){
 								fields[this.getxPosition()-i][this.getyPosition()+i].setDisable(false);
-								} if(!fields[this.getxPosition()-i][this.getyPosition()+i].isEmpty() || (this.getxPosition()+i == 0) || (this.getyPosition()+i == 7)){
+								} if(!fields[this.getxPosition()-i][this.getyPosition()+i].isEmpty() || (this.getxPosition()-i == 0) || (this.getyPosition()+i == 7)){
 									break outerloop;
 								}
 							}
 							
-				// Disable Towers of Player2 and enable Towers of Player 1
+				// Disable Towers of Player2
 				for(int y = 0; y < 8; y++){
 					for(int x = 0; x < 8; x++){
 						if(towersP2[x][y]!=null){
 							towersP2[x][y].setDisable(true);
 					}}}
-
 		}
 		
 	}
+
+	public void move(Field[][] fields, GridPane gameBoard, Tower[][] towersP1, Tower[][] towersP2, Field field, Player player1, Player player2) {
+		int column = GridPane.getColumnIndex(field);
+		int row = GridPane.getRowIndex(field);
+		
+		this.setxPosition(field.getxPosition());
+		this.setyPosition(field.getyPosition());
+		
+		this.setText(field.getxPosition()+"."+field.getyPosition());
+		
+		field.setEmpty(false);
+		
+		GridPane.setColumnIndex(this, column);
+		GridPane.setRowIndex(this, row);
+		
+		// The turn is finished, disable all fields
+		for(int y = 0; y < 8; y++){
+			for(int x = 0; x < 8; x++){
+				fields[x][y].setDisable(true);
+			}
+		}
+		if(player1.isOnTurn()){
+			player1.setOnTurn(false);
+		}
+		
+		if(player2.isOnTurn()){
+			player2.setOnTurn(false);
+		}
+}
 }
