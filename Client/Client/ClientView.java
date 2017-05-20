@@ -78,7 +78,7 @@ public class ClientView {
         Scene scene = new Scene(root);
         scene.getStylesheets().add(
                 getClass().getResource("Example.css").toExternalForm());
-      //  stage.setScene(scene);;
+        stage.setScene(scene);;
     }
     
     public void start() {

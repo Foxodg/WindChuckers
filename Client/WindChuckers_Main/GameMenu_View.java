@@ -140,25 +140,34 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		pane.setAlignment(Pos.CENTER);
 		
 		// Fields will be added
-		int counter = 0;
-		for(int y = 1; y<=GameMenu_Model.DIMENSION; y++){
-			for(int x = 1; x<=GameMenu_Model.DIMENSION; x++){
-				pane.add(fields[x][y], x,y);
-				fields[x][y].setNumber(counter);
-				fields[x][y].setText(""+fields[x][y].getNumber());
-				counter++;
+		for(int y = 0; y < GameMenu_Model.DIMENSION; y++){
+			for(int x = 0; x < GameMenu_Model.DIMENSION; x++){
+			fields[x][y].setxPosition(x);
+			fields[x][y].setyPosition(y);
+			fields[x][y].setDisable(true);
+			fields[x][y].setText(""+fields[x][y].getxPosition()+"."+fields[x][y].getyPosition());
+			pane.add(fields[x][y],x,(fields.length-1)-y);
+			
 			}
 		}
 	
 		// Towers will be added
-		for(int x = 1; x<=GameMenu_Model.DIMENSION;x++){
-			towersP1[x][1].setNumber(x-1);
-			towersP1[x][1].setText(""+towersP1[x][1].getNumber());
-			pane.add(towersP1[x][1], x, 1);
+		for(int x = 0; x < GameMenu_Model.DIMENSION;x++){
+			towersP1[x][towersP1.length-1].setxPosition(x);
+			towersP1[x][towersP1.length-1].setyPosition(towersP1.length-1);
+			towersP1[x][towersP1.length-1].setText(""+towersP1[x][7].getxPosition()+"."+towersP1[x][7].getyPosition());
 			
-			towersP2[x][8].setNumber(56+x-1);
-			towersP2[x][8].setText(""+towersP2[x][8].getNumber());
-			pane.add(towersP2[x][8], x, 8);
+			towersP2[x][towersP2.length-towersP2.length].setxPosition(x);
+			towersP2[x][towersP2.length-towersP2.length].setyPosition(towersP2.length-towersP2.length);
+			towersP2[x][towersP2.length-towersP2.length].setText(""+towersP2[x][0].getxPosition()+"."+towersP2[x][0].getyPosition());
+			
+			
+			
+			pane.add(towersP1[x][towersP1.length-1],x,towersP1.length-towersP1.length);
+			pane.add(towersP2[x][towersP2.length-towersP2.length],x,towersP2.length-1);
+			
+			fields[x][towersP1.length-1].setEmpty(false);
+			fields[x][towersP2.length-towersP2.length].setEmpty(false);
 		}
 		return pane;
 	}
@@ -168,22 +177,22 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	 * @author robin
 	 */
 	private normalTower[][] getTowersP1Array() {
-		normalTower[][]towersP1 = new normalTower[GameMenu_Model.DIMENSION+1][GameMenu_Model.DIMENSION+1];
+		normalTower[][]towersP1 = new normalTower[GameMenu_Model.DIMENSION][GameMenu_Model.DIMENSION];
 		
-		towersP1[1][1] = normalTower.getOrangeTower(1, 1);
-		towersP1[2][1] = normalTower.getBlueTower(2, 1);
-		towersP1[3][1] = normalTower.getVioletTower(3, 1);
-		towersP1[4][1] = normalTower.getPinkTower(4, 1);
-		towersP1[5][1] = normalTower.getYellowTower(5, 1);
-		towersP1[6][1] = normalTower.getRedTower(6, 1);
-		towersP1[7][1] = normalTower.getGreenTower(7, 1);
-		towersP1[8][1] = normalTower.getBrownTower(8, 1);
+		towersP1[0][7] = normalTower.getOrangeTower();
+		towersP1[1][7] = normalTower.getBlueTower();
+		towersP1[2][7] = normalTower.getVioletTower();
+		towersP1[3][7] = normalTower.getPinkTower();
+		towersP1[4][7] = normalTower.getYellowTower();
+		towersP1[5][7] = normalTower.getRedTower();
+		towersP1[6][7] = normalTower.getGreenTower();
+		towersP1[7][7] = normalTower.getBrownTower();
 		
-		for(int i = 1; i<=GameMenu_Model.DIMENSION; i++){
-			towersP1[i][1].setPlayerNumber(1);
-			towersP1[i][1].setId("towersP1");
-			towersP1[i][1].setDisable(false);
-			GridPane.setHalignment(towersP1[i][1], HPos.CENTER);
+		for(int i = 0; i< GameMenu_Model.DIMENSION; i++){
+			towersP1[i][towersP1.length-1].setPlayerNumber(1);
+			towersP1[i][towersP1.length-1].setId("towersP1");
+			towersP1[i][towersP1.length-1].setDisable(false);
+			GridPane.setHalignment(towersP1[i][towersP1.length-1], HPos.CENTER);
 		}
 		return towersP1;
 	}
@@ -193,22 +202,22 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	 * @author robin
 	 */
 	private normalTower[][] getTowersP2Array() {
-		normalTower[][]towersP2 = new normalTower[GameMenu_Model.DIMENSION+1][GameMenu_Model.DIMENSION+1];
+		normalTower[][]towersP2 = new normalTower[GameMenu_Model.DIMENSION][GameMenu_Model.DIMENSION];
 
-		towersP2[8][8] = normalTower.getOrangeTower(8, 8);
-		towersP2[7][8] = normalTower.getBlueTower(7, 8);
-		towersP2[6][8] = normalTower.getVioletTower(6, 8);
-		towersP2[5][8] = normalTower.getPinkTower(5, 8);
-		towersP2[4][8] = normalTower.getYellowTower(4, 8);
-		towersP2[3][8] = normalTower.getRedTower(3, 8);
-		towersP2[2][8] = normalTower.getGreenTower(2, 8);
-		towersP2[1][8] = normalTower.getBrownTower(1, 8);
+		towersP2[7][0] = normalTower.getOrangeTower();
+		towersP2[6][0] = normalTower.getBlueTower();
+		towersP2[5][0] = normalTower.getVioletTower();
+		towersP2[4][0] = normalTower.getPinkTower();
+		towersP2[3][0] = normalTower.getYellowTower();
+		towersP2[2][0] = normalTower.getRedTower();
+		towersP2[1][0] = normalTower.getGreenTower();
+		towersP2[0][0] = normalTower.getBrownTower();
 		
-		for(int i = 1; i<=GameMenu_Model.DIMENSION;i++){
-			towersP2[i][8].setPlayerNumber(2);
-			towersP2[i][8].setId("towersP2");
-			towersP2[i][8].setDisable(false);
-			GridPane.setHalignment(towersP2[i][8], HPos.CENTER);
+		for(int i = 0; i < GameMenu_Model.DIMENSION;i++){
+			towersP2[i][towersP2.length-towersP2.length].setPlayerNumber(2);
+			towersP2[i][towersP2.length-towersP2.length].setId("towersP2");
+			towersP2[i][towersP2.length-towersP2.length].setDisable(false);
+			GridPane.setHalignment(towersP2[i][towersP2.length-towersP2.length], HPos.CENTER);
 		}
 		return towersP2;
 	}
@@ -218,87 +227,87 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	 * @author robin
 	 */
 	private Field[][] getFieldArray() {
-		Field[][] fields = new Field[GameMenu_Model.DIMENSION+1][GameMenu_Model.DIMENSION+1];
+		Field[][] fields = new Field[GameMenu_Model.DIMENSION][GameMenu_Model.DIMENSION];
 		
 		// orange fields will be added
-		fields[1][1] = Field.getOrangeField(1, 1);
-		fields[2][2] = Field.getOrangeField(1, 1);
-		fields[3][3] = Field.getOrangeField(1, 1);
-		fields[4][4] = Field.getOrangeField(1, 1);
-		fields[5][5] = Field.getOrangeField(1, 1);
-		fields[6][6] = Field.getOrangeField(1, 1);
-		fields[7][7] = Field.getOrangeField(1, 1);
-		fields[8][8] = Field.getOrangeField(1, 1);
+		fields[0][7] = Field.getOrangeField();
+		fields[1][6] = Field.getOrangeField();
+		fields[2][5] = Field.getOrangeField();
+		fields[3][4] = Field.getOrangeField();
+		fields[4][3] = Field.getOrangeField();
+		fields[5][2] = Field.getOrangeField();
+		fields[6][1] = Field.getOrangeField();
+		fields[7][0] = Field.getOrangeField();
 		
 		// blue fields will be added
-		fields[2][1] = Field.getBlueField(1, 1);
-		fields[5][2] = Field.getBlueField(1, 1);
-		fields[8][3] = Field.getBlueField(1, 1);
-		fields[3][4] = Field.getBlueField(1, 1);
-		fields[6][5] = Field.getBlueField(1, 1);
-		fields[1][6] = Field.getBlueField(1, 1);
-		fields[4][7] = Field.getBlueField(1, 1);
-		fields[7][8] = Field.getBlueField(1, 1);
+		fields[6][0] = Field.getBlueField();
+		fields[3][1] = Field.getBlueField();
+		fields[0][2] = Field.getBlueField();
+		fields[5][3] = Field.getBlueField();
+		fields[2][4] = Field.getBlueField();
+		fields[7][5] = Field.getBlueField();
+		fields[4][6] = Field.getBlueField();
+		fields[1][7] = Field.getBlueField();
 		
 		// violet fields will be added
-		fields[3][1] = Field.getVioletField(1, 1);
-		fields[8][2] = Field.getVioletField(1, 1);
-		fields[5][3] = Field.getVioletField(1, 1);
-		fields[2][4] = Field.getVioletField(1, 1);
-		fields[7][5] = Field.getVioletField(1, 1);
-		fields[4][6] = Field.getVioletField(1, 1);
-		fields[1][7] = Field.getVioletField(1, 1);
-		fields[6][8] = Field.getVioletField(1, 1);
+		fields[5][0] = Field.getVioletField();
+		fields[0][1] = Field.getVioletField();
+		fields[3][2] = Field.getVioletField();
+		fields[6][3] = Field.getVioletField();
+		fields[1][4] = Field.getVioletField();
+		fields[4][5] = Field.getVioletField();
+		fields[7][6] = Field.getVioletField();
+		fields[2][7] = Field.getVioletField();
 		
 		// pink fields will be added
-		fields[4][1] = Field.getPinkField(1, 1);
-		fields[3][2] = Field.getPinkField(1, 1);
-		fields[2][3] = Field.getPinkField(1, 1);
-		fields[1][4] = Field.getPinkField(1, 1);
-		fields[8][5] = Field.getPinkField(1, 1);
-		fields[7][6] = Field.getPinkField(1, 1);
-		fields[6][7] = Field.getPinkField(1, 1);
-		fields[5][8] = Field.getPinkField(1, 1);
+		fields[4][0] = Field.getPinkField();
+		fields[5][1] = Field.getPinkField();
+		fields[6][2] = Field.getPinkField();
+		fields[7][3] = Field.getPinkField();
+		fields[0][4] = Field.getPinkField();
+		fields[1][5] = Field.getPinkField();
+		fields[2][6] = Field.getPinkField();
+		fields[3][7] = Field.getPinkField();
 		
 		// yellow fields will be added
-		fields[5][1] = Field.getYellowField(1, 1);
-		fields[6][2] = Field.getYellowField(1, 1);
-		fields[7][3] = Field.getYellowField(1, 1);
-		fields[8][4] = Field.getYellowField(1, 1);
-		fields[1][5] = Field.getYellowField(1, 1);
-		fields[2][6] = Field.getYellowField(1, 1);
-		fields[3][7] = Field.getYellowField(1, 1);
-		fields[4][8] = Field.getYellowField(1, 1);
+		fields[3][0] = Field.getYellowField();
+		fields[2][1] = Field.getYellowField();
+		fields[1][2] = Field.getYellowField();
+		fields[0][3] = Field.getYellowField();
+		fields[7][4] = Field.getYellowField();
+		fields[6][5] = Field.getYellowField();
+		fields[5][6] = Field.getYellowField();
+		fields[4][7] = Field.getYellowField();
 		
 		// red fields will be added
-		fields[6][1] = Field.getRedField(1, 1);
-		fields[1][2] = Field.getRedField(1, 1);
-		fields[4][3] = Field.getRedField(1, 1);
-		fields[7][4] = Field.getRedField(1, 1);
-		fields[2][5] = Field.getRedField(1, 1);
-		fields[5][6] = Field.getRedField(1, 1);
-		fields[8][7] = Field.getRedField(1, 1);
-		fields[3][8] = Field.getRedField(1, 1);
+		fields[2][0] = Field.getRedField();
+		fields[7][1] = Field.getRedField();
+		fields[4][2] = Field.getRedField();
+		fields[1][3] = Field.getRedField();
+		fields[6][4] = Field.getRedField();
+		fields[3][5] = Field.getRedField();
+		fields[0][6] = Field.getRedField();
+		fields[5][7] = Field.getRedField();
 		
 		// green fields will be added
-		fields[7][1] = Field.getGreenField(1, 1);
-		fields[4][2] = Field.getGreenField(1, 1);
-		fields[1][3] = Field.getGreenField(1, 1);
-		fields[6][4] = Field.getGreenField(1, 1);
-		fields[3][5] = Field.getGreenField(1, 1);
-		fields[8][6] = Field.getGreenField(1, 1);
-		fields[5][7] = Field.getGreenField(1, 1);
-		fields[2][8] = Field.getGreenField(1, 1);
+		fields[1][0] = Field.getGreenField();
+		fields[4][1] = Field.getGreenField();
+		fields[7][2] = Field.getGreenField();
+		fields[2][3] = Field.getGreenField();
+		fields[5][4] = Field.getGreenField();
+		fields[0][5] = Field.getGreenField();
+		fields[3][6] = Field.getGreenField();
+		fields[6][7] = Field.getGreenField();
 		
 		// brown fields will be added
-		fields[8][1] = Field.getBrownField(1, 1);
-		fields[7][2] = Field.getBrownField(1, 1);
-		fields[6][3] = Field.getBrownField(1, 1);
-		fields[5][4] = Field.getBrownField(1, 1);
-		fields[4][5] = Field.getBrownField(1, 1);
-		fields[3][6] = Field.getBrownField(1, 1);
-		fields[2][7] = Field.getBrownField(1, 1);
-		fields[1][8] = Field.getBrownField(1, 1);
+		fields[0][0] = Field.getBrownField();
+		fields[1][1] = Field.getBrownField();
+		fields[2][2] = Field.getBrownField();
+		fields[3][3] = Field.getBrownField();
+		fields[4][4] = Field.getBrownField();
+		fields[5][5] = Field.getBrownField();
+		fields[6][6] = Field.getBrownField();
+		fields[7][7] = Field.getBrownField();
 
 		return fields;
 	}

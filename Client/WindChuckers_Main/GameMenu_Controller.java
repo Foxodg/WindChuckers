@@ -133,19 +133,18 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		 * @author robin
 		 */
 
-		for(int y = 1; y<=GameMenu_Model.DIMENSION; y++){
-			for(int x = 1; x<=GameMenu_Model.DIMENSION; x++){
+		for(int y = 0; y < GameMenu_Model.DIMENSION; y++){
+			for(int x = 0; x < GameMenu_Model.DIMENSION; x++){
 				if(view.getTowersP1()[x][y]!=null){
-					view.getTowersP1()[x][y].setOnAction(towerHandler);}
-			}}
+					view.getTowersP1()[x][y].setOnAction(towerHandler);
+				}}}
 		
-		for(int y = 1; y<=GameMenu_Model.DIMENSION; y++){
-			for(int x = 1; x<=GameMenu_Model.DIMENSION; x++){
+		for(int y = 0; y < GameMenu_Model.DIMENSION; y++){
+			for(int x = 0; x < GameMenu_Model.DIMENSION; x++){
 				if(view.getTowersP2()[x][y]!=null){
-					view.getTowersP2()[x][y].setOnAction(towerHandler);}
-			}}
-		
-		
+					view.getTowersP2()[x][y].setOnAction(towerHandler);
+					view.getTowersP2()[x][y].setDisable(true); // entscheidet wer beginnt, soll später vom User bestimmt werden
+				}}}
 		
 	}
 	
@@ -188,27 +187,30 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			model.getPlayer2().setOnTurn(false);
 			
 			if(model.getPlayer1().isOnTurn()){	
-				for(int y = 1; y<=GameMenu_Model.DIMENSION; y++){
-					for(int x = 1; x<=GameMenu_Model.DIMENSION; x++){
+				for(int y = 0; y < GameMenu_Model.DIMENSION; y++){
+					for(int x = 0; x < GameMenu_Model.DIMENSION; x++){
 						if(view.getTowersP2()[x][y]!=null){
 							view.getTowersP2()[x][y].setDisable(true);
 					}}}
 				
 				// Activate possible fields where the tower can be moved to
-				tower.showPossibleMoves(view.getFields(), view.getGameBoard());
-			
+				tower.showPossibleMoves(view.getFields(), view.getGameBoard(), view.getTowersP1(), view.getTowersP2());
+				
+				
+
 			}
 			
 	if(model.getPlayer2().isOnTurn()){	
-				for(int y = 1; y<=GameMenu_Model.DIMENSION; y++){
-					for(int x = 1; x<=GameMenu_Model.DIMENSION; x++){
+				for(int y = 0; y < GameMenu_Model.DIMENSION; y++){
+					for(int x = 0; x < GameMenu_Model.DIMENSION; x++){
 						if(view.getTowersP1()[x][y]!=null){
 							view.getTowersP1()[x][y].setDisable(true);
 					}}}
 				
 				// Activate possible fields where the tower can be moved to
-				tower.showPossibleMoves(view.getFields(), view.getGameBoard());
-				
+				tower.showPossibleMoves(view.getFields(), view.getGameBoard(), view.getTowersP1(), view.getTowersP2());
+
+
 			}
 
 		}}}

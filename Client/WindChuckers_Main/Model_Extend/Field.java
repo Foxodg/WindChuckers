@@ -9,7 +9,6 @@ public class Field extends Button{
 	private int yPosition;
 	private int xPosition;
 	private boolean empty = true;
-	private int number;
 	
 	public Field(String color){
 		super();
@@ -23,68 +22,51 @@ public class Field extends Button{
 	 * @return
 	 * @author robin
 	 */
-	public static Field getOrangeField(int xPosition, int yPosition){
+	public static Field getOrangeField(){
 			Field orangeField = new Field("orange");
-			
-			orangeField.setxPosition(xPosition);
-			orangeField.setyPosition(yPosition);
 			orangeField.setStyle(" -fx-background-color: #FF8C00;");
 			orangeField.setId("gameField");
 			return orangeField;
 			
 	}
-	public static Field getBlueField(int xPosition, int yPosition){
+	public static Field getBlueField(){
 		Field blueField = new Field("blue");
-		blueField.setxPosition(xPosition);
-		blueField.setyPosition(yPosition);
 		blueField.setStyle(" -fx-background-color: #4169E1;");
 		blueField.setId("gameField");
 		return blueField;
 }
-	public static Field getVioletField(int xPosition, int yPosition){
+	public static Field getVioletField(){
 		Field violetField = new Field("violet");
-		violetField.setxPosition(xPosition);
-		violetField.setyPosition(yPosition);
 		violetField.setStyle(" -fx-background-color: #663399;");
 		violetField.setId("gameField");
 		return violetField;
 }
-	public static Field getPinkField(int xPosition, int yPosition){
+	public static Field getPinkField(){
 		Field pinkField = new Field("pink");
-		pinkField.setxPosition(xPosition);
-		pinkField.setyPosition(yPosition);
 		pinkField.setStyle(" -fx-background-color: #FF69B4;");
 		pinkField.setId("gameField");
 		return pinkField;
 }
-	public static Field getYellowField(int xPosition, int yPosition){
+	public static Field getYellowField(){
 		Field yellowField = new Field("yellow");
-		yellowField.setxPosition(xPosition);
-		yellowField.setyPosition(yPosition);
 		yellowField.setStyle(" -fx-background-color: #FFD700;");
 		yellowField.setId("gameField");
 		return yellowField;
 }
-	public static Field getRedField(int xPosition, int yPosition){
+	public static Field getRedField(){
 		Field redField = new Field("red");
-		redField.setxPosition(xPosition);
-		redField.setyPosition(yPosition);
 		redField.setStyle(" -fx-background-color: #B22222;");
 		redField.setId("gameField");
 		return redField;
 }
-	public static Field getGreenField(int xPosition, int yPosition){
+	public static Field getGreenField(){
 		Field greenField = new Field("green");
-		greenField.setxPosition(xPosition);
-		greenField.setyPosition(yPosition);
 		greenField.setStyle(" -fx-background-color: #008000;");
 		greenField.setId("gameField");
 		return greenField;
 }
-	public static Field getBrownField(int xPosition, int yPosition){
+	public static Field getBrownField(){
 		Field brownField = new Field("brown");
-		brownField.setxPosition(xPosition);
-		brownField.setyPosition(yPosition);
 		brownField.setStyle(" -fx-background-color: #8B4513;");
 		brownField.setId("gameField");
 		return brownField;
@@ -110,14 +92,6 @@ public class Field extends Button{
 
 	public void setxPosition(int xPosition) {
 		this.xPosition = xPosition;
-	}
-
-	public int getNumber() {
-		return number;
-	}
-
-	public void setNumber(int number) {
-		this.number = number;
 	}
 
 	public boolean isEmpty() {

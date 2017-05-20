@@ -9,7 +9,6 @@ public class Tower extends Button {
 	private String color;
 	private int yPosition;
 	private int xPosition;
-	private int number;
 	
 	protected Tower (String color){
 		super();
@@ -27,13 +26,6 @@ public class Tower extends Button {
 		return this.color;
 	}
 
-	public int getNumber() {
-		return number;
-	}
-
-	public void setNumber(int number) {
-		this.number = number;
-	}
 	public int getyPosition() {
 		return yPosition;
 	}
@@ -50,23 +42,88 @@ public class Tower extends Button {
 		this.xPosition = xPosition;
 	}
 
-	public void showPossibleMoves(Field[][] fields, GridPane gridPane) {
+	public void showPossibleMoves(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {
+		
 		if(this.getPlayerNumber()==1){
 
-					// Enable possible fields for a front move
+				// Down move
+				for(int y = this.getyPosition()-1; y>=0; y--){
+						if(fields[this.getxPosition()][y].isEmpty()){
+						fields[this.getxPosition()][y].setDisable(false);
+						} if(!fields[this.getxPosition()][y].isEmpty()){
+							break;
+						}
+					}
 				
-					// Enable possible fields for a diagonal move bottom right
-				
-					// Enable possible fields for a diagonal move bottom left
-				}
+				// Diagonal move bottom right
+				outerloop:
+				for(int i = 1; i<8; i++){
+						if(fields[this.getxPosition()+i][this.getyPosition()-i].isEmpty()&&(this.getxPosition()+i<8) && (this.getyPosition()-i >= 0)){
+							fields[this.getxPosition()+i][this.getyPosition()-i].setDisable(false);
+							} if(!fields[this.getxPosition()+i][this.getyPosition()-i].isEmpty() || (this.getxPosition()+i==7) || (this.getyPosition()-i == 0)){
+								break outerloop;
+							}
+						}
+					
+				// Diagonal move bottom left
+				outerloop:
+					for(int i = 1; i<8; i++){
+							if(fields[this.getxPosition()-i][this.getyPosition()-i].isEmpty() && (this.getxPosition()-i>=0) && (this.getyPosition()-i >= 0)){
+								fields[this.getxPosition()-i][this.getyPosition()-i].setDisable(false);
+								} if(!fields[this.getxPosition()-i][this.getyPosition()-i].isEmpty() || (this.getxPosition()-i==0) || (this.getyPosition()-i == 0)){
+									break outerloop;
+								}
+							}
 	
+				// Disable Towers of Player1 and enable Towers of Player 2
+				for(int y = 0; y < 8; y++){
+					for(int x = 0; x < 8; x++){
+						if(towersP1[x][y]!=null){
+							towersP1[x][y].setDisable(true);
+					}
+						}
+					}
+				}
+			
+
 		if(this.getPlayerNumber()==2){
 
-					// Enable possible fields for a front move
+				// Up move
+				for(int y = this.getyPosition()+1; y<=7; y++){
+					if(fields[this.getxPosition()][y].isEmpty()){
+					fields[this.getxPosition()][y].setDisable(false);
+					} if(!fields[this.getxPosition()][y].isEmpty()){
+						break;
+					}
+				}
+						
+				// Diagonal move top right
+				outerloop:
+					for(int i = 1; i<8; i++){
+							if(fields[this.getxPosition()+i][this.getyPosition()+i].isEmpty() && (this.getxPosition()+i<=7) && (this.getyPosition()+i <= 7)){
+								fields[this.getxPosition()+i][this.getyPosition()+i].setDisable(false);
+								} if(!fields[this.getxPosition()+i][this.getyPosition()+i].isEmpty() || (this.getxPosition()+i == 7) || (this.getyPosition()+i == 7)){
+									break outerloop;
+								}
+							}
 					
-					// Enable possible fields for a diagonal move bottom right
-				
-					// Enable possible fields for a diagonal move bottom left
+				// Diagonal move top left
+				outerloop:
+					for(int i = 1; i<8; i++){
+							if(fields[this.getxPosition()-i][this.getyPosition()+i].isEmpty() && (this.getxPosition()+i >= 0) && (this.getyPosition()+i <= 7)){
+								fields[this.getxPosition()-i][this.getyPosition()+i].setDisable(false);
+								} if(!fields[this.getxPosition()-i][this.getyPosition()+i].isEmpty() || (this.getxPosition()+i == 0) || (this.getyPosition()+i == 7)){
+									break outerloop;
+								}
+							}
+							
+				// Disable Towers of Player2 and enable Towers of Player 1
+				for(int y = 0; y < 8; y++){
+					for(int x = 0; x < 8; x++){
+						if(towersP2[x][y]!=null){
+							towersP2[x][y].setDisable(true);
+					}}}
+
 		}
 		
 	}
