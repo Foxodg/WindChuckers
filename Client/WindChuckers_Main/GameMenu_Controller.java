@@ -49,7 +49,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		this.player = player;
 		serviceLocator = ServiceLocator.getServiceLocator();
 		TowerHandler towerHandler = new TowerHandler(); // Anonym Class to handle the tower events
-		
+		model.getPlayer1().setOnTurn(true); // Je nach dem wer anfängt, müssen wir noch implementieren
 		
 		/**
 		 * For End the Application
@@ -132,6 +132,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		 * Set Towers on action
 		 * @author robin
 		 */
+		
 		for(int y = 0; y < GameMenu_Model.DIMENSION; y++){
 			for(int x = 0; x < GameMenu_Model.DIMENSION; x++){
 				if(view.getTowersP1()[x][y]!=null){
@@ -142,7 +143,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			for(int x = 0; x < GameMenu_Model.DIMENSION; x++){
 				if(view.getTowersP2()[x][y]!=null){
 					view.getTowersP2()[x][y].setOnAction(towerHandler);
-					view.getTowersP2()[x][y].setDisable(true);
+					view.getTowersP2()[x][y].setDisable(true); // Je nach dem wer anfängt -> müssen wir noch implementieren
 				}}}
 	
 		
@@ -183,19 +184,8 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		@Override
 		public void handle(ActionEvent event){
 			Tower tower = (Tower) event.getSource();
-			model.getPlayer2().setOnTurn(true);
 			
 			if(model.getPlayer1().isOnTurn()){	
-				for(int y = 0; y < GameMenu_Model.DIMENSION; y++){
-					for(int x = 0; x < GameMenu_Model.DIMENSION; x++){
-						if(view.getTowersP1()[x][y]!=null){
-							view.getTowersP1()[x][y].setDisable(false);
-						}
-						if(view.getTowersP2()[x][y]!=null){
-							view.getTowersP2()[x][y].setDisable(true);
-						}
-					}
-					}
 				
 				// Activate possible fields where the tower can be moved to
 				tower.showMoves(view.getFields(), view.getGameBoard(), view.getTowersP1(), view.getTowersP2());
@@ -212,17 +202,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			}
 			
 	if(model.getPlayer2().isOnTurn()){
-			for(int y = 0; y < GameMenu_Model.DIMENSION; y++){
-				for(int x = 0; x < GameMenu_Model.DIMENSION; x++){
-					if(view.getTowersP1()[x][y]!=null){
-						view.getTowersP1()[x][y].setDisable(true);
-					}
-					if(view.getTowersP2()[x][y]!=null){
-						view.getTowersP2()[x][y].setDisable(false);
-					}
-				}
-				}
-				
+			
 			// Activate possible fields where the tower can be moved to
 			tower.showMoves(view.getFields(), view.getGameBoard(), view.getTowersP1(), view.getTowersP2());
 			
@@ -235,8 +215,9 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 					});
 				}
 			}
-			}
 		}
+	
 	}
+}
 }
 

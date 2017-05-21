@@ -21,6 +21,7 @@ public class GameMenu_Model extends Model {
 	
 	protected static final int DIMENSION = 8;
 	protected static final int MAX_FIELDS = DIMENSION*DIMENSION;
+
 	protected static final String ORANGE = "#FF8C00";
 	protected static final String BLUE = "#4169E1";
 	protected static final String VIOLET = "#663399";
