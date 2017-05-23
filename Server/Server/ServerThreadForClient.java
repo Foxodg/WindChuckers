@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import Message.Message;
@@ -67,7 +68,11 @@ public class ServerThreadForClient extends Thread {
 	
 	public void sendMessageBackToClient(Message message){
 		try {
-			message.send(clientSocket);
+			ServerModel model = ServerModel.getServerModel();
+			ArrayList<Socket> sockets = model.getSockets();
+			for(Socket socket : sockets){
+				message.send(socket);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

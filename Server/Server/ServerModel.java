@@ -2,15 +2,32 @@ package Server;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import Message.Message.Value;
+import WindChuckers_Main.GameMenu_Model;
 import javafx.concurrent.Task;
 
 public class ServerModel {
     private Integer port;
     private final Logger logger = Logger.getLogger("");
-    private 
+    private ArrayList<Socket> clientSockets = new ArrayList<Socket>();
+	private static ServerModel serverModel;
+    
+	/**
+	 * Factory method for returning the singleton board
+	 * 
+	 * @param mainClass
+	 *            The main class of this program
+	 * @return ServerModel
+	 * @author L.Weber
+	 */
+	public static ServerModel getServerModel() {
+		if (serverModel == null)
+			serverModel = new ServerModel();
+		return serverModel;
+	}
     
     final Task<Void> serverTask = new Task<Void>() {
         @Override
@@ -26,6 +43,7 @@ public class ServerModel {
                     Socket clientSocket = listener.accept();
                     
                     ServerThreadForClient client = new ServerThreadForClient(clientSocket);
+                    clientSockets.add(clientSocket);
                     client.start();
                 }
             } catch (Exception e) {
@@ -44,6 +62,10 @@ public class ServerModel {
         this.port = port;
         new Thread(serverTask).start();
     }
+    
+	public ArrayList<Socket> getSockets(){
+		return this.clientSockets;
+	}
 }
 
 
@@ -66,5 +88,7 @@ class Board {
 			board = new Value[boardSize][boardSize];
 		return board;
 	}
+	
+
 
 }

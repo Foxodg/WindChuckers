@@ -34,7 +34,7 @@ public class Server extends Application {
         defaultLogger.addHandler(textAreaHandler);
         
         // Initialize the GUI
-        model = new ServerModel();
+        model = model.getServerModel();
         view = new ServerView(primaryStage, model, textAreaHandler.getTextArea());
         controller = new ServerController(model, view);
 
