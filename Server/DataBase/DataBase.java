@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -22,13 +23,10 @@ public class DataBase {
 	private static final String DB_PASSWORD = "";
 
 	// only for test the DB and show the tables
-//	public static void main(String[] args) throws Exception {
-//		deleteDB();
+	public static void main(String[] args) throws Exception {
+		deleteDB();
 //		createDB();
-//		ArrayList<String> answer = selectPlayer();
-//		for (String s : answer){
-//			System.out.println(s);
-//		}
+	}
 		
 //		insertPlayer(1,"lukas","weber",1);
 //		isTheEntryThere(1);
@@ -57,7 +55,7 @@ public class DataBase {
 	 * Select Statements
 	 * @author L.Weber
 	 *********************************************************************************************/
-
+	
 	/**
 	 * becomes a whole statement for the Table 
 	 * 
@@ -448,10 +446,6 @@ public class DataBase {
 				+ "prename varchar(255), "
 				+ "surname varchar(255), "
 				+ "wins int)";
-		String CreateQueryFriends = "CREATE TABLE FRIENDS("
-				+ "id int primary key, "
-				+ "prename varchar(255), "
-				+ "surname varchar(255))";
 		String CreateQueryTower = "CREATE TABLE TOWER("
 				+ "id int primary key, "
 				+ "normalTower int, "
@@ -474,10 +468,10 @@ public class DataBase {
 				+ " ADD FOREIGN KEY (playerId) REFERENCES PLAYER (playerid)";
 		
 		String AlterFriendPlayer1 = "ALTER TABLE FRIENDSPOINTS"
-				+ " ADD FOREIGN KEY (friendId1) REFERENCES FRIENDS (id)";
+				+ " ADD FOREIGN KEY (friendId1) REFERENCES PLAYER (playerid)";
 		
 		String AlterFriendPlayer2 = "ALTER TABLE FRIENDSPOINTS"
-				+ " ADD FOREIGN KEY (friendId2) REFERENCES FRIENDS (id)";
+				+ " ADD FOREIGN KEY (friendId2) REFERENCES PLAYER (playerid)";
 
 		try {
 			connection.setAutoCommit(false);
@@ -485,9 +479,6 @@ public class DataBase {
 			createPreparedStatementPLAYER = connection.prepareStatement(CreateQueryPlayer);
 			createPreparedStatementPLAYER.executeUpdate();
 			createPreparedStatementPLAYER.close();
-			createPreparedStatementFRIENDS = connection.prepareStatement(CreateQueryFriends);
-			createPreparedStatementFRIENDS.executeUpdate();
-			createPreparedStatementFRIENDS.close();
 			createPreparedStatementTOWER = connection.prepareStatement(CreateQueryTower);
 			createPreparedStatementTOWER.executeUpdate();
 			createPreparedStatementTOWER.close();

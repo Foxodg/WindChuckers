@@ -6,6 +6,7 @@ import Client.ClientThreadForServer;
 import Message.Message;
 import Message.Message.MessageType;
 import Message.Message.Value;
+import WindChuckers_Main.Model_Extend.Player;
 import abstractClasses.Model;
 import commonClasses.ServiceLocator;
 
@@ -20,6 +21,7 @@ public class GameMenu_Model extends Model {
 	
 	protected static final int DIMENSION = 8;
 	protected static final int MAX_FIELDS = DIMENSION*DIMENSION;
+
 	protected static final String ORANGE = "#FF8C00";
 	protected static final String BLUE = "#4169E1";
 	protected static final String VIOLET = "#663399";
@@ -28,6 +30,9 @@ public class GameMenu_Model extends Model {
 	protected static final String RED = "#B22222";
 	protected static final String GREEN = "#008000";
 	protected static final String BROWN = "#8B4513";
+	
+	private Player player1 = new Player(1);
+	private Player player2 = new Player(2);
 
 	protected ServiceLocator serviceLocator;
 	private static GameMenu_Model gameModel;
@@ -136,6 +141,16 @@ public class GameMenu_Model extends Model {
 		Message message = new Message(MessageType.Error);
 		sendMessage(message);
 	}
+
 	
-	
+	// Getter and setter
+	public Player getPlayer1() {
+		return player1;
+	}
+
+	public Player getPlayer2() {
+		return player2;
+	}
+
+
 }
