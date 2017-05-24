@@ -58,8 +58,8 @@ public class ServerThreadForClient extends Thread {
 			board.makeMove(new Move(message.getXCoordinate1(), message.getYCoordinate1(), message.getXCoordinate2(), message.getYCoordinate2(),true));
 			sendMessageBackToClient(message);
 			//Safes the coordinates for the hidden-Board on the Server
-			Move move = kamisado.setPlayConfiguration(false, 5, 100, 100, 15, 25, 12, Double.POSITIVE_INFINITY);
-			Message messageAI = new Message(MessageType.Coordinate, move.getX1(),move.getY1(),move.getX2(),move.getY2(), Value.Player2);
+			Move move = kamisado.setPlayConfiguration(message.getSinglePlayer(), 5, 100, 100, 15, 25, 12, Double.POSITIVE_INFINITY);
+			Message messageAI = new Message(MessageType.Coordinate, message.getSinglePlayer(), move.getX1(),move.getY1(),move.getX2(),move.getY2(), Value.Player2);
 			sendMessageBackToClient(messageAI);
 		}
 		else if(message.getMessageType() == MessageType.Update){

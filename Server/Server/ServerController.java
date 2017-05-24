@@ -51,7 +51,7 @@ public class ServerController {
 		kamisado.getValueProperty().addListener((obervable, oldValue, newValue) -> {
 			logger.info("A new Move is arrived");
 			Move move = kamisado.getMove();
-			ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Coordinate,move.getX1(),move.getY1(),move.getX2(),move.getY2(), Value.Player2));
+			ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Coordinate,true,move.getX1(),move.getY1(),move.getX2(),move.getY2(), Value.Player2));
 		});
     }
 }

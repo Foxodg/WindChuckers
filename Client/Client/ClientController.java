@@ -45,12 +45,13 @@ public class ClientController {
         		model.messageContructorForChat(input);
         	}
         	else if(view.cbchoice.getSelectionModel().getSelectedItem() == MessageType.Coordinate){
+        		boolean singlePlayer = true;
         		int xCoordinate1 = 0;
         		int yCoordinate1 = 0;
         		int xCoordinate2 = 0;
         		int yCoordinate2 = 4;
         		Value value = Value.Player1;
-        		model.messageConstructorForCoordinate(xCoordinate1, yCoordinate1, xCoordinate2, yCoordinate2, value);
+        		model.messageConstructorForCoordinate(singlePlayer, xCoordinate1, yCoordinate1, xCoordinate2, yCoordinate2, value);
         	}
         	else if(view.cbchoice.getSelectionModel().getSelectedItem() == MessageType.Update){
         		boolean update = true;

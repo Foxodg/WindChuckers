@@ -68,6 +68,9 @@ public class Message {
 	
 	@Element(required = false)
 	private Value value;
+	
+	@Element(required = false)
+	private boolean singlePlayer;
 
 	// Generator for a unique message ID
 	private static long messageID = 0;
@@ -89,8 +92,9 @@ public class Message {
 	 * @param yCoordinate
 	 * @param value
 	 */
-	public Message (MessageType messageType, int xCoordinate1, int yCoordinate1, int xCoordinate2, int yCoordinate2, Value value) {
+	public Message (MessageType messageType, boolean singlePlayer, int xCoordinate1, int yCoordinate1, int xCoordinate2, int yCoordinate2, Value value) {
 		createStandardMessage(messageType);
+		this.singlePlayer = singlePlayer;
 		this.xCoordinate1 = xCoordinate1;
 		this.yCoordinate1 = yCoordinate1;
 		this.xCoordinate2 = xCoordinate2;
@@ -249,6 +253,10 @@ public class Message {
 	
 	public Value getValue(){
 		return this.value;
+	}
+	
+	public boolean getSinglePlayer(){
+		return this.singlePlayer;
 	}
 
 }

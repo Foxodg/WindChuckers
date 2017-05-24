@@ -110,8 +110,8 @@ public class GameMenu_Model extends Model {
 	 * @param yCoordinate2
 	 * @param value
 	 */
-	public void messageConstructorForCoordinate(int xCoordinate1, int yCoordinate1, int xCoordinate2, int yCoordinate2, Value value) {
-		Message message = new Message(MessageType.Coordinate, xCoordinate1, yCoordinate1, xCoordinate2, yCoordinate2, value);
+	public void messageConstructorForCoordinate(boolean singlePlayer, int xCoordinate1, int yCoordinate1, int xCoordinate2, int yCoordinate2, Value value) {
+		Message message = new Message(MessageType.Coordinate,singlePlayer, xCoordinate1, yCoordinate1, xCoordinate2, yCoordinate2, value);
 		sendMessage(message);
 	}
 
