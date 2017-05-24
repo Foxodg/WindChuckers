@@ -8,6 +8,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import AI.Board;
 import Message.Message;
 import Message.Message.MessageType;
 import Message.Message.Value;
@@ -46,10 +47,16 @@ public class ServerThreadForClient extends Thread {
 			sendMessageBackToClient(message);
 		}
 		else if(message.getMessageType() == MessageType.Coordinate){
-			logger.info("Server: " + "x-Coordinates: " + message.getXCoordinate() + " y-Coordinates: " + message.getYCoordinate() + " Value: " + message.getValue());
+			logger.info("Server: " + "x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: " + message.getYCoordinate1() +
+					" x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: " + message.getYCoordinate2() + " Value: " + message.getValue());
+			//send the Message Back to all Clients
+			sendMessageBackToClient(message);
 			//Safes the coordinates for the hidden-Board on the Server
-			Value[][] board = Board.getBoard();
-			board[message.getXCoordinate()][message.getYCoordinate()] = message.getValue();
+		}
+		else if(message.getMessageType() == MessageType.Update){
+			logger.info("Server: " + "Update: " + message.getUpdate() + " x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: " + message.getYCoordinate1() +
+					" x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: " + message.getYCoordinate2() + " Gems: " + message.getGems());
+			//send the Message Back to all Clients
 			sendMessageBackToClient(message);
 		}
 		else if(message.getMessageType() == MessageType.DBMessage){

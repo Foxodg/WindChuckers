@@ -102,25 +102,43 @@ public class GameMenu_Model extends Model {
 	}
 
 	/**
-	 * For the Coordinate-Message
+	 * For the gamePlay
 	 * @author L.Weber
-	 * @param xCoordinate
-	 * @param yCoordinate
-	 * @param Value
+	 * @param xCoordinate1
+	 * @param yCoordinate1
+	 * @param xCoordinate2
+	 * @param yCoordinate2
+	 * @param value
 	 */
-	public void messageConstructorForCoordinate(int xCoordinate, int yCoordinate, Value value) {
-		Message message = new Message(MessageType.Coordinate, xCoordinate, yCoordinate, value);
+	public void messageConstructorForCoordinate(int xCoordinate1, int yCoordinate1, int xCoordinate2, int yCoordinate2, Value value) {
+		Message message = new Message(MessageType.Coordinate, xCoordinate1, yCoordinate1, xCoordinate2, yCoordinate2, value);
 		sendMessage(message);
 	}
 
 	/**
 	 * For the Win-Message
-	 * 
+	 * @author L.Weber
 	 * @param win
 	 */
 	public void messageConstructorForWin(boolean win) {
 		Message message = new Message(MessageType.WinMessage, win);
 		sendMessage(message);
+	}
+	
+	/**
+	 * For the Update-Message
+	 * @author L.weber
+	 * @param update
+	 * @param xCoordinate1
+	 * @param yCoordinate1
+	 * @param xCoordinate2
+	 * @param yCoordinate2
+	 * @param gems
+	 */
+	public void messageConstructorForUpdate(boolean update, int xCoordinate1, int yCoordinate1, int xCoordinate2, int yCoordinate2, int gems){
+		Message message = new Message(MessageType.Update, update, xCoordinate1, yCoordinate1, xCoordinate2, yCoordinate2, gems);
+		sendMessage(message);
+		
 	}
 
 	/**

@@ -30,9 +30,10 @@ public class ClientView {
     protected Button btnSendOther = new Button("Send");
     protected ComboBox cbchoice = new ComboBox();
     
-    public ClientView(Stage stage, GameMenu_Model model) {
+    public ClientView(Stage stage, GameMenu_Model model, TextArea txtLog) {
         this.stage = stage;
         this.model = model;
+        txtMessages = txtLog;
         
         stage.setTitle("SimpleXML client");
         
@@ -50,7 +51,8 @@ public class ClientView {
         		Message.Message.MessageType.Coordinate, 
         		Message.Message.MessageType.DBMessage, 
         		Message.Message.MessageType.Error, 
-        		Message.Message.MessageType.WinMessage
+        		Message.Message.MessageType.WinMessage,
+        		Message.Message.MessageType.Update
         		);
         
         topBox.getChildren().addAll(lblIP, txtIP, spacer, lblPort, txtPort, spacer2, btnGo);

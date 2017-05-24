@@ -6,6 +6,7 @@ import Message.Message;
 import Message.Message.MessageType;
 import Message.Message.Value;
 import WindChuckers_Main.GameMenu_Model;
+import commonClasses.ServiceLocator;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,7 +14,8 @@ import javafx.stage.WindowEvent;
 
 public class ClientController {
 
-	private final Logger logger = Logger.getLogger("");
+	private ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
+	private final Logger logger = serviceLocator.getLogger();
 	final private GameMenu_Model model;
 	final private ClientView view;
 	final private ClientThreadForServer clientserver;
@@ -43,10 +45,21 @@ public class ClientController {
         		model.messageContructorForChat(input);
         	}
         	else if(view.cbchoice.getSelectionModel().getSelectedItem() == MessageType.Coordinate){
-        		int xCoordinate = 1;
-        		int yCoordinate = 2;
+        		int xCoordinate1 = 1;
+        		int yCoordinate1 = 2;
+        		int xCoordinate2 = 1;
+        		int yCoordinate2 = 5;
         		Value value = Value.Player1;
-        		model.messageConstructorForCoordinate(xCoordinate, yCoordinate, value);
+        		model.messageConstructorForCoordinate(xCoordinate1, yCoordinate1, xCoordinate2, yCoordinate2, value);
+        	}
+        	else if(view.cbchoice.getSelectionModel().getSelectedItem() == MessageType.Update){
+        		boolean update = true;
+        		int xCoordinate1 = 1;
+        		int yCoordinate1 = 2;
+        		int xCoordinate2 = 1;
+        		int yCoordinate2 = 5;
+        		int gems = 1;
+        		model.messageConstructorForUpdate(update, xCoordinate1, yCoordinate1, xCoordinate2, yCoordinate2, gems);
         	}
         	else if(view.cbchoice.getSelectionModel().getSelectedItem() == MessageType.DBMessage){
         		int dbMessage = 1;

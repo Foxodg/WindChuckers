@@ -6,12 +6,14 @@ import java.util.logging.Logger;
 import Message.Message;
 import Message.Message.MessageType;
 import Message.Message.Value;
+import commonClasses.ServiceLocator;
 import javafx.beans.property.SimpleStringProperty;
 
 public class ClientThreadForServer extends Thread {
 	private static ClientThreadForServer clientServer;
 	
-	private final Logger logger = Logger.getLogger("");
+	private ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
+	private final Logger logger = serviceLocator.getLogger();
 	private Socket serverSocket;
 	private ClientController controller;
 	
@@ -71,9 +73,14 @@ public class ClientThreadForServer extends Thread {
 		}
 		else if (message.getMessageType() == MessageType.Coordinate){
 			//Safes the coordinate from the server in the double Array
-			logger.info("Client: " + "x-Coordinates: " + message.getXCoordinate() + " y-Coordinates: " + message.getYCoordinate() + " Value: " + message.getValue());
+			logger.info("Client: " + "x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: " + message.getYCoordinate1() +
+					" x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: " + message.getYCoordinate2() + " Value: " + message.getValue());
 			Value[][] board = Board.getBoard();
-			board[message.getXCoordinate()][message.getYCoordinate()] = message.getValue(); 
+			board[message.getXCoordinate2()][message.getYCoordinate2()] = message.getValue(); 
+		}
+		else if (message.getMessageType() == MessageType.Update){
+			logger.info("Client: " + "Update: " + message.getUpdate() + " x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: " + message.getYCoordinate1() +
+					" x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: " + message.getYCoordinate2() + " Gems: " + message.getGems());
 		}
 	}
 	

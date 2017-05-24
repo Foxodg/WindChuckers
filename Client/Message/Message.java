@@ -22,7 +22,7 @@ import org.simpleframework.xml.core.Persister;
 @Root
 public class Message {
 	public enum MessageType {
-		Coordinate, WinMessage, ChatMessage, DBMessage, Error
+		Coordinate, WinMessage, ChatMessage, DBMessage, Error, Update
 	};
 	
 	public enum Value {
@@ -40,13 +40,25 @@ public class Message {
 	private MessageType type;
 
 	@Element(required = false)
-	private Integer xCoordinate;
+	private Integer xCoordinate1;
 	
 	@Element(required = false)
-	private Integer yCoordinate;
+	private Integer yCoordinate1;
+	
+	@Element(required = false)
+	private Integer xCoordinate2;
+	
+	@Element(required = false)
+	private Integer yCoordinate2;
 	
 	@Element(required = false)
 	private Boolean win;
+	
+	@Element(required = false)
+	private Boolean update;
+	
+	@Element(required = false)
+	private int gems;
 	
 	@Element(required = false)
 	private String chat;
@@ -77,10 +89,12 @@ public class Message {
 	 * @param yCoordinate
 	 * @param value
 	 */
-	public Message (MessageType messageType, int xCoordinate, int yCoordinate, Value value) {
+	public Message (MessageType messageType, int xCoordinate1, int yCoordinate1, int xCoordinate2, int yCoordinate2, Value value) {
 		createStandardMessage(messageType);
-		this.xCoordinate = xCoordinate;
-		this.yCoordinate = yCoordinate;
+		this.xCoordinate1 = xCoordinate1;
+		this.yCoordinate1 = yCoordinate1;
+		this.xCoordinate2 = xCoordinate2;
+		this.yCoordinate2 = yCoordinate2;
 		this.value = value;
 	}
 	
@@ -92,6 +106,17 @@ public class Message {
 	public Message(MessageType messageType, boolean win){
 		createStandardMessage(messageType);
 		this.win = win;
+	}
+	
+	
+	public Message(MessageType messageType, boolean update, int xCoordinate1, int yCoordinate1, int xCoordinate2, int yCoordinate2, int gems ){
+		createStandardMessage(messageType);
+		this.update = update;
+		this.xCoordinate1 = xCoordinate1;
+		this.yCoordinate1 = yCoordinate1;
+		this.xCoordinate2 = xCoordinate2;
+		this.yCoordinate2 = yCoordinate2;
+		this.gems = gems;
 	}
 	
 	/**
@@ -190,12 +215,36 @@ public class Message {
 		return this.chat;
 	}
 	
-	public int getXCoordinate(){
-		return this.xCoordinate;
+	public int getXCoordinate1(){
+		return this.xCoordinate1;
 	}
 	
-	public int getYCoordinate(){
-		return this.yCoordinate;
+	public int getYCoordinate1(){
+		return this.yCoordinate1;
+	}
+	
+	public int getXCoordinate2(){
+		return this.xCoordinate2;
+	}
+	
+	public int getYCoordinate2(){
+		return this.yCoordinate2;
+	}
+	
+	public int getGems(){
+		return this.gems;
+	}
+	
+	public boolean getWin(){
+		return this.win;
+	}
+	
+	public boolean getUpdate(){
+		return this.update;
+	}
+	
+	public int getDB(){
+		return this.DB;
 	}
 	
 	public Value getValue(){

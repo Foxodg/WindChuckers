@@ -23,10 +23,10 @@ public class DataBase {
 	private static final String DB_PASSWORD = "";
 
 	// only for test the DB and show the tables
-	public static void main(String[] args) throws Exception {
-		deleteDB();
+//	public static void main(String[] args) throws Exception {
+//		deleteDB();
 //		createDB();
-	}
+//	}
 		
 //		insertPlayer(1,"lukas","weber",1);
 //		isTheEntryThere(1);

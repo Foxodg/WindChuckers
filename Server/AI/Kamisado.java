@@ -20,20 +20,28 @@ public class Kamisado {
 
 		Tile[][] temp = new Tile[8][8];
 
-		AlphaBetaPlayer player1 = new AlphaBetaPlayer(PlayerType.ONE, 5);
-		AlphaBetaPlayer player2 = new AlphaBetaPlayer(PlayerType.TWO, 5);
+		AlphaBetaPlayer player1 = new AlphaBetaPlayer(PlayerType.ONE, 5, 100, 100, 15, 30, 15, Double.POSITIVE_INFINITY);
+		AlphaBetaPlayer player2 = new AlphaBetaPlayer(PlayerType.TWO, 5, 100, 100, 15, 30, 15, Double.POSITIVE_INFINITY);
 
 		play(player1, player2, board);
 	}
 
-	public static void play(Player player1, Player player2, Board board) {
-
+	public static void play(AlphaBetaPlayer player1, AlphaBetaPlayer player2, Board board) {
+		long start;
+		long end;
+		
 		while(true){
 			board.firstMove(PlayerType.ONE);
 			while(board.isWinSituation() == false){
+				start = System.currentTimeMillis();
 				board.makeMove(player1.getNextMove(board, PlayerType.TWO));
+				end = System.currentTimeMillis();
+				System.out.println( "time: " + (end - start) );
 				if (board.isWinSituation() == false){
+					start = System.currentTimeMillis();
 					board.makeMove(player2.getNextMove(board, PlayerType.ONE));
+					end = System.currentTimeMillis();
+					System.out.println( "time: " + (end - start) );
 				} 
 			}
 			board.newRound(PlayerType.ONE,NewRound.Left);

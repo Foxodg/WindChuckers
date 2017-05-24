@@ -320,4 +320,133 @@ public class Tower {
 		}
 		return gems;
 	}
+	
+	/**
+	 * All Possible Moves that a Tower can do without a block
+	 * 
+	 * @author L.Weber
+	 * @param board
+	 * @param x
+	 * @param y
+	 * @return ArrayList<Move>
+	 */
+	public ArrayList<Move> getMovesIgnore(Board board, int x, int y) {
+		ArrayList<Move> moves = new ArrayList<Move>();
+
+		int possibleMoves = getGems(board.getTile(x, y).getTower());
+
+		if (playerType == PlayerType.ONE) {
+			// up
+			for (int i = 1; i <= possibleMoves; i++) {
+				if (valid(x, y + i)) {
+					if (possibleMoves == 8) {
+						if (!board.getTile(x, y + i).isOccupied()) {
+							moves.add(new Move(x, y, x, y + i));
+						} else {
+							if (board.getTile(x, y + i).getTower().getPlayerType() != PlayerType.ONE) {
+								moves.add(new Move(x, y, x, y + i));
+							}
+						}
+					} else {
+						// then it must be an Sumo-Tower and it can push put
+						// not if the field behind is not valid
+						int tempy = y + (i + 1);
+						if (!board.getTile(x, y + i).isOccupied()) {
+							moves.add(new Move(x, y, x, y + i));
+						} else {
+							if (board.getTile(x, y + i).getTower().getPlayerType() != PlayerType.ONE
+									&& valid(x, tempy)) {
+								moves.add(new Move(x, y, x, y + i));
+							}
+						}
+					}
+				}
+			}
+		}
+		// NE
+		for (int i = 1; i <= possibleMoves; i++) {
+			if (valid(x + i, y + i)) {
+				if (!board.getTile(x + i, y + i).isOccupied()) {
+					moves.add(new Move(x, y, x + i, y + i));
+				} else {
+					if (board.getTile(x + i, y + i).getTower().getPlayerType() != PlayerType.ONE) {
+						moves.add(new Move(x, y, x + i, y + i));
+					}
+				}
+			}
+		}
+
+		// NW
+		for (int i = 1; i <= possibleMoves; i++) {
+			if (valid(x - i, y + i)) {
+				if (!board.getTile(x - i, y + i).isOccupied()) {
+					moves.add(new Move(x, y, x - i, y + i));
+				} else {
+					if (board.getTile(x - i, y + i).getTower().getPlayerType() != PlayerType.ONE) {
+						moves.add(new Move(x, y, x - i, y + i));
+					}
+				}
+			}
+		}
+
+		if (playerType == PlayerType.TWO) {
+			// down
+			for (int i = 1; i <= possibleMoves; i++) {
+				if (valid(x, y - i)) {
+					if (possibleMoves == 8) {
+						if (!board.getTile(x, y - i).isOccupied()) {
+							moves.add(new Move(x, y, x, y - i));
+						} else {
+							if (board.getTile(x, y - i).getTower().getPlayerType() != PlayerType.TWO) {
+								moves.add(new Move(x, y, x, y - i));
+							}
+						}
+					} else {
+						// then it must be an Sumo-Tower and it can push put
+						// not if the field behind is not valid
+						int tempy = y - (i - 1);
+						if (!board.getTile(x, y - i).isOccupied()) {
+							moves.add(new Move(x, y, x, y - i));
+
+						} else {
+							if (board.getTile(x, y - i).getTower().getPlayerType() != PlayerType.TWO
+									&& valid(x, tempy)) {
+								moves.add(new Move(x, y, x, y - i));
+							}
+						}
+					}
+
+				}
+			}
+
+			// SE
+			for (int i = 1; i <= possibleMoves; i++) {
+				if (valid(x + i, y - i)) {
+					if (!board.getTile(x + i, y - i).isOccupied()) {
+						moves.add(new Move(x, y, x + i, y - i));
+					} else {
+						if (board.getTile(x + i, y - i).getTower().getPlayerType() != PlayerType.TWO) {
+							moves.add(new Move(x, y, x + i, y - i));
+							break;
+						}
+					}
+				}
+			}
+
+			// SW
+			for (int i = 1; i <= possibleMoves; i++) {
+				if (valid(x - i, y - i)) {
+					if (!board.getTile(x - i, y - i).isOccupied()) {
+						moves.add(new Move(x, y, x - i, y - i));
+					} else {
+						if (board.getTile(x - i, y - i).getTower().getPlayerType() != PlayerType.TWO) {
+							moves.add(new Move(x, y, x - i, y - i));
+						}
+					}
+
+				}
+			}
+		}
+		return moves;
+	}
 }

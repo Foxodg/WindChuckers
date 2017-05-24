@@ -1,6 +1,11 @@
 package WindChuckers_Main;
 
 
+import java.util.logging.Filter;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+
 import Client.ClientController;
 import Client.ClientThreadForServer;
 import Client.ClientView;
@@ -13,6 +18,7 @@ import Login.LoginController;
 import Login.LoginView;
 import MainMenu.MainMenuController;
 import MainMenu.MainMenuView;
+import Server.TextAreaHandler;
 import WindChuckers_Main.Model_Extend.Board;
 import WindChuckers_Main.Model_Extend.Movement;
 import WindChuckers_Main.Model_Extend.Player;
@@ -177,14 +183,19 @@ public class WindChuckers extends Application {
      * @author L.Weber
      */
     public void startClient() {
+    	serviceLocator = ServiceLocator.getServiceLocator();
+    	
+        TextAreaHandler textAreaHandler = new TextAreaHandler();
+        textAreaHandler.setLevel(Level.INFO);
+        Logger defaultLogger = serviceLocator.getLogger();
+        defaultLogger.addHandler(textAreaHandler);
+    	
     	Stage clientStage = new Stage();
     	model = GameMenu_Model.getGameModel();
     	clientserver = ClientThreadForServer.getClientServer();
-    	clientView = new ClientView(clientStage, model);
+    	clientView = new ClientView(clientStage, model, textAreaHandler.getTextArea());
     	new ClientController(model, clientView, clientserver);
-    	
-    	serviceLocator = ServiceLocator.getServiceLocator();
-    	
+    	   	
     	clientView.start();
     }
     
