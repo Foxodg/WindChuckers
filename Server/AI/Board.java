@@ -9,12 +9,20 @@ public class Board {
 	private Move lastMove = null;
 	Random rand = new Random();
 	private MiniMaxAlphaBeta minimax;
+	private static Board boardSingleton;
 
 	// these are here, for optimising the code, don't build every time new -
 	// it's always the same top or bottom Line
 	ArrayList<Move> topBottomLine = topBottomList();
 	ArrayList<Move> bottomLine = splitTopBottomList(topBottomLine, false);
 	ArrayList<Move> topLine = splitTopBottomList(topBottomLine, true);
+	
+	public static Board getBoard() {
+		if(boardSingleton == null){
+			boardSingleton = new Board();
+		}
+		return boardSingleton;
+	}
 
 	public Board(Tile[][] board) {
 		this.board = board;
@@ -197,15 +205,16 @@ public class Board {
 	 * 
 	 * @author L.Weber
 	 * @param playerType
+	 * @return 
 	 */
-	public void firstMove(PlayerType playerType) {
+	public Move firstMove(PlayerType playerType) {
 
 		ArrayList<Move> thisPlayerMoves = new ArrayList<Move>();
 
 		thisPlayerMoves = getAllMoves(playerType);
 		int randomPick = rand.nextInt(thisPlayerMoves.size());
 		Move move = new Move(thisPlayerMoves.get(randomPick), true);
-		makeMove(move);
+		return makeMove(move);
 	}
 
 	/**
@@ -380,9 +389,11 @@ public class Board {
 
 		for (int y = 0; y < 8; y++) {
 			for (int x = 0; x < 8; x++) {
-				if (board[x][y].isOccupied() && board[x][y].getTower().getPlayerType() == playerType
-						&& board[x][y].getTower().getColor() == board[move.getX2()][move.getY2()].getColor()) {
-					moves.addAll(board[x][y].getTower().getMovesIgnore(this, x, y));
+				if (board[x][y].isOccupied()) {
+					if (board[x][y].getTower().getPlayerType() == playerType
+							&& board[x][y].getTower().getColor() == board[move.getX2()][move.getY2()].getColor()) {
+						moves.addAll(board[x][y].getTower().getMovesIgnore(this, x, y));
+					}
 				}
 			}
 		}
@@ -450,7 +461,7 @@ public class Board {
 		}
 		return weight;
 	}
-	
+
 	/**
 	 * Heuristic-Method For the question is it a Winning-Move
 	 * 
@@ -494,23 +505,25 @@ public class Board {
 				// is the Goal for the nextPossibleMoves free
 				if (!board[nextPossibleMoves.get(i).getX2()][nextPossibleMoves.get(i).getY2()].isOccupied()) {
 					// is this move between the next Possible Moves
-					if (board[nextPossibleMoves.get(i).getX2()][nextPossibleMoves.get(i)
-							.getY2()] == board[possibleMovesForThisTower.get(i).getX2()][possibleMovesForThisTower
-									.get(i).getY2()]) {
-						// is also in the right line
-						if (board[nextPossibleMoves.get(i).getX1()][nextPossibleMoves.get(i).getY1()].getTower()
-								.getPlayerType() == PlayerType.ONE
-								// Player.ONE protect the bottomLine
-								&& bottomLine.get(i).getX1() == nextPossibleMoves.get(i).getX2()
-								&& bottomLine.get(i).getY1() - 1 == nextPossibleMoves.get(i).getY2()) {
-							return weightBlock;
-						}
-						if (board[nextPossibleMoves.get(i).getX1()][nextPossibleMoves.get(i).getY1()].getTower()
-								.getPlayerType() == PlayerType.TWO
-								// Player.TWO protect the topLine
-								&& topLine.get(i).getX1() == nextPossibleMoves.get(i).getX2()
-								&& topLine.get(i).getY1() - 1 == nextPossibleMoves.get(i).getY2()) {
-							return weightBlock;
+					for (int j = 0; j < possibleMovesForThisTower.size(); j++) {
+						if (board[nextPossibleMoves.get(i).getX2()][nextPossibleMoves.get(i)
+								.getY2()] == board[possibleMovesForThisTower.get(i).getX2()][possibleMovesForThisTower
+										.get(i).getY2()]) {
+							// is also in the right line
+							if (board[nextPossibleMoves.get(i).getX1()][nextPossibleMoves.get(i).getY1()].getTower()
+									.getPlayerType() == PlayerType.ONE
+									// Player.ONE protect the bottomLine
+									&& bottomLine.get(i).getX1() == nextPossibleMoves.get(i).getX2()
+									&& bottomLine.get(i).getY1() - 1 == nextPossibleMoves.get(i).getY2()) {
+								return weightBlock;
+							}
+							if (board[nextPossibleMoves.get(i).getX1()][nextPossibleMoves.get(i).getY1()].getTower()
+									.getPlayerType() == PlayerType.TWO
+									// Player.TWO protect the topLine
+									&& topLine.get(i).getX1() == nextPossibleMoves.get(i).getX2()
+									&& topLine.get(i).getY1() - 1 == nextPossibleMoves.get(i).getY2()) {
+								return weightBlock;
+							}
 						}
 					}
 				}
@@ -806,7 +819,7 @@ public class Board {
 		}
 		return playerType;
 	}
-	
+
 	/**
 	 * Help-Method is it a Block-Move
 	 * 
@@ -830,23 +843,25 @@ public class Board {
 				// is the Goal for the nextPossibleMoves free
 				if (!board[nextPossibleMoves.get(i).getX2()][nextPossibleMoves.get(i).getY2()].isOccupied()) {
 					// is this move between the next Possible Moves
-					if (board[nextPossibleMoves.get(i).getX2()][nextPossibleMoves.get(i)
-							.getY2()] == board[possibleMovesForThisTower.get(i).getX2()][possibleMovesForThisTower
-									.get(i).getY2()]) {
-						// is also in the right line
-						if (board[nextPossibleMoves.get(i).getX1()][nextPossibleMoves.get(i).getY1()].getTower()
-								.getPlayerType() == PlayerType.ONE
-								// Player.ONE protect the bottomLine
-								&& bottomLine.get(i).getX1() == nextPossibleMoves.get(i).getX2()
-								&& bottomLine.get(i).getY1() - 1 == nextPossibleMoves.get(i).getY2()) {
-							return true;
-						}
-						if (board[nextPossibleMoves.get(i).getX1()][nextPossibleMoves.get(i).getY1()].getTower()
-								.getPlayerType() == PlayerType.TWO
-								// Player.TWO protect the topLine
-								&& topLine.get(i).getX1() == nextPossibleMoves.get(i).getX2()
-								&& topLine.get(i).getY1() - 1 == nextPossibleMoves.get(i).getY2()) {
-							return true;
+					for (int j = 0; j < possibleMovesForThisTower.size(); j++) {
+						if (board[nextPossibleMoves.get(i).getX2()][nextPossibleMoves.get(i)
+								.getY2()] == board[possibleMovesForThisTower.get(i).getX2()][possibleMovesForThisTower
+										.get(i).getY2()]) {
+							// is also in the right line
+							if (board[nextPossibleMoves.get(i).getX1()][nextPossibleMoves.get(i).getY1()].getTower()
+									.getPlayerType() == PlayerType.ONE
+									// Player.ONE protect the bottomLine
+									&& bottomLine.get(i).getX1() == nextPossibleMoves.get(i).getX2()
+									&& bottomLine.get(i).getY1() - 1 == nextPossibleMoves.get(i).getY2()) {
+								return true;
+							}
+							if (board[nextPossibleMoves.get(i).getX1()][nextPossibleMoves.get(i).getY1()].getTower()
+									.getPlayerType() == PlayerType.TWO
+									// Player.TWO protect the topLine
+									&& topLine.get(i).getX1() == nextPossibleMoves.get(i).getX2()
+									&& topLine.get(i).getY1() - 1 == nextPossibleMoves.get(i).getY2()) {
+								return true;
+							}
 						}
 					}
 				}
@@ -949,5 +964,9 @@ public class Board {
 
 	public Tile getTile(int x, int y) {
 		return board[x][y];
+	}
+	
+	public Move getLastMove(){
+		return this.lastMove;
 	}
 }

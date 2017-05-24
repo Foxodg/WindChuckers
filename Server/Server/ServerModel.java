@@ -4,9 +4,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Logger;
-
 import Message.Message.Value;
-import WindChuckers_Main.GameMenu_Model;
+
 import javafx.concurrent.Task;
 
 public class ServerModel {

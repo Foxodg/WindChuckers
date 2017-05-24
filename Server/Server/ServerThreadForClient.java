@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import AI.Board;
+import AI.Kamisado;
+import AI.Move;
 import Message.Message;
 import Message.Message.MessageType;
 import Message.Message.Value;
@@ -16,9 +18,12 @@ import Message.Message.Value;
 public class ServerThreadForClient extends Thread {
 	private final Logger logger = Logger.getLogger("");
 	private Socket clientSocket;
+	private Kamisado kamisado;
+	private Board board = Board.getBoard();
 
 	public ServerThreadForClient(Socket clientSocket) {
 		this.clientSocket = clientSocket;
+		this.kamisado = Kamisado.getKamisado();
 	}
 
 	/**
@@ -50,8 +55,12 @@ public class ServerThreadForClient extends Thread {
 			logger.info("Server: " + "x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: " + message.getYCoordinate1() +
 					" x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: " + message.getYCoordinate2() + " Value: " + message.getValue());
 			//send the Message Back to all Clients
+			board.makeMove(new Move(message.getXCoordinate1(), message.getYCoordinate1(), message.getXCoordinate2(), message.getYCoordinate2(),true));
 			sendMessageBackToClient(message);
 			//Safes the coordinates for the hidden-Board on the Server
+			Move move = kamisado.setPlayConfiguration(false, 5, 100, 100, 15, 25, 12, Double.POSITIVE_INFINITY);
+			Message messageAI = new Message(MessageType.Coordinate, move.getX1(),move.getY1(),move.getX2(),move.getY2(), Value.Player2);
+			sendMessageBackToClient(messageAI);
 		}
 		else if(message.getMessageType() == MessageType.Update){
 			logger.info("Server: " + "Update: " + message.getUpdate() + " x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: " + message.getYCoordinate1() +
@@ -73,7 +82,7 @@ public class ServerThreadForClient extends Thread {
 		}
 	}
 	
-	public void sendMessageBackToClient(Message message){
+	public static void sendMessageBackToClient(Message message){
 		try {
 			ServerModel model = ServerModel.getServerModel();
 			ArrayList<Socket> sockets = model.getSockets();

@@ -45,10 +45,10 @@ public class ClientController {
         		model.messageContructorForChat(input);
         	}
         	else if(view.cbchoice.getSelectionModel().getSelectedItem() == MessageType.Coordinate){
-        		int xCoordinate1 = 1;
-        		int yCoordinate1 = 2;
-        		int xCoordinate2 = 1;
-        		int yCoordinate2 = 5;
+        		int xCoordinate1 = 0;
+        		int yCoordinate1 = 0;
+        		int xCoordinate2 = 0;
+        		int yCoordinate2 = 4;
         		Value value = Value.Player1;
         		model.messageConstructorForCoordinate(xCoordinate1, yCoordinate1, xCoordinate2, yCoordinate2, value);
         	}
