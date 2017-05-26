@@ -6,6 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import AI.AI_Controller;
+import AI.AI_View;
 import Client.ClientController;
 import Client.ClientThreadForServer;
 import Client.ClientView;
@@ -25,7 +27,6 @@ import WindChuckers_Main.Model_Extend.Player;
 import WindChuckers_Main.Model_Extend.Position;
 import WindChuckers_Main.Model_Extend.normalTower;
 import WindChuckers_Main.Model_Extend.sumoTower;
-import WindChuckers_Main.AI.AI;
 import commonClasses.ServiceLocator;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -53,6 +54,7 @@ public class WindChuckers extends Application {
     private FriendsView friendsView;
     private AddFriendsView addFriendsView;
     private MainMenuView mainMenuView;
+
     
     //Game
     private GameMenu_View view;
@@ -63,6 +65,10 @@ public class WindChuckers extends Application {
     private ClientView clientView;
     private ClientThreadForServer clientserver;
     
+    //AI
+    private AI_View aiView;
+    private AI_Controller aiController;
+    
     //Model extended
     private Board board;
     private Movement movement;
@@ -71,8 +77,6 @@ public class WindChuckers extends Application {
     private Position position;
     private Player player;
     
-    //AI
-    private AI ai;
     
     //Friends
     private FriendsController friendscontroller;
@@ -164,8 +168,8 @@ public class WindChuckers extends Application {
         // can only be initialized now, because they may depend on the
         // resources initialized by the splash screen
         model = GameMenu_Model.getGameModel();
-        view = new GameMenu_View(appStage, model,board,movement,position,normalTower,sumoTower,ai,player);
-        controller = new GameMenu_Controller(model, view,board,movement,position,normalTower,sumoTower,ai,player);
+        view = new GameMenu_View(appStage, model,board,movement,position,normalTower,sumoTower, player);
+        controller = new GameMenu_Controller(model, view,board,movement,position,normalTower,sumoTower, player);
         
         // Resources are now initialized
         serviceLocator = ServiceLocator.getServiceLocator();
@@ -197,6 +201,21 @@ public class WindChuckers extends Application {
     	new ClientController(model, clientView, clientserver);
     	   	
     	clientView.start();
+    }
+    
+    /**
+     * Start the View and Controller for the AI Controller
+     * @author L.Weber
+     */
+    public void startAI() {
+    	serviceLocator = ServiceLocator.getServiceLocator();
+    	
+    	Stage aiStage = new Stage();
+    	model = GameMenu_Model.getGameModel();
+    	aiView = new AI_View(aiStage, model);
+    	aiController = new AI_Controller(model, aiView);
+    	
+    	aiView.start();
     }
     
     /**

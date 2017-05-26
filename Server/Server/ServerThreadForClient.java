@@ -20,6 +20,9 @@ public class ServerThreadForClient extends Thread {
 	private Socket clientSocket;
 	private Kamisado kamisado;
 	private Board board = Board.getBoard();
+	
+	private boolean wantAI = false;
+	private boolean wantDoubleAI = false;
 
 	public ServerThreadForClient(Socket clientSocket) {
 		this.clientSocket = clientSocket;
@@ -58,9 +61,12 @@ public class ServerThreadForClient extends Thread {
 			board.makeMove(new Move(message.getXCoordinate1(), message.getYCoordinate1(), message.getXCoordinate2(), message.getYCoordinate2(),true));
 			sendMessageBackToClient(message);
 			//Safes the coordinates for the hidden-Board on the Server
-			Move move = kamisado.setPlayConfiguration(message.getSinglePlayer(), 5, 100, 100, 15, 25, 12, Double.POSITIVE_INFINITY);
-			Message messageAI = new Message(MessageType.Coordinate, message.getSinglePlayer(), move.getX1(),move.getY1(),move.getX2(),move.getY2(), Value.Player2);
-			sendMessageBackToClient(messageAI);
+			if(this.wantAI){
+				Move move = kamisado.setPlayConfiguration(true, 5);
+				Message messageAI = new Message(MessageType.Coordinate, message.getSinglePlayer(), move.getX1(),move.getY1(),move.getX2(),move.getY2(), Value.Player2);
+				sendMessageBackToClient(messageAI);
+			}
+
 		}
 		else if(message.getMessageType() == MessageType.Update){
 			logger.info("Server: " + "Update: " + message.getUpdate() + " x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: " + message.getYCoordinate1() +
@@ -75,6 +81,42 @@ public class ServerThreadForClient extends Thread {
 		else if(message.getMessageType() == MessageType.WinMessage){
 			logger.info("Server: " + "Win-Message: " );
 			//Win-Message
+		}
+		else if(message.getMessageType() == MessageType.AISingle){
+			logger.info("Server: "+"Paramter-Injection SinglePlayer:\n"+message.getProgressTWO()+"\n"+message.getMovesTWO()+"\n"+message.getBlockTWO()+"\n"+message.getSumoBlockTWO()+"\n"+message.getSumoWinTWO()+"\n"+message.getWinTWO());
+			kamisado.setProgressTwo(message.getProgressTWO());
+			kamisado.setMovesTwo(message.getMovesTWO());
+			kamisado.setBlockTwo(message.getBlockTWO());
+			kamisado.setSumoBlockTwo(message.getSumoBlockTWO());
+			kamisado.setSumoWinTwo(message.getSumoWinTWO());
+			kamisado.setWinTwo(message.getWinTWO());
+			this.wantAI = true;
+		}
+		else if(message.getMessageType() == MessageType.AIDouble){
+			logger.info("Server: "+"Paramter-Injection DoublePlayer:\n"
+					+"\nONE: "+message.getProgressONE()+"\n"+message.getMovesONE()+"\n"+message.getBlockONE()+"\n"+message.getSumoBlockONE()+"\n"+message.getSumoWinONE()+"\n"+message.getWinONE()
+					+"\nTWO: "+message.getProgressTWO()+"\n"+message.getMovesTWO()+"\n"+message.getBlockTWO()+"\n"+message.getSumoBlockTWO()+"\n"+message.getSumoWinTWO()+"\n"+message.getWinTWO());
+
+			
+			kamisado.setProgressOne(message.getProgressONE());
+			kamisado.setMovesOne(message.getMovesONE());
+			kamisado.setBlockOne(message.getBlockONE());
+			kamisado.setSumoBlockOne(message.getSumoBlockONE());
+			kamisado.setSumoWinOne(message.getSumoWinONE());
+			kamisado.setWinOne(message.getWinONE());
+			
+			kamisado.setProgressTwo(message.getProgressTWO());
+			kamisado.setMovesTwo(message.getMovesTWO());
+			kamisado.setBlockTwo(message.getBlockTWO());
+			kamisado.setSumoBlockTwo(message.getSumoBlockTWO());
+			kamisado.setSumoWinTwo(message.getSumoWinTWO());
+			kamisado.setWinTwo(message.getWinTWO());
+			this.wantAI = true;
+			this.wantDoubleAI = true;
+			
+			if(this.wantAI && this.wantDoubleAI){
+				Move move = kamisado.setPlayConfiguration(false, 5);
+			}
 		}
 		else {
 			logger.info("Server" + "Error-Message: ");

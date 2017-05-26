@@ -22,7 +22,7 @@ import org.simpleframework.xml.core.Persister;
 @Root
 public class Message {
 	public enum MessageType {
-		Coordinate, WinMessage, ChatMessage, DBMessage, Error, Update
+		Coordinate, WinMessage, ChatMessage, DBMessage, Error, Update, AISingle, AIDouble
 	};
 	
 	public enum Value {
@@ -72,6 +72,43 @@ public class Message {
 	@Element(required = false)
 	private boolean singlePlayer;
 
+	@Element(required = false)
+	private double weightProgressOne;
+
+	@Element(required = false)
+	private double weightMovesOne;
+
+	@Element(required = false)
+	private double weightBlockOne;
+
+	@Element(required = false)
+	private double weightSumoBlockOne;
+
+	@Element(required = false)
+	private double weightSumoWinOne;
+
+	@Element(required = false)
+	private double weightWinOne;
+	
+	@Element(required = false)
+	private double weightProgressTwo;
+
+	@Element(required = false)
+	private double weightMovesTwo;
+
+	@Element(required = false)
+	private double weightBlockTwo;
+
+	@Element(required = false)
+	private double weightSumoBlockTwo;
+
+	@Element(required = false)
+	private double weightSumoWinTwo;
+
+	@Element(required = false)
+	private double weightWinTwo;
+	
+
 	// Generator for a unique message ID
 	private static long messageID = 0;
 
@@ -112,7 +149,16 @@ public class Message {
 		this.win = win;
 	}
 	
-	
+	/**
+	 * For Update
+	 * @param messageType
+	 * @param update
+	 * @param xCoordinate1
+	 * @param yCoordinate1
+	 * @param xCoordinate2
+	 * @param yCoordinate2
+	 * @param gems
+	 */
 	public Message(MessageType messageType, boolean update, int xCoordinate1, int yCoordinate1, int xCoordinate2, int yCoordinate2, int gems ){
 		createStandardMessage(messageType);
 		this.update = update;
@@ -121,6 +167,56 @@ public class Message {
 		this.xCoordinate2 = xCoordinate2;
 		this.yCoordinate2 = yCoordinate2;
 		this.gems = gems;
+	}
+	
+	/**
+	 * For AI Single
+	 * @param messageType
+	 * @param singlePlayer
+	 * @param weightProgress
+	 * @param weightMoves
+	 * @param weightBlock
+	 * @param weightSumoBlock
+	 * @param weightSumoWin
+	 * @param weightWin
+	 */
+	public Message(MessageType messageType, double weightProgress, double weightMoves, double weightBlock, double weightSumoBlock, double weightSumoWin, double weightWin){
+		createStandardMessage(messageType);
+		this.weightProgressTwo = weightProgress;
+		this.weightMovesTwo = weightMoves;
+		this.weightBlockTwo = weightBlock;
+		this.weightSumoBlockTwo = weightSumoBlock;
+		this.weightSumoWinTwo = weightSumoWin;
+		this.weightWinTwo = weightWin;
+	}
+	
+	/**
+	 * For AI Double
+	 * @param messageType
+	 * @param singlePlayer
+	 * @param weightProgress
+	 * @param weightMoves
+	 * @param weightBlock
+	 * @param weightSumoBlock
+	 * @param weightSumoWin
+	 * @param weightWin
+	 */
+	public Message(MessageType messageType, double weightProgressL, double weightMovesL, double weightBlockL, double weightSumoBlockL, double weightSumoWinL, double weightWinL, 
+			double weightProgressR, double weightMovesR, double weightBlockR, double weightSumoBlockR, double weightSumoWinR, double weightWinR){
+		createStandardMessage(messageType);
+		this.weightProgressOne = weightProgressL;
+		this.weightMovesOne = weightMovesL;
+		this.weightBlockOne = weightBlockL;
+		this.weightSumoBlockOne = weightSumoBlockL;
+		this.weightSumoWinOne = weightSumoWinL;
+		this.weightWinOne = weightWinL;
+		
+		this.weightProgressTwo = weightProgressR;
+		this.weightMovesTwo = weightMovesR;
+		this.weightBlockTwo = weightBlockR;
+		this.weightSumoBlockTwo = weightSumoBlockR;
+		this.weightSumoWinTwo = weightSumoWinR;
+		this.weightWinTwo = weightWinR;
 	}
 	
 	/**
@@ -257,6 +353,54 @@ public class Message {
 	
 	public boolean getSinglePlayer(){
 		return this.singlePlayer;
+	}
+	
+	public double getProgressONE(){
+		return this.weightProgressOne;
+	}
+	
+	public double getProgressTWO(){
+		return this.weightProgressTwo;
+	}
+	
+	public double getMovesONE(){
+		return this.weightMovesOne;
+	}
+	
+	public double getMovesTWO(){
+		return this.weightMovesTwo;
+	}
+	
+	public double getBlockONE(){
+		return this.weightBlockOne;
+	}
+	
+	public double getBlockTWO(){
+		return this.weightBlockTwo;
+	}
+	
+	public double getSumoBlockONE(){
+		return this.weightSumoBlockOne;
+	}
+	
+	public double getSumoBlockTWO(){
+		return this.weightSumoBlockTwo;
+	}
+	
+	public double getSumoWinONE(){
+		return this.weightSumoWinOne;
+	}
+	
+	public double getSumoWinTWO(){
+		return this.weightSumoWinTwo;
+	}
+	
+	public double getWinONE(){
+		return this.weightWinOne;
+	}
+	
+	public double getWinTWO(){
+		return this.weightWinTwo;
 	}
 
 }

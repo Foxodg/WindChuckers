@@ -6,6 +6,20 @@ public class Kamisado {
 	private static Kamisado kamisado;
 	private Move move;
 	
+	private double weightVerticalOne = 100;
+	private double weightPossibleOne = 100;
+	private double weightBlockOne = 15;
+	private double weightSumoWinOne = 25;
+	private double weightSumoBlockOne = 15;
+	private double winOne = Double.POSITIVE_INFINITY;
+	
+	private double weightVerticalTwo = 100;
+	private double weightPossibleTwo = 100;
+	private double weightBlockTwo = 15;
+	private double weightSumoWinTwo = 25;
+	private double weightSumoBlockTwo = 15;
+	private double winTwo = Double.POSITIVE_INFINITY;
+	
 	// SimpleBooleanProperty for overwatching the a new return value
 	private SimpleBooleanProperty moveHere = new SimpleBooleanProperty();
 	
@@ -22,19 +36,18 @@ public class Kamisado {
 //		setPlayConfiguration(false, 5, 100, 100, 15, 25, 15, Double.POSITIVE_INFINITY);
 //	}
 
-	public Move setPlayConfiguration(boolean singlePlayer, int depth, double weightVertical,
-			double weightPossible, double weightBlock, double weightSumoWin, double weightSumoBlock, double win) {
+	public Move setPlayConfiguration(boolean singlePlayer, int depth) {
 		Board board = Board.getBoard();
 
 		if (singlePlayer) {
-			AlphaBetaPlayer player2 = new AlphaBetaPlayer(PlayerType.TWO, depth, weightVertical, weightPossible,
-					weightBlock, weightSumoWin, weightSumoBlock, win);
+			AlphaBetaPlayer player2 = new AlphaBetaPlayer(PlayerType.TWO, depth, weightVerticalTwo, weightPossibleTwo,
+					weightBlockTwo, weightSumoWinTwo, weightSumoBlockTwo, winTwo);
 			return play(player2, board);
 		} else {
-			AlphaBetaPlayer player1 = new AlphaBetaPlayer(PlayerType.ONE, depth, weightVertical, weightPossible,
-					weightBlock, weightSumoWin, weightSumoBlock, win);
-			AlphaBetaPlayer player2 = new AlphaBetaPlayer(PlayerType.TWO, depth, weightVertical, weightPossible,
-					weightBlock, weightSumoWin, weightSumoBlock, win);
+			AlphaBetaPlayer player1 = new AlphaBetaPlayer(PlayerType.ONE, depth, weightVerticalOne, weightPossibleOne,
+					weightBlockOne, weightSumoWinOne, weightSumoBlockOne, winOne);
+			AlphaBetaPlayer player2 = new AlphaBetaPlayer(PlayerType.TWO, depth, weightVerticalTwo, weightPossibleTwo,
+					weightBlockTwo, weightSumoWinTwo, weightSumoBlockTwo, winTwo);
 			play(player1, player2, board);
 			return null;
 		}
@@ -95,7 +108,57 @@ public class Kamisado {
 			e.printStackTrace();
 		}
 	}
+	//normal getter when recognised that simpleBooleanProperty is true
 	public Move getMove(){
 		return this.move;
+	}
+	
+	// setter for the AI-Properties
+	public void setProgressOne(double weight){
+		this.weightVerticalOne = weight;
+	}
+	
+	public void setProgressTwo(double weight){
+		this.weightVerticalTwo = weight;
+	}
+	
+	public void setMovesOne(double weight){
+		this.weightPossibleOne = weight;
+	}
+	
+	public void setMovesTwo(double weight){
+		this.weightPossibleTwo = weight;
+	}
+	
+	public void setBlockOne(double weight){
+		this.weightBlockOne = weight;
+	}
+	
+	public void setBlockTwo(double weight){
+		this.weightBlockTwo = weight;
+	}
+	
+	public void setSumoBlockOne(double weight){
+		this.weightSumoBlockOne = weight;
+	}
+	
+	public void setSumoBlockTwo(double weight){
+		this.weightSumoBlockTwo = weight;
+	}
+	
+	public void setSumoWinOne(double weight){
+		this.weightSumoWinOne = weight;
+	}
+	
+	public void setSumoWinTwo(double weight) {
+		this.weightSumoWinTwo = weight;
+	}
+	
+	public void setWinOne(double weight) {
+		this.winOne = weight;
+	}
+	
+	public void setWinTwo(double weight) {
+		this.winTwo = weight;
 	}
 }

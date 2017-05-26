@@ -159,6 +159,49 @@ public class GameMenu_Model extends Model {
 		Message message = new Message(MessageType.Error);
 		sendMessage(message);
 	}
+	
+	/**
+	 * For the AI SinglePlayer
+	 * @author L.Weber
+	 * @param singlePlayer
+	 * @param weightProgress
+	 * @param weightMoves
+	 * @param weightBlock
+	 * @param weightSumoBlock
+	 * @param weightSumoWin
+	 * @param weightWin
+	 */
+	public void messageContstructorForAISingle(double weightProgress, double weightMoves, 
+			double weightBlock, double weightSumoBlock, double weightSumoWin, double weightWin) {
+		Message message = new Message(MessageType.AISingle, weightProgress, weightMoves, weightBlock, weightSumoBlock, weightSumoWin, weightWin);
+		sendMessage(message);
+	}
+	
+	/**
+	 * For the AI DoublePlayer
+	 * @author L.Weber
+	 * @param weightProgressL
+	 * @param weightMovesL
+	 * @param weightBlockL
+	 * @param weightSumoBlockL
+	 * @param weightSumoWinL
+	 * @param weightWinL
+	 * @param weightProgressR
+	 * @param weightMovesR
+	 * @param weightBlockR
+	 * @param weightSumoBlockR
+	 * @param weightSumoWinR
+	 * @param weightWinR
+	 */
+	public void messageContstructorForAIDouble(double weightProgressL, double weightMovesL, 
+			double weightBlockL, double weightSumoBlockL, double weightSumoWinL, double weightWinL,
+			double weightProgressR, double weightMovesR, double weightBlockR, double weightSumoBlockR, double weightSumoWinR, double weightWinR) {
+		
+		Message message = new Message(MessageType.AIDouble, weightProgressL, weightMovesL, weightBlockL, weightSumoBlockL, weightSumoWinL, weightWinL,
+				weightProgressR, weightMovesR, weightBlockR, weightSumoBlockR, weightSumoWinR, weightWinR);
+		
+		sendMessage(message);
+	}
 
 	
 	// Getter and setter
@@ -169,6 +212,8 @@ public class GameMenu_Model extends Model {
 	public Player getPlayer2() {
 		return player2;
 	}
+
+
 
 
 }

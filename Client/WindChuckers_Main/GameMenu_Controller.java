@@ -9,7 +9,6 @@ import WindChuckers_Main.Model_Extend.Position;
 import WindChuckers_Main.Model_Extend.Tower;
 import WindChuckers_Main.Model_Extend.normalTower;
 import WindChuckers_Main.Model_Extend.sumoTower;
-import WindChuckers_Main.AI.AI;
 import abstractClasses.Controller;
 import commonClasses.ServiceLocator;
 import commonClasses.Translator;
@@ -35,17 +34,15 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	private normalTower normalTower;
 	private sumoTower sumoTower;
 	private Position position;
-	private AI ai;
 	private Player player; 
 
-	public GameMenu_Controller(GameMenu_Model model, GameMenu_View view, Board board, Movement movement, Position position, normalTower normalTower, sumoTower sumoTower, AI ai, Player player) {
+	public GameMenu_Controller(GameMenu_Model model, GameMenu_View view, Board board, Movement movement, Position position, normalTower normalTower, sumoTower sumoTower, Player player) {
 		super(model, view);
 		this.board = board;
 		this.movement = movement;
 		this.position = position;
 		this.normalTower = normalTower;
 		this.sumoTower = sumoTower;
-		this.ai = ai;
 		this.player = player;
 		serviceLocator = ServiceLocator.getServiceLocator();
 		TowerHandler towerHandler = new TowerHandler(); // Anonym Class to handle the tower events
@@ -125,6 +122,16 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			serviceLocator.getLogger().info("Start Client");
 			windChuckers = WindChuckers.getWindChuckers();
 			windChuckers.startClient();
+		});
+		
+		/**
+		 * Start the AI Configurator
+		 * @author L.Weber
+		 */
+		view.menuFileAI.setOnAction(e -> {
+			serviceLocator.getLogger().info("Start AIConfigurator");
+			windChuckers = WindChuckers.getWindChuckers();
+			windChuckers.startAI();
 		});
 		
 		

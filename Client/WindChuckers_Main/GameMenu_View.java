@@ -7,7 +7,6 @@ import WindChuckers_Main.Model_Extend.Board;
 import WindChuckers_Main.Model_Extend.Field;
 import WindChuckers_Main.Model_Extend.Tower;
 import WindChuckers_Main.Model_Extend.normalTower;
-import WindChuckers_Main.AI.AI;
 import WindChuckers_Main.Model_Extend.Movement;
 import WindChuckers_Main.Model_Extend.Player;
 import WindChuckers_Main.Model_Extend.Position;
@@ -39,13 +38,13 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	private Position position;
 	private normalTower normalTower;
 	private sumoTower sumoTower;
-	private AI ai;
 	private Player player;
 	
 	private Menu menuFile;
 	private Menu menuFileLanguage;
 	private Menu menuHelp;
 	private Menu menuClient;
+	private Menu menuAI;
 	public MenuItem menuHelpAbout;
 	public MenuItem menuFileRestart;
 	public MenuItem menuFileExit;
@@ -54,6 +53,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	public MenuItem menuFileLogin;
 	public MenuItem menuFileFriends;
 	public MenuItem menuMainMenu;
+	public MenuItem menuFileAI;
 	
 	// GameBoard
 	private GridPane GameBoard;
@@ -61,14 +61,13 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	private normalTower[][] towersP1;
 	private normalTower[][] towersP2;
 
-	public GameMenu_View(Stage stage, GameMenu_Model model, Board board, Movement movement, Position position, normalTower normalTower, sumoTower sumoTower, AI ai, Player player) {
+	public GameMenu_View(Stage stage, GameMenu_Model model, Board board, Movement movement, Position position, normalTower normalTower, sumoTower sumoTower, Player player) {
 		super(stage, model);
 		this.board = board;
 		this.movement = movement;
 		this.position = position;
 		this.normalTower = normalTower;
 		this.sumoTower = sumoTower;
-		this.ai = ai;
 		this.player = player;
 		
 		stage.setTitle("WindChuckers Kamisado");
@@ -105,7 +104,8 @@ public class GameMenu_View extends View<GameMenu_Model> {
 
 		menuHelp = new Menu();
 		menuClient = new Menu();
-		menuBar.getMenus().addAll(menuFile, menuHelp, menuClient);
+		menuAI = new Menu();
+		menuBar.getMenus().addAll(menuFile, menuHelp, menuClient, menuAI);
 
 		menuHelpAbout = new MenuItem();
 		menuHelp.getItems().add(menuHelpAbout);
@@ -113,6 +113,10 @@ public class GameMenu_View extends View<GameMenu_Model> {
 
 		menuClientGUI = new MenuItem();
 		menuClient.getItems().add(menuClientGUI);
+		
+		menuFileAI = new MenuItem();
+		menuAI.getItems().add(menuFileAI);
+		
 		
 		// The GameBoard will be initialized
 		fields = this.getFieldArray();
@@ -328,6 +332,8 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		menuFileLogin.setText(t.getString("program.menu.file.login"));
 		menuFileFriends.setText(t.getString("program.menu.file.friends"));
 		menuMainMenu.setText(t.getString("program.menu.file.mainmenu"));
+		menuFileAI.setText(t.getString("program.menu.file.AI"));
+		menuAI.setText(t.getString("program.menu.AI"));
 		
 		// Buttons
 
