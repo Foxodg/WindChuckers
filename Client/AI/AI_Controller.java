@@ -52,9 +52,11 @@ public class AI_Controller extends Controller<GameMenu_Model, AI_View> {
 				if(new_val == false){
 					logger.info("Double AI is enabled");
 					view.leftPane.setVisible(true);
+					view.btnMultiPlayer.setVisible(true);
 				} else {
 					logger.info("Single AI is enabled");
 					view.leftPane.setVisible(false);
+					view.btnMultiPlayer.setVisible(false);
 				}
 
 			}

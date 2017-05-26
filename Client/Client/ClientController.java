@@ -90,12 +90,20 @@ public class ClientController {
         	model.makeMove(clientserver.getStartColumn(),clientserver.getStartRow(), clientserver.getEndColumn(), clientserver.getEndRow());
         });
         
+		//Watch for the DB-Request
+		clientserver.getDBRequest().addListener((observable, oldValue, newValue) -> {
+			logger.info("DB-Request is here");
+			model.setUserID(clientserver.getUserID());
+			
+		});
+        
 		// Watch the client for ChatMessage
 		clientserver.getChatMessageProperty().addListener((obervable, oldValue, newValue) -> {
 			logger.info("Message from Chat is arrived");
 			updateGUI(newValue);
 		});
 	}
+		
 	
 		private void updateGUI(String newValue) {
 		Platform.runLater(() -> {

@@ -21,12 +21,16 @@ public class ClientThreadForServer extends Thread {
 	private int startRow;
 	private int endColumn;
 	private int endRow;
+	private int userID;
 	
 	// SimpleStringProperty for overwatching the chat
 	private SimpleStringProperty chatMessage = new SimpleStringProperty();
 	
 	// SimpleBooleanProperty for overwatching the incoming moves
 	private SimpleBooleanProperty moveProperty = new SimpleBooleanProperty();
+	
+	// SimpleBooleanProperty for overwatching the incoming moves
+	private SimpleBooleanProperty dbRequest = new SimpleBooleanProperty();
 	
 	public void setSocket(Socket serverSocket) {
 		this.serverSocket = serverSocket;
@@ -95,6 +99,10 @@ public class ClientThreadForServer extends Thread {
 			logger.info("Client: " + "Update: " + message.getUpdate() + " x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: " + message.getYCoordinate1() +
 					" x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: " + message.getYCoordinate2() + " Gems: " + message.getGems());
 		}
+		else if (message.getMessageType() == MessageType.DBMessage){
+			logger.info("Client: DB-Message is arrived " + message.getDB());
+			userID = message.getDB();
+		}
 	}
 	
 	// Get the MessageProperty from the chat
@@ -126,6 +134,19 @@ public class ClientThreadForServer extends Thread {
 		}
 	}
 	
+	//set a new db request
+	public void setDBRequest(Boolean newValue) {
+		try{
+			this.dbRequest.setValue(newValue);;
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public SimpleBooleanProperty getDBRequest(){
+		return this.dbRequest;
+	}
+	
 	public SimpleBooleanProperty getValue(){
 		return this.moveProperty;
 	}
@@ -144,6 +165,10 @@ public class ClientThreadForServer extends Thread {
 	
 	public int getEndRow(){
 		return this.endRow;
+	}
+	
+	public int getUserID(){
+		return this.userID;
 	}
 
 }

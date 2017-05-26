@@ -68,9 +68,13 @@ public class GameMenu_Model extends Model {
 	private int startRow;
 	private int endColumn;
 	private int endRow;
+	private int userID;
 
 	// SimpleBooleanProperty for overwatching the incoming moves
 	private SimpleBooleanProperty moveProperty = new SimpleBooleanProperty();
+	
+	// SimpleBooleanProperty for overwatching the incoming dbRequests
+	private SimpleBooleanProperty dbRequest = new SimpleBooleanProperty();
 	
 	public boolean connect(String ipAddress, Integer port) {
 		boolean success = false;
@@ -220,6 +224,19 @@ public class GameMenu_Model extends Model {
 		}
 	}
 	
+	//set a new db request
+	public void setDBRequest(Boolean newValue) {
+		try{
+			this.dbRequest.setValue(newValue);;
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public SimpleBooleanProperty getDBRequest(){
+		return this.dbRequest;
+	}
+	
 	public SimpleBooleanProperty getMoveProperty(){
 		return this.moveProperty;
 	}
@@ -260,6 +277,7 @@ public class GameMenu_Model extends Model {
 		return this.endRow;
 	}
 
-
-
+	public void setUserID(int userID) {
+		this.userID = userID;	
+	}
 }

@@ -238,7 +238,8 @@ public class Message {
 		createStandardMessage(messageType);
 		this.DB = db;
 	}
-	
+		
+
 	/**
 	 * For Error
 	 * @param messageType
@@ -402,5 +403,6 @@ public class Message {
 	public double getWinTWO(){
 		return this.weightWinTwo;
 	}
+	
 
 }

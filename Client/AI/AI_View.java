@@ -198,7 +198,7 @@ public class AI_View extends View<GameMenu_Model>{
         
 		leftPane.setLeft(leftGrid);
 		if(cb.isSelected()){
-			leftPane.setVisible(false);
+			this.leftPane.setVisible(false);
 		}
 		
 
@@ -275,6 +275,10 @@ public class AI_View extends View<GameMenu_Model>{
 		Region spacerButton = new Region();
 		bottomBox.getChildren().addAll(btnSingePlayer, spacerButton, btnMultiPlayer);
 		bottomBox.setHgrow(spacerButton, Priority.ALWAYS);
+		
+		if(cb.isSelected()){
+			btnMultiPlayer.setVisible(false);
+		}
 		
 		BorderPane endPane = new BorderPane();
 		VBox centerVBox = new VBox();

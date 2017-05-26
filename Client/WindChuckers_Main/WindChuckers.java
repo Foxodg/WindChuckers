@@ -17,6 +17,7 @@ import Friends.FriendsView;
 import Lobby.LobbyController;
 import Lobby.LobbyView;
 import Login.LoginController;
+import Login.LoginModel;
 import Login.LoginView;
 import MainMenu.MainMenuController;
 import MainMenu.MainMenuView;
@@ -80,6 +81,9 @@ public class WindChuckers extends Application {
     
     //Friends
     private FriendsController friendscontroller;
+    
+    //Login
+    private LoginModel loginModel;
     
     private ServiceLocator serviceLocator; // resources, after initialization
 
@@ -240,8 +244,9 @@ public class WindChuckers extends Application {
     public void startLogin() {
     	Stage loginStage = new Stage();
     	model = GameMenu_Model.getGameModel();
+    	loginModel = new LoginModel();
     	loginView = new LoginView(loginStage, model);
-    	new LoginController(model,loginView);
+    	new LoginController(this,model,loginView,loginModel);
     	
     	serviceLocator = ServiceLocator.getServiceLocator();
     	

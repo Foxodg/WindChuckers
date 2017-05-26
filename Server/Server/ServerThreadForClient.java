@@ -5,12 +5,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
+
 
 import AI.Board;
 import AI.Kamisado;
 import AI.Move;
+import DataBase.DataBase;
 import Message.Message;
 import Message.Message.MessageType;
 import Message.Message.Value;
@@ -23,6 +26,8 @@ public class ServerThreadForClient extends Thread {
 	
 	private boolean wantAI = false;
 	private boolean wantDoubleAI = false;
+	
+	DataBase h2 = DataBase.getDB();
 
 	public ServerThreadForClient(Socket clientSocket) {
 		this.clientSocket = clientSocket;
@@ -77,6 +82,11 @@ public class ServerThreadForClient extends Thread {
 		else if(message.getMessageType() == MessageType.DBMessage){
 			logger.info("Server: " + "DB-Message: " );
 			//DB-Message
+			try {
+				sendMessageBackToClient(new Message(MessageType.DBMessage, h2.selectWithName(message.getChatMessage())));
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		else if(message.getMessageType() == MessageType.WinMessage){
 			logger.info("Server: " + "Win-Message: " );
