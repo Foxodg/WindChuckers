@@ -84,6 +84,12 @@ public class ClientController {
             }
         });
         
+        //Watch the client for Moves
+        clientserver.getValue().addListener((observable, oldValue, newValue) -> {
+        	logger.info("Client: New Move from Server is here");
+        	model.makeMove(clientserver.getStartColumn(),clientserver.getStartRow(), clientserver.getEndColumn(), clientserver.getEndRow());
+        });
+        
 		// Watch the client for ChatMessage
 		clientserver.getChatMessageProperty().addListener((obervable, oldValue, newValue) -> {
 			logger.info("Message from Chat is arrived");
@@ -97,4 +103,5 @@ public class ClientController {
 		});
 		
 	}
+		
 }

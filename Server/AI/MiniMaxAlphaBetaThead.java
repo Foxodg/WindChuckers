@@ -59,7 +59,7 @@ public class MiniMaxAlphaBetaThead extends Thread{
 			return buildHeuristic(this.playerType, b, state);
 
 		ArrayList<Move> moves = b.getNextPossibleMoves(this.playerType, state);
-		if (moves.size() == 0) // TODO add draw
+		if (moves.size() == 0) 
 			return Double.NEGATIVE_INFINITY;
 
 		for (int i = 0; i < moves.size(); i++) {
@@ -95,7 +95,7 @@ public class MiniMaxAlphaBetaThead extends Thread{
 			return buildHeuristic(changePlayerType(this.playerType), b, state);
 
 		ArrayList<Move> moves = b.getNextPossibleMoves(changePlayerType(this.playerType), state);
-		if (moves.size() == 0) // TODO add draw
+		if (moves.size() == 0)
 			return Double.POSITIVE_INFINITY;
 
 		for (int i = 0; i < moves.size(); i++) {

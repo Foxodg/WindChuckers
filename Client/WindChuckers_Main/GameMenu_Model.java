@@ -9,6 +9,7 @@ import Message.Message.Value;
 import WindChuckers_Main.Model_Extend.Player;
 import abstractClasses.Model;
 import commonClasses.ServiceLocator;
+import javafx.beans.property.SimpleBooleanProperty;
 
 /**
  * Copyright 2015, FHNW, Prof. Dr. Brad Richards. All rights reserved. This code
@@ -63,7 +64,14 @@ public class GameMenu_Model extends Model {
 	 */
 
 	Socket socket;
+	private int startColumn;
+	private int startRow;
+	private int endColumn;
+	private int endRow;
 
+	// SimpleBooleanProperty for overwatching the incoming moves
+	private SimpleBooleanProperty moveProperty = new SimpleBooleanProperty();
+	
 	public boolean connect(String ipAddress, Integer port) {
 		boolean success = false;
 		try {
@@ -202,6 +210,19 @@ public class GameMenu_Model extends Model {
 		
 		sendMessage(message);
 	}
+	
+	//set a new move
+	public void setMoveProperty(Boolean newValue) {
+		try{
+			this.moveProperty.setValue(newValue);;
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public SimpleBooleanProperty getMoveProperty(){
+		return this.moveProperty;
+	}
 
 	
 	// Getter and setter
@@ -213,6 +234,31 @@ public class GameMenu_Model extends Model {
 		return player2;
 	}
 
+	public void makeMove(int startColumn, int startRow, int endColumn, int endRow) {
+		this.setMoveProperty(false);
+		this.startColumn = startColumn;
+		this.startRow = startRow;
+		this.endColumn = endColumn;
+		this.endRow = endRow;
+		this.setMoveProperty(true);
+		
+	}
+	
+	public int getStartColumn(){
+		return this.startColumn;
+	}
+
+	public int getStartRow(){
+		return this.startRow;
+	}
+	
+	public int getEndColumn(){
+		return this.endColumn;
+	}
+	
+	public int getEndRow(){
+		return this.endRow;
+	}
 
 
 

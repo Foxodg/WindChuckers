@@ -1,5 +1,7 @@
 package WindChuckers_Main;
 
+import com.sun.media.jfxmedia.logging.Logger;
+
 import WindChuckers_Main.WindChuckers;
 import WindChuckers_Main.Model_Extend.Board;
 import WindChuckers_Main.Model_Extend.Field;
@@ -16,6 +18,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.GridPane;
 
 /**
  * Copyright 2015, FHNW, Prof. Dr. Brad Richards. All rights reserved. This code
@@ -134,6 +137,13 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			windChuckers.startAI();
 		});
 		
+		model.getMoveProperty().addListener((observable, oldValue, newValue) -> {
+			serviceLocator.getLogger().info("The Move Message reaches the GameMenu_Controller");
+			//TODO here is now the move - with model.getStartColumn/Row model.getEndColumn/Row it gets the start or end x-Coordinates or y-Coordinates
+
+		});
+		
+		
 		
 		/**
 		 * Set Towers on action
@@ -165,6 +175,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		view.stop();
 		// Implement more Methods for Cleanup
 	}
+	
 
 
 //	/**

@@ -7,6 +7,7 @@ import Message.Message;
 import Message.Message.MessageType;
 import Message.Message.Value;
 import commonClasses.ServiceLocator;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class ClientThreadForServer extends Thread {
@@ -16,9 +17,16 @@ public class ClientThreadForServer extends Thread {
 	private final Logger logger = serviceLocator.getLogger();
 	private Socket serverSocket;
 	private ClientController controller;
+	private int startColumn;
+	private int startRow;
+	private int endColumn;
+	private int endRow;
 	
 	// SimpleStringProperty for overwatching the chat
 	private SimpleStringProperty chatMessage = new SimpleStringProperty();
+	
+	// SimpleBooleanProperty for overwatching the incoming moves
+	private SimpleBooleanProperty moveProperty = new SimpleBooleanProperty();
 	
 	public void setSocket(Socket serverSocket) {
 		this.serverSocket = serverSocket;
@@ -73,10 +81,15 @@ public class ClientThreadForServer extends Thread {
 		}
 		else if (message.getMessageType() == MessageType.Coordinate){
 			//Safes the coordinate from the server in the double Array
+			setValue(false);
 			logger.info("Client: " + "x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: " + message.getYCoordinate1() +
 					" x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: " + message.getYCoordinate2() + " Value: " + message.getValue());
-			Value[][] board = Board.getBoard();
-			board[message.getXCoordinate2()][message.getYCoordinate2()] = message.getValue(); 
+			startColumn = message.getXCoordinate1();
+			startRow = message.getYCoordinate1();
+			endColumn = message.getXCoordinate2();
+			endRow = message.getYCoordinate2();
+			setValue(true);
+			
 		}
 		else if (message.getMessageType() == MessageType.Update){
 			logger.info("Client: " + "Update: " + message.getUpdate() + " x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: " + message.getYCoordinate1() +
@@ -103,6 +116,36 @@ public class ClientThreadForServer extends Thread {
 	public String getChatMessageInString() {
 		return chatMessage.get();
 	}
+	
+	//set a new move
+	public void setValue(Boolean newValue) {
+		try{
+			this.moveProperty.setValue(newValue);;
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public SimpleBooleanProperty getValue(){
+		return this.moveProperty;
+	}
+	
+	public int getStartColumn(){
+		return this.startColumn;
+	}
+	
+	public int getStartRow(){
+		return this.startRow;
+	}
+	
+	public int getEndColumn(){
+		return this.endColumn;
+	}
+	
+	public int getEndRow(){
+		return this.endRow;
+	}
+
 }
 
 class Board {
@@ -124,5 +167,7 @@ class Board {
 			board = new Value[boardSize][boardSize];
 		return board;
 	}
+	
+	
 
 }
