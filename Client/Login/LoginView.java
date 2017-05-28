@@ -24,6 +24,8 @@ public class LoginView extends View <GameMenu_Model>{
 	
 	private Menu menuFileLogin;
 	protected MenuItem menuFileExitLogin;
+	private Menu menuClient;
+	public MenuItem menuClientGUI;
 
 	protected TextField username;
 	protected PasswordField password;
@@ -60,9 +62,13 @@ public class LoginView extends View <GameMenu_Model>{
 		MenuBar menuBar = new MenuBar();
 		menuFileLogin = new Menu();
 		menuFileExitLogin = new MenuItem();
-		menuBar.getMenus().add(menuFileLogin);
-		
 		menuFileLogin.getItems().add(menuFileExitLogin);
+		menuClient = new Menu();
+		menuClientGUI = new MenuItem();
+		menuClient.getItems().add(menuClientGUI);
+		menuBar.getMenus().addAll(menuFileLogin,menuClient);
+		
+
 		
 		GridPane root = new GridPane();
 		root.add(menuBar, 0, 0);
@@ -81,6 +87,8 @@ public class LoginView extends View <GameMenu_Model>{
 		// Menu strings
 		menuFileLogin.setText(t.getString("login.menu.file"));
 		menuFileExitLogin.setText(t.getString("login.menu.file.exit"));
+		menuClient.setText(t.getString("program.menu.client"));
+		menuClientGUI.setText(t.getString("program.menu.clientGUI"));
 		
 		//Buttons
 		btnLogin.setText(t.getString("btnLogin"));

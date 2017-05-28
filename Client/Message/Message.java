@@ -4,9 +4,11 @@ package Message;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -22,7 +24,7 @@ import org.simpleframework.xml.core.Persister;
 @Root
 public class Message {
 	public enum MessageType {
-		Coordinate, WinMessage, ChatMessage, DBMessage, Error, Update, AISingle, AIDouble
+		Coordinate, WinMessage, ChatMessage, DBMessage, DBMessageFull, Error, Update, AISingle, AIDouble
 	};
 	
 	public enum Value {
@@ -107,6 +109,9 @@ public class Message {
 
 	@Element(required = false)
 	private double weightWinTwo;
+	
+	@ElementList(required=false, inline=true)
+	private ArrayList<String> nameList;
 	
 
 	// Generator for a unique message ID
@@ -237,6 +242,18 @@ public class Message {
 	public Message(MessageType messageType, int db){
 		createStandardMessage(messageType);
 		this.DB = db;
+	}
+	
+	/**
+	 * For DB full Request
+	 * @param messageType
+	 * @param db
+	 * @param ArrayList<String>
+	 */
+	public Message(MessageType messageType, int db, ArrayList<String> nameList){
+		createStandardMessage(messageType);
+		this.DB = db;
+		this.nameList = nameList;
 	}
 		
 
@@ -402,6 +419,10 @@ public class Message {
 	
 	public double getWinTWO(){
 		return this.weightWinTwo;
+	}
+	
+	public ArrayList<String> getNameList(){
+		return this.nameList;
 	}
 	
 

@@ -82,10 +82,13 @@ public class ServerThreadForClient extends Thread {
 		else if(message.getMessageType() == MessageType.DBMessage){
 			logger.info("Server: " + "DB-Message: " );
 			//DB-Message
-			try {
-				sendMessageBackToClient(new Message(MessageType.DBMessage, h2.selectWithName(message.getChatMessage())));
-			} catch (SQLException e) {
-				e.printStackTrace();
+			if(message.getDB() == 0){
+				// 0 stands for give the hole ArrayList Back
+				try {
+					sendMessageBackToClient(new Message(MessageType.DBMessageFull,0,h2.selectPlayer()));
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		else if(message.getMessageType() == MessageType.WinMessage){

@@ -17,6 +17,7 @@ public class LoginController extends Controller<GameMenu_Model, LoginView> {
 	private LoginModel loginModel;
 	private ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
 	private Logger logger = serviceLocator.getLogger();
+	private WindChuckers windChuckers;
 	
 	public LoginController (final WindChuckers main, GameMenu_Model model, LoginView view, LoginModel loginModel){
 		super(model,view);
@@ -37,10 +38,27 @@ public class LoginController extends Controller<GameMenu_Model, LoginView> {
 			model.sendMessage(new Message(MessageType.DBMessage,0));
 		});
 		
-		//Watch for the DB-Request
+		/**
+		 * Watch for the DB-Request
+		 * @author L.Weber
+		 */
 		model.getDBRequest().addListener((observable, oldValue, newValue) -> {
 			logger.info("DB-Request is here");
-			view.btnCheckUserName.setStyle("-fx-font: 22 arial; -fx-base: #b6e7c9;");			
+			for(int i = 0; i < model.getUserList().size(); i++) {
+				if(loginModel.checkUserList(model.getUserList().get(i),view.username.getText())){
+					view.btnCheckUserName.setStyle("-fx-background-color: #00ff00");
+				}
+			}
+		});
+		
+		/**
+		 * Start the Client-View
+		 * @author L.Weber
+		 */
+		view.menuClientGUI.setOnAction(e -> {
+			serviceLocator.getLogger().info("Start Client");
+			windChuckers = WindChuckers.getWindChuckers();
+			windChuckers.getStartetClient();
 		});
 		
 	}

@@ -1,6 +1,7 @@
 package Client;
 
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import Message.Message;
@@ -22,6 +23,7 @@ public class ClientThreadForServer extends Thread {
 	private int endColumn;
 	private int endRow;
 	private int userID;
+	private ArrayList<String> userList;
 	
 	// SimpleStringProperty for overwatching the chat
 	private SimpleStringProperty chatMessage = new SimpleStringProperty();
@@ -49,7 +51,7 @@ public class ClientThreadForServer extends Thread {
 		return clientServer;
 	}
 	
-	public ClientThreadForServer(){
+	private ClientThreadForServer(){
 	}
 	
 	public void setController(ClientController controller) {
@@ -99,9 +101,14 @@ public class ClientThreadForServer extends Thread {
 			logger.info("Client: " + "Update: " + message.getUpdate() + " x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: " + message.getYCoordinate1() +
 					" x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: " + message.getYCoordinate2() + " Gems: " + message.getGems());
 		}
-		else if (message.getMessageType() == MessageType.DBMessage){
+		else if (message.getMessageType() == MessageType.DBMessage || message.getMessageType() == MessageType.DBMessageFull){
 			logger.info("Client: DB-Message is arrived " + message.getDB());
-			userID = message.getDB();
+			setDBRequest(false);
+			if(message.getDB() == 0){
+				// 0 stands for full List
+				userList = message.getNameList();
+			}
+			setDBRequest(true);
 		}
 	}
 	
@@ -169,6 +176,10 @@ public class ClientThreadForServer extends Thread {
 	
 	public int getUserID(){
 		return this.userID;
+	}
+	
+	public ArrayList<String> getUserList(){
+		return this.userList;
 	}
 
 }

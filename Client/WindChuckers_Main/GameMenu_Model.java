@@ -1,6 +1,7 @@
 package WindChuckers_Main;
 
 import java.net.Socket;
+import java.util.ArrayList;
 
 import Client.ClientThreadForServer;
 import Message.Message;
@@ -69,6 +70,7 @@ public class GameMenu_Model extends Model {
 	private int endColumn;
 	private int endRow;
 	private int userID;
+	private ArrayList<String> userList;
 
 	// SimpleBooleanProperty for overwatching the incoming moves
 	private SimpleBooleanProperty moveProperty = new SimpleBooleanProperty();
@@ -162,7 +164,7 @@ public class GameMenu_Model extends Model {
 		Message message = new Message(MessageType.DBMessage, db);
 		sendMessage(message);
 	}
-
+	
 	/**
 	 * For the Error-Message
 	 * @author L.Weber
@@ -279,5 +281,18 @@ public class GameMenu_Model extends Model {
 
 	public void setUserID(int userID) {
 		this.userID = userID;	
+	}
+	
+	public int getUserID(){
+		return this.userID;
+	}
+
+	public void setUserList(ArrayList<String> userList) {
+		this.userList = userList;
+		
+	}
+
+	public ArrayList<String> getUserList() {
+		return this.userList;
 	}
 }

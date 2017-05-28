@@ -1,5 +1,7 @@
 package Login;
 
+import java.util.ArrayList;
+
 import abstractClasses.Model;
 import commonClasses.ServiceLocator;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -24,6 +26,15 @@ public class LoginModel extends Model {
 		}
 		
 	}
+
+
+	public boolean checkUserList(String user, String name) {
+		if(user.equals(name)){
+			return true;
+		}
+		return false;
+	}
+
 
 
 }

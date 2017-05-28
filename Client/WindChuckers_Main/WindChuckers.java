@@ -65,6 +65,7 @@ public class WindChuckers extends Application {
     //client
     private ClientView clientView;
     private ClientThreadForServer clientserver;
+    private ClientController clientController;
     
     //AI
     private AI_View aiView;
@@ -202,7 +203,29 @@ public class WindChuckers extends Application {
     	model = GameMenu_Model.getGameModel();
     	clientserver = ClientThreadForServer.getClientServer();
     	clientView = new ClientView(clientStage, model, textAreaHandler.getTextArea());
-    	new ClientController(model, clientView, clientserver);
+    	clientController = new ClientController(model, clientView, clientserver);
+    	   	
+    	clientView.start();
+    }
+    
+    /**
+     * Client must start again and again
+     * Singleton with the view and the controller is impossible
+     * @author L.Weber
+     */
+    public void getStartetClient() {
+    	serviceLocator = ServiceLocator.getServiceLocator();
+    	
+        TextAreaHandler textAreaHandler = new TextAreaHandler();
+        textAreaHandler.setLevel(Level.INFO);
+        Logger defaultLogger = serviceLocator.getLogger();
+        defaultLogger.addHandler(textAreaHandler);
+    	
+    	Stage clientStage = new Stage();
+    	model = GameMenu_Model.getGameModel();
+    	clientserver = ClientThreadForServer.getClientServer();
+    	clientView = clientView.getClientView();
+    	clientController = clientController.getClientController();
     	   	
     	clientView.start();
     }

@@ -19,6 +19,11 @@ public class ClientController {
 	final private GameMenu_Model model;
 	final private ClientView view;
 	final private ClientThreadForServer clientserver;
+	
+	public ClientController getClientController(){
+		return this;
+	}
+	
 
 	public ClientController(GameMenu_Model model, ClientView view, ClientThreadForServer clientserver) {
         this.model = model;
@@ -93,14 +98,19 @@ public class ClientController {
 		//Watch for the DB-Request
 		clientserver.getDBRequest().addListener((observable, oldValue, newValue) -> {
 			logger.info("DB-Request is here");
-			model.setUserID(clientserver.getUserID());
-			
+			model.setDBRequest(false);
+			model.setUserList(clientserver.getUserList());
+			model.setDBRequest(true);
 		});
         
 		// Watch the client for ChatMessage
 		clientserver.getChatMessageProperty().addListener((obervable, oldValue, newValue) -> {
 			logger.info("Message from Chat is arrived");
 			updateGUI(newValue);
+		});
+		
+		view.menuFileExitClient.setOnAction(e -> {
+			view.stop();
 		});
 	}
 		

@@ -1,7 +1,10 @@
 package WindChuckers_Main;
 
+import java.util.ArrayList;
+
 import com.sun.media.jfxmedia.logging.Logger;
 
+import Client.ClientThreadForServer;
 import WindChuckers_Main.WindChuckers;
 import WindChuckers_Main.Model_Extend.Board;
 import WindChuckers_Main.Model_Extend.Field;
@@ -38,6 +41,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	private sumoTower sumoTower;
 	private Position position;
 	private Player player; 
+	private ClientThreadForServer clientServer;
 
 	public GameMenu_Controller(GameMenu_Model model, GameMenu_View view, Board board, Movement movement, Position position, normalTower normalTower, sumoTower sumoTower, Player player) {
 		super(model, view);
@@ -47,6 +51,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		this.normalTower = normalTower;
 		this.sumoTower = sumoTower;
 		this.player = player;
+		this.clientServer = ClientThreadForServer.getClientServer();
 		serviceLocator = ServiceLocator.getServiceLocator();
 		TowerHandler towerHandler = new TowerHandler(); // Anonym Class to handle the tower events
 		model.getPlayer1().setOnTurn(true); // Je nach dem wer anfängt, müssen wir noch implementieren
@@ -124,7 +129,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		view.menuClientGUI.setOnAction(e -> {
 			serviceLocator.getLogger().info("Start Client");
 			windChuckers = WindChuckers.getWindChuckers();
-			windChuckers.startClient();
+			windChuckers.getStartetClient();
 		});
 		
 		/**
@@ -142,7 +147,6 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			//TODO here is now the move - with model.getStartColumn/Row model.getEndColumn/Row it gets the start or end x-Coordinates or y-Coordinates
 
 		});
-		
 		
 		
 		/**
