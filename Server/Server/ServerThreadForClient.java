@@ -90,6 +90,18 @@ public class ServerThreadForClient extends Thread {
 					e.printStackTrace();
 				}
 			}
+			else if(message.getDB() == 1){
+				//1 stands for Insert
+				insertPlayer(message.getId(), message.getUserName(), message.getPreName(), message.getLastName(), message.getPassword());
+			}
+			else if(message.getDB() == 2){
+				//2 stands for Update
+				
+			}
+			else if(message.getDB() == 3){
+				//3 stands for Delete
+				
+			}
 		}
 		else if(message.getMessageType() == MessageType.WinMessage){
 			logger.info("Server: " + "Win-Message: " );
@@ -137,6 +149,16 @@ public class ServerThreadForClient extends Thread {
 		}
 	}
 	
+	private void insertPlayer(int id, String userName, String preName, String lastName, String password) {
+		// TODO Auto-generated method stub
+		try {
+			h2.insertPlayer(id, userName, preName, lastName, password);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
 	public static void sendMessageBackToClient(Message message){
 		try {
 			ServerModel model = ServerModel.getServerModel();

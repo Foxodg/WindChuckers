@@ -1,5 +1,8 @@
 package Login;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import Message.Message;
@@ -8,8 +11,7 @@ import WindChuckers_Main.GameMenu_Model;
 import WindChuckers_Main.WindChuckers;
 import abstractClasses.Controller;
 import commonClasses.ServiceLocator;
-import javafx.event.ActionEvent;
-import javafx.scene.control.Dialog;
+
 
 public class LoginController extends Controller<GameMenu_Model, LoginView> {
 	private GameMenu_Model model;
@@ -18,24 +20,47 @@ public class LoginController extends Controller<GameMenu_Model, LoginView> {
 	private ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
 	private Logger logger = serviceLocator.getLogger();
 	private WindChuckers windChuckers;
-	
+
+	private HashMap<Integer, ArrayList<String>> userMap;
+
 	public LoginController (final WindChuckers main, GameMenu_Model model, LoginView view, LoginModel loginModel){
 		super(model,view);
 		this.loginModel = loginModel;
 		
+		/**
+		 * Stops the view
+		 * @author L.Weber
+		 */
 		view.menuFileExitLogin.setOnAction(e -> {
 			view.stop();
 		});
 		
 		view.btnLogin.setOnAction(e -> {
 			if(loginModel.passwordCheck(view.password.getText())){
-				main.startApp();
+				main.startMainMenu();
 				view.stop();
 			}
 		});
 		
-		view.btnCheckUserName.setOnAction(e -> {
+		/**
+		 * Make a new DB-Request
+		 * @author L.Weber
+		 */
+		view.btnRefresh.setOnAction(e -> {
+			//Get a new DB-Request to get all Names in the PlayerTable
 			model.sendMessage(new Message(MessageType.DBMessage,0));
+		});
+		
+		view.username.textProperty().addListener((observable, oldaValue, newValue) -> {
+			
+			for(Entry<Integer, ArrayList<String>> ee : userMap.entrySet()){
+				ArrayList<String> searchList = ee.getValue();
+				if(searchList.get(0).equals(view.username.getText())){
+					view.username.setStyle("-fx-text-inner-color: red;");
+				} else {
+					view.username.setStyle("-fx-text-inner-color: green;");
+				}
+			}
 		});
 		
 		/**
@@ -44,11 +69,11 @@ public class LoginController extends Controller<GameMenu_Model, LoginView> {
 		 */
 		model.getDBRequest().addListener((observable, oldValue, newValue) -> {
 			logger.info("DB-Request is here");
-			for(int i = 0; i < model.getUserList().size(); i++) {
-				if(loginModel.checkUserList(model.getUserList().get(i),view.username.getText())){
-					view.btnCheckUserName.setStyle("-fx-background-color: #00ff00");
-				}
-			}
+			view.btnLogin.setVisible(true);
+			view.username.setVisible(true);
+			view.password.setVisible(true);
+			//fills the userName-Map
+			userMap = model.getUserMap();
 		});
 		
 		/**
@@ -59,6 +84,11 @@ public class LoginController extends Controller<GameMenu_Model, LoginView> {
 			serviceLocator.getLogger().info("Start Client");
 			windChuckers = WindChuckers.getWindChuckers();
 			windChuckers.getStartetClient();
+		});
+		
+		view.btnUserMenu.setOnAction(e -> {
+			windChuckers = WindChuckers.getWindChuckers();
+			windChuckers.startUserMenu();
 		});
 		
 	}

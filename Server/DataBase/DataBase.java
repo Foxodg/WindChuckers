@@ -27,12 +27,15 @@ public class DataBase {
 //		deleteDB();
 //		createDB();
 //	}
-		
+//		ArrayList<String> searchList = selectPlayer();
+//		for(int i = 0; i < searchList.size(); i++){
+//			System.out.println(searchList.get(i));
+//		}
 //		insertPlayer(1,"lukas","weber",1);
 //		isTheEntryThere(1);
 //		update("UPDATE PLAYER SET WINS = 2 WHERE PLAYERID = 1");
 //		System.out.println(selectWithName("weber"));
-		
+//		update("UPDATE PLAYER SET WINS =0 WHERE PLAYERID = 2");
 //	}
 
 	public DataBase() {
@@ -115,8 +118,10 @@ public class DataBase {
 			while (rs.next()) {
 				logger.info("Select:" + SelectQuery);
 				answerList.add(rs.getString("playerid").toString());
+				answerList.add(rs.getString("username"));
 				answerList.add(rs.getString("prename"));
 				answerList.add(rs.getString("surname"));
+				answerList.add(rs.getString("password"));
 				answerList.add(rs.getString("wins").toString());
 			}
 			selectPreparedStatement.close();
@@ -376,21 +381,26 @@ public class DataBase {
 	 *            - points that given
 	 * @throws SQLException
 	 */
-	public static void insertPlayer(int id, String prename, String surname, int win) throws SQLException {
+	public static void insertPlayer(int id,String username, String prename, String surname, String password) throws SQLException {
 		Connection connection = getDBConnection();
 		PreparedStatement insertPreparedStatement = null;
-		String InsertQuery = "INSERT INTO PLAYER" + "(playerid, prename, surname, wins) values" + "(?,?,?,?)";
-
+		String InsertQuery = "INSERT INTO PLAYER" + "(playerid, username, prename, surname, password) values" + "(?,?,?,?,?)";
+		int win = 0;
+		
 		try {
 			connection.setAutoCommit(false);
 
 			insertPreparedStatement = connection.prepareStatement(InsertQuery);
 			insertPreparedStatement.setInt(1, id);
-			insertPreparedStatement.setString(2, prename);
-			insertPreparedStatement.setString(3, surname);
-			insertPreparedStatement.setInt(4, win);
+			insertPreparedStatement.setString(2, username);
+			insertPreparedStatement.setString(3, prename);
+			insertPreparedStatement.setString(4, surname);
+			insertPreparedStatement.setString(5, password);
+			
+			update("UPDATE PLAYER SET WINS =0 WHERE PLAYERID = "+id);
+			
 
-			logger.info("Insert: " + id + " " + prename + " " + surname + " " + win);
+			logger.info("Insert: " + id + " "+ username + " " + prename + " " + surname + " " + "***" + " " + win);
 			insertPreparedStatement.executeUpdate();
 			insertPreparedStatement.close();
 
@@ -417,7 +427,7 @@ public class DataBase {
 		DeleteDbFiles.execute("~", "WindChuckers", true);
 		try {
 			createDB();
-			insertPlayer(1, "default", "muster", 00);
+			insertPlayer(1,"testy","prename", "surname", "test");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -443,8 +453,10 @@ public class DataBase {
 		
 		String CreateQueryPlayer = "CREATE TABLE PLAYER("
 				+ "playerid int primary key, "
+				+ "username varchar(255),"
 				+ "prename varchar(255), "
 				+ "surname varchar(255), "
+				+ "password varchar(255),"
 				+ "wins int)";
 		String CreateQueryTower = "CREATE TABLE TOWER("
 				+ "id int primary key, "

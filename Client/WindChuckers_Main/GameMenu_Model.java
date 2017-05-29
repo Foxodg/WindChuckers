@@ -2,6 +2,8 @@ package WindChuckers_Main;
 
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import Client.ClientThreadForServer;
 import Message.Message;
@@ -20,9 +22,9 @@ import javafx.beans.property.SimpleBooleanProperty;
  * @author Brad Richards
  */
 public class GameMenu_Model extends Model {
-	
+
 	protected static final int DIMENSION = 8;
-	protected static final int MAX_FIELDS = DIMENSION*DIMENSION;
+	protected static final int MAX_FIELDS = DIMENSION * DIMENSION;
 
 	protected static final String ORANGE = "#FF8C00";
 	protected static final String BLUE = "#4169E1";
@@ -32,7 +34,7 @@ public class GameMenu_Model extends Model {
 	protected static final String RED = "#B22222";
 	protected static final String GREEN = "#008000";
 	protected static final String BROWN = "#8B4513";
-	
+
 	private Player player1 = new Player(1);
 	private Player player2 = new Player(2);
 
@@ -61,6 +63,7 @@ public class GameMenu_Model extends Model {
 
 	/**
 	 * All following Methods are for the Client-Server-Communications
+	 * 
 	 * @author L.Weber
 	 */
 
@@ -71,13 +74,14 @@ public class GameMenu_Model extends Model {
 	private int endRow;
 	private int userID;
 	private ArrayList<String> userList;
+	private HashMap<Integer, ArrayList<String>> userMap;
 
 	// SimpleBooleanProperty for overwatching the incoming moves
 	private SimpleBooleanProperty moveProperty = new SimpleBooleanProperty();
-	
+
 	// SimpleBooleanProperty for overwatching the incoming dbRequests
 	private SimpleBooleanProperty dbRequest = new SimpleBooleanProperty();
-	
+
 	public boolean connect(String ipAddress, Integer port) {
 		boolean success = false;
 		try {
@@ -94,6 +98,7 @@ public class GameMenu_Model extends Model {
 
 	/**
 	 * For send the Message via SimpleXML
+	 * 
 	 * @author L.Weber
 	 * @param message
 	 */
@@ -107,6 +112,7 @@ public class GameMenu_Model extends Model {
 
 	/**
 	 * For the Chat-Messages
+	 * 
 	 * @author L.Weber
 	 * @param input
 	 */
@@ -117,6 +123,7 @@ public class GameMenu_Model extends Model {
 
 	/**
 	 * For the gamePlay
+	 * 
 	 * @author L.Weber
 	 * @param xCoordinate1
 	 * @param yCoordinate1
@@ -124,13 +131,16 @@ public class GameMenu_Model extends Model {
 	 * @param yCoordinate2
 	 * @param value
 	 */
-	public void messageConstructorForCoordinate(boolean singlePlayer, int xCoordinate1, int yCoordinate1, int xCoordinate2, int yCoordinate2, Value value) {
-		Message message = new Message(MessageType.Coordinate,singlePlayer, xCoordinate1, yCoordinate1, xCoordinate2, yCoordinate2, value);
+	public void messageConstructorForCoordinate(boolean singlePlayer, int xCoordinate1, int yCoordinate1,
+			int xCoordinate2, int yCoordinate2, Value value) {
+		Message message = new Message(MessageType.Coordinate, singlePlayer, xCoordinate1, yCoordinate1, xCoordinate2,
+				yCoordinate2, value);
 		sendMessage(message);
 	}
 
 	/**
 	 * For the Win-Message
+	 * 
 	 * @author L.Weber
 	 * @param win
 	 */
@@ -138,9 +148,10 @@ public class GameMenu_Model extends Model {
 		Message message = new Message(MessageType.WinMessage, win);
 		sendMessage(message);
 	}
-	
+
 	/**
 	 * For the Update-Message
+	 * 
 	 * @author L.weber
 	 * @param update
 	 * @param xCoordinate1
@@ -149,14 +160,17 @@ public class GameMenu_Model extends Model {
 	 * @param yCoordinate2
 	 * @param gems
 	 */
-	public void messageConstructorForUpdate(boolean update, int xCoordinate1, int yCoordinate1, int xCoordinate2, int yCoordinate2, int gems){
-		Message message = new Message(MessageType.Update, update, xCoordinate1, yCoordinate1, xCoordinate2, yCoordinate2, gems);
+	public void messageConstructorForUpdate(boolean update, int xCoordinate1, int yCoordinate1, int xCoordinate2,
+			int yCoordinate2, int gems) {
+		Message message = new Message(MessageType.Update, update, xCoordinate1, yCoordinate1, xCoordinate2,
+				yCoordinate2, gems);
 		sendMessage(message);
-		
+
 	}
 
 	/**
 	 * For the DB-Messages
+	 * 
 	 * @author L.Weber
 	 * @param db
 	 */
@@ -166,16 +180,30 @@ public class GameMenu_Model extends Model {
 	}
 	
 	/**
+	 * For DB Update / Insert
+	 * @author L.Weber
+	 * @param db
+	 * @param preName
+	 * @param lastName
+	 */
+	public void messageConstructorForDBInsertUpdate(int db, int Id, String userName, String preName, String lastName, String password){
+		Message message = new Message(MessageType.DBMessage, db,Id, userName, preName, lastName, password);
+		sendMessage(message);
+	}
+
+	/**
 	 * For the Error-Message
+	 * 
 	 * @author L.Weber
 	 */
 	public void messageConstructorForError() {
 		Message message = new Message(MessageType.Error);
 		sendMessage(message);
 	}
-	
+
 	/**
 	 * For the AI SinglePlayer
+	 * 
 	 * @author L.Weber
 	 * @param singlePlayer
 	 * @param weightProgress
@@ -185,14 +213,16 @@ public class GameMenu_Model extends Model {
 	 * @param weightSumoWin
 	 * @param weightWin
 	 */
-	public void messageContstructorForAISingle(double weightProgress, double weightMoves, 
-			double weightBlock, double weightSumoBlock, double weightSumoWin, double weightWin) {
-		Message message = new Message(MessageType.AISingle, weightProgress, weightMoves, weightBlock, weightSumoBlock, weightSumoWin, weightWin);
+	public void messageContstructorForAISingle(double weightProgress, double weightMoves, double weightBlock,
+			double weightSumoBlock, double weightSumoWin, double weightWin) {
+		Message message = new Message(MessageType.AISingle, weightProgress, weightMoves, weightBlock, weightSumoBlock,
+				weightSumoWin, weightWin);
 		sendMessage(message);
 	}
-	
+
 	/**
 	 * For the AI DoublePlayer
+	 * 
 	 * @author L.Weber
 	 * @param weightProgressL
 	 * @param weightMovesL
@@ -207,43 +237,81 @@ public class GameMenu_Model extends Model {
 	 * @param weightSumoWinR
 	 * @param weightWinR
 	 */
-	public void messageContstructorForAIDouble(double weightProgressL, double weightMovesL, 
-			double weightBlockL, double weightSumoBlockL, double weightSumoWinL, double weightWinL,
-			double weightProgressR, double weightMovesR, double weightBlockR, double weightSumoBlockR, double weightSumoWinR, double weightWinR) {
-		
-		Message message = new Message(MessageType.AIDouble, weightProgressL, weightMovesL, weightBlockL, weightSumoBlockL, weightSumoWinL, weightWinL,
-				weightProgressR, weightMovesR, weightBlockR, weightSumoBlockR, weightSumoWinR, weightWinR);
-		
+	public void messageContstructorForAIDouble(double weightProgressL, double weightMovesL, double weightBlockL,
+			double weightSumoBlockL, double weightSumoWinL, double weightWinL, double weightProgressR,
+			double weightMovesR, double weightBlockR, double weightSumoBlockR, double weightSumoWinR,
+			double weightWinR) {
+
+		Message message = new Message(MessageType.AIDouble, weightProgressL, weightMovesL, weightBlockL,
+				weightSumoBlockL, weightSumoWinL, weightWinL, weightProgressR, weightMovesR, weightBlockR,
+				weightSumoBlockR, weightSumoWinR, weightWinR);
+
 		sendMessage(message);
 	}
 	
-	//set a new move
+
+	public void makeUserList(ArrayList<String> userList) {
+		int id;
+		String prename;
+		String username;
+		String surname;
+		String password;
+		String win;
+
+		userMap = new HashMap<Integer, ArrayList<String>>();
+		ArrayList<String> uList = new ArrayList<String>();
+		while (!userList.isEmpty()) {
+			uList.clear();			
+			id = Integer.parseInt(userList.get(0));
+			username = userList.get(1);
+			uList.add(username);
+			prename = userList.get(2);
+			uList.add(prename);
+			surname = userList.get(3);
+			uList.add(surname);
+			password = userList.get(4);
+			uList.add(password);
+			win = userList.get(5);
+			uList.add(win);
+			if(userMap.get(id) == null){
+				userMap.put(id, new ArrayList<String>());
+				userMap.get(id).addAll(uList);
+			}
+			for(int i = 0; i < 6; i ++){
+				userList.remove(0);
+			}
+		}
+
+	}
+
+	// set a new move
 	public void setMoveProperty(Boolean newValue) {
-		try{
-			this.moveProperty.setValue(newValue);;
-		} catch (Exception e){
+		try {
+			this.moveProperty.setValue(newValue);
+			;
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	//set a new db request
+
+	// set a new db request
 	public void setDBRequest(Boolean newValue) {
-		try{
-			this.dbRequest.setValue(newValue);;
-		} catch (Exception e){
+		try {
+			this.dbRequest.setValue(newValue);
+			;
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public SimpleBooleanProperty getDBRequest(){
+
+	public SimpleBooleanProperty getDBRequest() {
 		return this.dbRequest;
 	}
-	
-	public SimpleBooleanProperty getMoveProperty(){
+
+	public SimpleBooleanProperty getMoveProperty() {
 		return this.moveProperty;
 	}
 
-	
 	// Getter and setter
 	public Player getPlayer1() {
 		return player1;
@@ -260,39 +328,43 @@ public class GameMenu_Model extends Model {
 		this.endColumn = endColumn;
 		this.endRow = endRow;
 		this.setMoveProperty(true);
-		
+
 	}
-	
-	public int getStartColumn(){
+
+	public int getStartColumn() {
 		return this.startColumn;
 	}
 
-	public int getStartRow(){
+	public int getStartRow() {
 		return this.startRow;
 	}
-	
-	public int getEndColumn(){
+
+	public int getEndColumn() {
 		return this.endColumn;
 	}
-	
-	public int getEndRow(){
+
+	public int getEndRow() {
 		return this.endRow;
 	}
 
 	public void setUserID(int userID) {
-		this.userID = userID;	
+		this.userID = userID;
 	}
-	
-	public int getUserID(){
+
+	public int getUserID() {
 		return this.userID;
 	}
 
 	public void setUserList(ArrayList<String> userList) {
 		this.userList = userList;
-		
+
 	}
 
 	public ArrayList<String> getUserList() {
 		return this.userList;
+	}
+	
+	public HashMap<Integer, ArrayList<String>> getUserMap(){
+		return this.userMap;
 	}
 }

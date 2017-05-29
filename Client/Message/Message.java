@@ -113,6 +113,21 @@ public class Message {
 	@ElementList(required=false, inline=true)
 	private ArrayList<String> nameList;
 	
+	@Element(required = false)
+	private String preName;
+	
+	@Element(required = false)
+	private String lastName;
+	
+	@Element(required = false)
+	private String userName;
+	
+	@Element(required = false)
+	private int Id;
+	
+	@Element(required = false)
+	private String password;
+	
 
 	// Generator for a unique message ID
 	private static long messageID = 0;
@@ -254,6 +269,37 @@ public class Message {
 		createStandardMessage(messageType);
 		this.DB = db;
 		this.nameList = nameList;
+	}
+	
+	/**
+	 * For DB insert
+	 * @param messageType
+	 * @param db
+	 * @param preName
+	 * @param lastName
+	 */
+	public Message(MessageType messageType, int db, int Id, String userName, String preName, String lastName, String password){
+		createStandardMessage(messageType);
+		this.DB = db;
+		this.Id = Id;
+		this.preName = preName;
+		this.lastName = lastName;
+		this.userName = userName;
+		this.password = password;
+	}
+	
+	/**
+	 * For DB Updates
+	 * @author L.Weber
+	 * @param messageType
+	 * @param db
+	 * @param preName
+	 * @param lastName
+	 */
+	public Message(MessageType messageType, int db, String preName, String lastName){
+		this.DB = db;
+		this.preName = preName;
+		this.lastName = lastName;
 	}
 		
 
@@ -423,6 +469,26 @@ public class Message {
 	
 	public ArrayList<String> getNameList(){
 		return this.nameList;
+	}
+	
+	public String getPreName(){
+		return this.preName;
+	}
+	
+	public String getLastName(){
+		return this.lastName;
+	}
+	
+	public String getUserName(){
+		return this.userName;
+	}
+	
+	public int getId(){
+		return this.Id;
+	}
+	
+	public String getPassword(){
+		return this.password;
 	}
 	
 

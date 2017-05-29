@@ -22,6 +22,8 @@ import Login.LoginView;
 import MainMenu.MainMenuController;
 import MainMenu.MainMenuView;
 import Server.TextAreaHandler;
+import UserMenu.UserMenuController;
+import UserMenu.UserMenuView;
 import WindChuckers_Main.Model_Extend.Board;
 import WindChuckers_Main.Model_Extend.Movement;
 import WindChuckers_Main.Model_Extend.Player;
@@ -85,6 +87,9 @@ public class WindChuckers extends Application {
     
     //Login
     private LoginModel loginModel;
+    
+    //User Menu
+    private UserMenuView userMenuView;
     
     private ServiceLocator serviceLocator; // resources, after initialization
 
@@ -303,12 +308,23 @@ public class WindChuckers extends Application {
 		Stage mainMenuStage = new Stage();
 		model = GameMenu_Model.getGameModel();
 		mainMenuView = new MainMenuView(mainMenuStage, model);
-		new MainMenuController(model,mainMenuView);
+		new MainMenuController(this,model,mainMenuView);
 		
 		serviceLocator = ServiceLocator.getServiceLocator();
 		
 		mainMenuView.start();
 		
+	}
+	
+	public void startUserMenu(){
+		Stage userMenuStage = new Stage();
+		model = GameMenu_Model.getGameModel();
+		userMenuView = new UserMenuView(userMenuStage, model);
+		new UserMenuController(model,userMenuView);
+		
+		serviceLocator = ServiceLocator.getServiceLocator();
+		
+		userMenuView.start();
 	}
 
     /**

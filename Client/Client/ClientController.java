@@ -38,6 +38,9 @@ public class ClientController {
                 Integer port = new Integer(view.txtPort.getText());
                 if (model.connect(ip, port)) {
                     view.txtMessages.setText("Connection established");
+            		//Do a Request to the DB for all the Users
+            		model.setMoveProperty(false);
+                    model.sendMessage(new Message(MessageType.DBMessage,0));
                 } else {
                     view.txtMessages.setText("Failed to establish connection");
                 }
@@ -85,7 +88,7 @@ public class ClientController {
             @Override
             public void handle(WindowEvent event) {
                 view.stop();
-                Platform.exit();
+//                Platform.exit();
             }
         });
         
@@ -100,6 +103,7 @@ public class ClientController {
 			logger.info("DB-Request is here");
 			model.setDBRequest(false);
 			model.setUserList(clientserver.getUserList());
+			model.makeUserList(clientserver.getUserList());
 			model.setDBRequest(true);
 		});
         

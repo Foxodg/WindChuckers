@@ -30,8 +30,8 @@ public class LoginView extends View <GameMenu_Model>{
 	protected TextField username;
 	protected PasswordField password;
 	protected Button btnLogin;
-	protected Button btnCreateUser;
-	protected Button btnCheckUserName;
+	protected Button btnUserMenu;
+	protected Button btnRefresh;
 
 	public LoginView(Stage stage, GameMenu_Model model) {
 		super(stage,model);
@@ -47,17 +47,21 @@ public class LoginView extends View <GameMenu_Model>{
 		Translator t = sl.getTranslator();
 		
 		btnLogin = new Button();
-		btnCreateUser = new Button();
-		btnCheckUserName = new Button();
+		btnLogin.setVisible(false);
+		btnUserMenu = new Button();
+		btnRefresh = new Button();
 		password = new PasswordField();
 		username = new TextField();
 		username.setPromptText("username");
+		username.setVisible(false);
 		password.setPromptText("password");
+		//TODO password 
 		password.setText("test");
+		password.setVisible(false);
 		HBox loginBox = new HBox();
 		HBox userBox = new HBox();
 		loginBox.getChildren().addAll(username, password ,btnLogin);
-		userBox.getChildren().addAll(btnCreateUser, btnCheckUserName);
+		userBox.getChildren().addAll(btnUserMenu, btnRefresh);
 		
 		MenuBar menuBar = new MenuBar();
 		menuFileLogin = new Menu();
@@ -92,8 +96,8 @@ public class LoginView extends View <GameMenu_Model>{
 		
 		//Buttons
 		btnLogin.setText(t.getString("btnLogin"));
-		btnCreateUser.setText(t.getString("btnCreateUser"));
-		btnCheckUserName.setText(t.getString("CheckUserName"));
+		btnUserMenu.setText(t.getString("btnUserMenu"));
+		btnRefresh.setText(t.getString("btnRefresh"));
 		
 	}
 
