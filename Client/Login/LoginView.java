@@ -47,7 +47,8 @@ public class LoginView extends View <GameMenu_Model>{
 		Translator t = sl.getTranslator();
 		
 		btnLogin = new Button();
-		btnLogin.setVisible(false);
+		//TODO set to false when work done
+		btnLogin.setVisible(true);
 		btnUserMenu = new Button();
 		btnRefresh = new Button();
 		password = new PasswordField();
