@@ -97,6 +97,7 @@ public class ServerThreadForClient extends Thread {
 			else if(message.getDB() == 2){
 				//2 stands for Update
 				
+				
 			}
 			else if(message.getDB() == 3){
 				//3 stands for Delete
@@ -158,6 +159,17 @@ public class ServerThreadForClient extends Thread {
 		}
 		
 	}
+	
+	public void updatePlayer(int id, String userName, String preName, String lastName, String password){
+		try {
+			h2.update("UPDATE PLAYER SET USERNAME ="+userName+" WHERE PLAYERID ="+id);
+			h2.update("UPDATE PLAYER SET PRENAME ="+preName+" WHERE PLAYERID ="+id);
+			h2.update("UPDATE PLAYER SET SURNAME ="+lastName+" WHERE PLAYERID ="+id);
+			h2.update("UPDATE PLAYER SET PASSWORD ="+password+" WHERE PLAYERID ="+id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public static void sendMessageBackToClient(Message message){
 		try {
@@ -170,4 +182,5 @@ public class ServerThreadForClient extends Thread {
 			e.printStackTrace();
 		}
 	}
+	
 }

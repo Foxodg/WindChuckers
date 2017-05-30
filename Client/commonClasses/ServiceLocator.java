@@ -33,6 +33,9 @@ public class ServiceLocator {
     private Logger logger;
     private Configuration configuration;
     private Translator translator;
+    private String port;
+    private String webServer;
+    private String startClient;
 
     /**
      * Factory method for returning the singleton
@@ -88,5 +91,29 @@ public class ServiceLocator {
     
     public void setTranslator(Translator translator) {
         this.translator = translator;
+    }
+    
+    public String getPort(){
+    	return this.port;
+    }
+    
+    public void setPort(String port){
+    	this.port = port;
+    }
+    
+    public String getWebServer(){
+    	return this.webServer;
+    }
+    
+    public void setWebServer(String webServer){
+    	this.webServer = webServer;
+    }
+    
+    public String getStartClient(){
+    	return this.startClient;
+    }
+    
+    public void setStartClient(String startClient){
+    	this.startClient = startClient;
     }
 }

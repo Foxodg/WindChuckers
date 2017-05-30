@@ -99,6 +99,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 			language.setOnAction(event -> {
 				sl.setTranslator(new Translator(locale.getLanguage()));
 				updateTexts();
+				sl.getConfiguration().setLocalOption("Language", locale.getLanguage());
 			});
 		}
 

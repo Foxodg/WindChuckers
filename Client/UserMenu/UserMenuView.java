@@ -40,6 +40,7 @@ public class UserMenuView extends View<GameMenu_Model> {
 	TextField txtSurName;
 	
 	TextField txtIdDis;
+	TextField txtUserNameDis;
 	TextField txtPreNameDis;
 	TextField txtSurNameDis;
 	TextField txtWinsDis;
@@ -48,15 +49,18 @@ public class UserMenuView extends View<GameMenu_Model> {
 	TextField txtSurNameEnter;
 	TextField txtUserNameEnter;
 	PasswordField pwfPasswordEnter;
+	PasswordField pwfOldPassword;
 	
 	//Label
 	Label lblPreName;
 	Label lblSurName;
 	Label lblIdDis;
+	Label lblUserNameDis;
 	Label lblPreNameDis;
 	Label lblSurNameDis;
 	Label lblWinsDis;
 	Label lblStatus;
+	Label lblnewUser;
 	
 	//Panel
 	VBox rightVBox;
@@ -87,7 +91,7 @@ public class UserMenuView extends View<GameMenu_Model> {
 		mainWindow.setOrientation(Orientation.HORIZONTAL);
 		mainWindow.getItems().addAll(leftPanel,centerPane, rightPanel);
 		
-		mainWindow.setDividerPosition(0, 0.125);
+		mainWindow.setDividerPosition(0, 0.2);
 		
 		this.txtPreNameDis = new TextField();
 		txtPreNameDis.setDisable(true);
@@ -97,14 +101,17 @@ public class UserMenuView extends View<GameMenu_Model> {
 		txtWinsDis.setDisable(true);
 		this.txtIdDis = new TextField();
 		txtIdDis.setDisable(true);
+		this.txtUserNameDis = new TextField();
+		txtUserNameDis.setDisable(true);
 		
 		lblIdDis = new Label();
+		lblUserNameDis = new Label();
 		lblPreNameDis = new Label();
 		lblSurNameDis = new Label();
 		lblWinsDis = new Label();
 		
 		centerPane.setOrientation(Orientation.VERTICAL);
-		centerPane.getItems().addAll(lblIdDis, txtIdDis, lblPreNameDis, txtPreNameDis,lblSurNameDis, txtSurNameDis, lblWinsDis, txtWinsDis);
+		centerPane.getItems().addAll(lblIdDis, txtIdDis, lblUserNameDis, txtUserNameDis, lblPreNameDis, txtPreNameDis,lblSurNameDis, txtSurNameDis, lblWinsDis, txtWinsDis);
 		centerPane.setDividerPosition(0, 0.20);
 		centerPane.setPrefSize(200, 200);
 		
@@ -124,6 +131,7 @@ public class UserMenuView extends View<GameMenu_Model> {
 		leftPanel.setDividerPosition(0, 0.1);
 		leftPanel.setPrefSize(200, 200);
 		
+		lblnewUser = new Label();
 		lblPreName = new Label();
 		lblSurName = new Label();
 		txtPreName = new TextField();
@@ -135,15 +143,12 @@ public class UserMenuView extends View<GameMenu_Model> {
 		rightPanel.setPrefSize(200, 200);
 		
 		this.txtPreNameEnter = new TextField();
-		this.txtPreNameEnter.setPromptText("New Prename");
 		this.txtSurNameEnter = new TextField();
-		this.txtSurNameEnter.setPromptText("New Surname");
 		this.txtUserNameEnter = new TextField();
-		this.txtUserNameEnter.setPromptText("New Username");
 		this.pwfPasswordEnter = new PasswordField();
-		this.pwfPasswordEnter.setPromptText("New Password");
+		this.pwfOldPassword = new PasswordField();
 		
-		rightVBox.getChildren().addAll(txtPreNameEnter, txtSurNameEnter, txtUserNameEnter, pwfPasswordEnter);
+		rightVBox.getChildren().addAll(lblnewUser, txtPreNameEnter, txtSurNameEnter, txtUserNameEnter, pwfPasswordEnter, pwfOldPassword);
 		
 		HBox bottomBox = new HBox();
 		lblStatus = new Label();
@@ -159,6 +164,8 @@ public class UserMenuView extends View<GameMenu_Model> {
 		updateTexts();
 
 		Scene scene = new Scene(root);
+        scene.getStylesheets().add(
+                getClass().getResource("Example.css").toExternalForm());
 		return scene;
 	};
 
@@ -178,10 +185,19 @@ public class UserMenuView extends View<GameMenu_Model> {
 		//Labels
 		lblPreName.setText(t.getString("lblPreName"));
 		lblSurName.setText(t.getString("lblSurName"));
+		lblUserNameDis.setText(t.getString("lblUserNameDis"));
 		lblPreNameDis.setText(t.getString("lblPreName"));
 		lblSurNameDis.setText(t.getString("lblSurName"));
 		lblWinsDis.setText(t.getString("lblWinsDis"));
 		lblIdDis.setText(t.getString("lblIdDis"));
+		lblnewUser.setText(t.getString("lblnewUser"));
+		
+		//TextField
+		txtPreNameEnter.setPromptText(t.getString("txtPreNameEnter"));
+		txtSurNameEnter.setPromptText(t.getString("txtSurNameEnter"));
+		txtUserNameEnter.setPromptText(t.getString("txtUserNameEnter"));
+		pwfPasswordEnter.setPromptText(t.getString("pwfPasswordEnter"));
+		pwfOldPassword.setPromptText(t.getString("pwfOldPassword"));
 
 	}
 

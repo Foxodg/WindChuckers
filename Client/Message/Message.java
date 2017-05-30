@@ -13,6 +13,8 @@ import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+import Message.Message.MessageType;
+
 
 /**
  * A simple example showing how to encapsulate messages in a class. This class sends and receives
@@ -127,6 +129,9 @@ public class Message {
 	
 	@Element(required = false)
 	private String password;
+	
+	@Element(required = false)
+	private String something;
 	
 
 	// Generator for a unique message ID
@@ -317,7 +322,21 @@ public class Message {
 	public Message(){
 	}
 	
-	
+	/**
+	 * For DB with one 
+	 * @param dbmessage
+	 * @param db2
+	 * @param something
+	 */
+	public Message(MessageType messageType, int db, int id, String something) {
+		createStandardMessage(messageType);
+		this.DB = db;
+		this.Id = id;
+		this.something = something;
+		
+	}
+
+
 	/**
 	 * For the standard in a Message
 	 * @param type MessageType
@@ -489,6 +508,10 @@ public class Message {
 	
 	public String getPassword(){
 		return this.password;
+	}
+	
+	public String getSomething(){
+		return this.something;
 	}
 	
 

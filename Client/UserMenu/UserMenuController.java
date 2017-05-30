@@ -32,6 +32,7 @@ public class UserMenuController extends Controller<GameMenu_Model, UserMenuView>
 				if (searchList.get(1).equals(view.txtPreName.getText())
 						|| searchList.get(2).equals(view.txtSurName.getText())) {
 					view.txtIdDis.setText(ee.getKey().toString());
+					view.txtUserNameDis.setText(searchList.get(0));
 					view.txtPreNameDis.setText(searchList.get(1));
 					view.txtSurNameDis.setText(searchList.get(2));
 					view.txtWinsDis.setText(searchList.get(4));
@@ -59,10 +60,24 @@ public class UserMenuController extends Controller<GameMenu_Model, UserMenuView>
 				for (Entry<Integer, ArrayList<String>> ee : userMap.entrySet()) {
 					ArrayList<String> searchList = ee.getValue();
 					//there is no entry
-					if(!searchList.get(1).equals(view.txtPreName.getText()) && !searchList.get(2).equals(view.txtSurName.getText())){
+					if(!searchList.get(1).equals(view.txtPreNameEnter.getText()) && !searchList.get(2).equals(view.txtSurNameEnter.getText()) && !searchList.get(0).equals(view.txtUserNameEnter.getText()) && searchList.get(4).equals(view.pwfOldPassword.getText())){
 						// 2 for an Update
-//						model.messageConstructorForDB(2, view.txtPreName.getText(), view.txtSurName.getText());
-//						model.messageConstructorForDB(0);
+						if(!view.txtPreNameEnter.getText().isEmpty() && !view.txtIdDis.getText().isEmpty() && !view.pwfPasswordEnter.getText().isEmpty()){
+							model.messageConstructorForDBInsertUpdate(2, Integer.parseInt(view.txtIdDis.getText()), view.txtUserNameDis.getText(), view.txtPreNameEnter.getText(), view.txtSurNameDis.getText(), view.pwfPasswordEnter.getText());
+						}
+						else if(!view.txtSurNameEnter.getText().isEmpty() && !view.txtIdDis.getText().isEmpty() && !view.pwfPasswordEnter.getText().isEmpty()){
+							model.messageConstructorForDBInsertUpdate(2, Integer.parseInt(view.txtIdDis.getText()), view.txtUserNameDis.getText(), view.txtPreNameDis.getText(), view.txtSurNameEnter.getText(), view.pwfPasswordEnter.getText());
+						}
+						else if(!view.txtUserNameEnter.getText().isEmpty() && !view.txtIdDis.getText().isEmpty() && !view.pwfPasswordEnter.getText().isEmpty()){
+							model.messageConstructorForDBInsertUpdate(2, Integer.parseInt(view.txtIdDis.getText()), view.txtUserNameEnter.getText(), view.txtPreNameDis.getText(), view.txtSurNameDis.getText(), view.pwfPasswordEnter.getText());
+						}
+						else if(!view.pwfPasswordEnter.getText().isEmpty() && !view.txtIdDis.getText().isEmpty() && !view.pwfPasswordEnter.getText().isEmpty()){
+							model.messageConstructorForDBInsertUpdate(2, Integer.parseInt(view.txtIdDis.getText()), view.txtUserNameDis.getText(), view.txtPreNameDis.getText(), view.txtSurNameDis.getText(), view.pwfPasswordEnter.getText());
+						}
+						else {
+							view.lblStatus.setText("Insert this one you will update");
+							view.lblStatus.setStyle("-fx-text-fill: #ff3300");
+						}
 					} else {
 						view.lblStatus.setText("Entry is there");
 						view.lblStatus.setStyle("-fx-text-fill: #ff3300");
@@ -89,7 +104,7 @@ public class UserMenuController extends Controller<GameMenu_Model, UserMenuView>
 				for (Entry<Integer, ArrayList<String>> ee : userMap.entrySet()) {
 					ArrayList<String> searchList = ee.getValue();	
 					//there is no entry
-					if(!searchList.get(1).equals(view.txtPreName.getText()) && !searchList.get(2).equals(view.txtSurName.getText())){
+					if(!searchList.get(1).equals(view.txtPreNameEnter.getText()) && !searchList.get(2).equals(view.txtSurNameEnter.getText()) && !searchList.get(0).equals(view.txtUserNameEnter.getText())){
 						// 1 for an Insert
 						model.messageConstructorForDBInsertUpdate(1, idcounter+1, view.txtUserNameEnter.getText(), view.txtPreNameEnter.getText(), view.txtSurNameEnter.getText(), view.pwfPasswordEnter.getText());
 						model.messageConstructorForDB(0);

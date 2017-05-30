@@ -43,7 +43,13 @@ public class Splash_Model extends Model {
             this.updateProgress(4,  6);
 
             String language = serviceLocator.getConfiguration().getOption("Language");
+            String port = serviceLocator.getConfiguration().getOption("Port");
+            String webServer = serviceLocator.getConfiguration().getOption("WebServer");
+            String startClient = serviceLocator.getConfiguration().getOption("StartClient");
             serviceLocator.setTranslator(new Translator(language));
+            serviceLocator.setPort(port);
+            serviceLocator.setWebServer(webServer);
+            serviceLocator.setStartClient(startClient);
             this.updateProgress(5,  6);
             
             // First, take some time, update progress

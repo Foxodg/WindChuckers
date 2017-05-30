@@ -210,7 +210,7 @@ public class WindChuckers extends Application {
     	clientView = new ClientView(clientStage, model, textAreaHandler.getTextArea());
     	clientController = new ClientController(model, clientView, clientserver);
     	   	
-    	clientView.start();
+//    	clientView.start();
     }
     
     /**
@@ -341,13 +341,7 @@ public class WindChuckers extends Application {
         serviceLocator.getConfiguration().save();
         if (view != null) {
             // Make the view invisible
-            view.stop();
-            clientView.stop();
-            lobbyView.stop();
-            loginView.stop();
-            friendsView.stop();
-            mainMenuView.stop();
-            addFriendsView.stop();
+        	Platform.exit();
         }
 
         // More cleanup code as needed

@@ -26,6 +26,7 @@ public class DataBase {
 //	public static void main(String[] args) throws Exception {
 //		deleteDB();
 //		createDB();
+//		updatePreparedStatementWithId(1);
 //	}
 //		ArrayList<String> searchList = selectPlayer();
 //		for(int i = 0; i < searchList.size(); i++){
@@ -35,7 +36,7 @@ public class DataBase {
 //		isTheEntryThere(1);
 //		update("UPDATE PLAYER SET WINS = 2 WHERE PLAYERID = 1");
 //		System.out.println(selectWithName("weber"));
-//		update("UPDATE PLAYER SET WINS =0 WHERE PLAYERID = 2");
+//		update("UPDATE PLAYER SET WINS =0 WHERE PLAYERID = 1");
 //	}
 
 	public DataBase() {
@@ -365,6 +366,32 @@ public class DataBase {
 		}
 	}
 	
+	public static void updatePreparedStatementWithId(int id) throws SQLException {
+		Connection connection = getDBConnection();
+		PreparedStatement updatePreparedStatement = null;
+		String UpdateQuery = ("UPDATE PLAYER SET WINS = 0 WHERE PLAYERID = ?");
+
+		try {
+			connection.setAutoCommit(false);
+
+			updatePreparedStatement = connection.prepareStatement(UpdateQuery);
+			updatePreparedStatement.setInt(1, id);
+			updatePreparedStatement.executeUpdate();
+			logger.info("H2 Database updated through PreparedStatement");
+		
+			updatePreparedStatement.close();
+
+			connection.commit();
+
+		} catch (SQLException e) {
+			logger.warning("Exception Message " + e.getLocalizedMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			connection.close();
+		}
+	}
+	
 	/*********************************************************************************************
 	 * Insert Statements
 	 * @author L.Weber
@@ -396,9 +423,7 @@ public class DataBase {
 			insertPreparedStatement.setString(3, prename);
 			insertPreparedStatement.setString(4, surname);
 			insertPreparedStatement.setString(5, password);
-			
-			update("UPDATE PLAYER SET WINS =0 WHERE PLAYERID = "+id);
-			
+					
 
 			logger.info("Insert: " + id + " "+ username + " " + prename + " " + surname + " " + "***" + " " + win);
 			insertPreparedStatement.executeUpdate();
@@ -412,6 +437,7 @@ public class DataBase {
 		} finally {
 			connection.close();
 		}
+		updatePreparedStatementWithId(id);
 	}
 	
 	/*********************************************************************************************

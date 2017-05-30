@@ -180,7 +180,7 @@ public class GameMenu_Model extends Model {
 	}
 	
 	/**
-	 * For DB Update / Insert
+	 * For DB Insert / Update
 	 * @author L.Weber
 	 * @param db
 	 * @param preName
@@ -188,6 +188,17 @@ public class GameMenu_Model extends Model {
 	 */
 	public void messageConstructorForDBInsertUpdate(int db, int Id, String userName, String preName, String lastName, String password){
 		Message message = new Message(MessageType.DBMessage, db,Id, userName, preName, lastName, password);
+		sendMessage(message);
+	}
+	
+	/**
+	 * For DB Update 
+	 * @author L.Weber
+	 * @param db
+	 * @param something
+	 */
+	public void messageConstructorForDBUpdate(int db, int id, String something){
+		Message message = new Message(MessageType.DBMessage, db, id, something);
 		sendMessage(message);
 	}
 

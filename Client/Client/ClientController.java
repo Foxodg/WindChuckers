@@ -30,6 +30,23 @@ public class ClientController {
         this.view = view;
         this.clientserver = clientserver;
         
+        //is the AutomaticButton true then login   
+        if(view.cbAutomaticLogin.isSelected()){
+        	String ip = view.txtIP.getText();
+            Integer port = new Integer(view.txtPort.getText());
+            if (model.connect(ip, port)) {
+                view.txtMessages.setText("Connection established");
+        		//Do a Request to the DB for all the Users
+        		model.setMoveProperty(false);
+                model.sendMessage(new Message(MessageType.DBMessage,0));
+                view.stop();
+            } else {
+                view.txtMessages.setText("Failed to establish connection");
+            }
+        } else {
+            view.start();
+        }
+        
         // register ourselves to listen for button clicks
         view.btnGo.setOnAction(new EventHandler<ActionEvent>() {
             @Override
