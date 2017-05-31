@@ -83,6 +83,8 @@ public class LoginView extends View <GameMenu_Model>{
 		updateTexts();
 		
         Scene scene = new Scene(root);
+        scene.getStylesheets().add(
+                getClass().getResource("Style.css").toExternalForm());
 		return scene;
 	}
 	

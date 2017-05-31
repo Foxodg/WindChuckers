@@ -103,12 +103,13 @@ public class ClientThreadForServer extends Thread {
 		}
 		else if (message.getMessageType() == MessageType.DBMessage || message.getMessageType() == MessageType.DBMessageFull){
 			logger.info("Client: DB-Message is arrived " + message.getDB());
-			setDBRequest(false);
+
 			if(message.getDB() == 0){
 				// 0 stands for full List
+				setDBRequest(false);
 				userList = message.getNameList();
+				setDBRequest(true);
 			}
-			setDBRequest(true);
 		}
 	}
 	

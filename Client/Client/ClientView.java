@@ -142,7 +142,7 @@ public class ClientView {
         
         Scene scene = new Scene(root);
         scene.getStylesheets().add(
-                getClass().getResource("Example.css").toExternalForm());
+                getClass().getResource("Style.css").toExternalForm());
         stage.setScene(scene);;
     }
     

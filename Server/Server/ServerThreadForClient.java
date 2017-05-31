@@ -93,11 +93,20 @@ public class ServerThreadForClient extends Thread {
 			else if(message.getDB() == 1){
 				//1 stands for Insert
 				insertPlayer(message.getId(), message.getUserName(), message.getPreName(), message.getLastName(), message.getPassword());
+				try {
+					sendMessageBackToClient(new Message(MessageType.DBMessageFull,0,h2.selectPlayer()));
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
 			else if(message.getDB() == 2){
 				//2 stands for Update
-				
-				
+				updatePlayer(message.getId(), message.getUserName(), message.getPreName(), message.getLastName(), message.getPassword());
+				try {
+					sendMessageBackToClient(new Message(MessageType.DBMessageFull,0,h2.selectPlayer()));
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
 			else if(message.getDB() == 3){
 				//3 stands for Delete
@@ -162,10 +171,11 @@ public class ServerThreadForClient extends Thread {
 	
 	public void updatePlayer(int id, String userName, String preName, String lastName, String password){
 		try {
-			h2.update("UPDATE PLAYER SET USERNAME ="+userName+" WHERE PLAYERID ="+id);
-			h2.update("UPDATE PLAYER SET PRENAME ="+preName+" WHERE PLAYERID ="+id);
-			h2.update("UPDATE PLAYER SET SURNAME ="+lastName+" WHERE PLAYERID ="+id);
-			h2.update("UPDATE PLAYER SET PASSWORD ="+password+" WHERE PLAYERID ="+id);
+			h2.updatePreparedStatementPreName(preName, id);
+			h2.updatePreparedStatementSurName(lastName, id);
+			h2.updatePreparedStatementUserName(userName, id);
+			h2.updatePreparedStatementPassword(password, id);
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

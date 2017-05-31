@@ -11,6 +11,7 @@ import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -30,40 +31,43 @@ public class UserMenuView extends View<GameMenu_Model> {
 	protected MenuItem menuFileExitUserMenu;
 	
 	//Buttons
-	Button btnCreateUser;
-	Button btnDeleteUser;
-	Button btnChangeUser;
-	Button btnSearchUser;
+	protected Button btnCreateUser;
+	protected Button btnDeleteUser;
+	protected Button btnChangeUser;
+	protected Button btnSearchUser;
+	protected Button btnGetAll;
 	
 	// TexFields
-	TextField txtPreName;
-	TextField txtSurName;
+	protected TextField txtPreName;
+	protected TextField txtSurName;
 	
-	TextField txtIdDis;
-	TextField txtUserNameDis;
-	TextField txtPreNameDis;
-	TextField txtSurNameDis;
-	TextField txtWinsDis;
+	protected TextField txtIdDis;
+	protected TextField txtUserNameDis;
+	protected TextField txtPreNameDis;
+	protected TextField txtSurNameDis;
+	protected TextField txtWinsDis;
 	
-	TextField txtPreNameEnter;
-	TextField txtSurNameEnter;
-	TextField txtUserNameEnter;
-	PasswordField pwfPasswordEnter;
-	PasswordField pwfOldPassword;
+	protected TextField txtPreNameEnter;
+	protected TextField txtSurNameEnter;
+	protected TextField txtUserNameEnter;
+	protected PasswordField pwfPasswordEnter;
+	protected PasswordField pwfOldPassword;
 	
 	//Label
-	Label lblPreName;
-	Label lblSurName;
-	Label lblIdDis;
-	Label lblUserNameDis;
-	Label lblPreNameDis;
-	Label lblSurNameDis;
-	Label lblWinsDis;
-	Label lblStatus;
-	Label lblnewUser;
+	protected Label lblPreName;
+	protected Label lblSurName;
+	protected Label lblIdDis;
+	protected Label lblUserNameDis;
+	protected Label lblPreNameDis;
+	protected Label lblSurNameDis;
+	protected Label lblWinsDis;
+	protected Label lblStatus;
+	protected Label lblnewUser;
+	protected Label lblSearch;
+	protected Label lblChange;
 	
 	//Panel
-	VBox rightVBox;
+	protected VBox rightVBox;
 
 
 	public UserMenuView(Stage stage, GameMenu_Model model) {
@@ -81,11 +85,14 @@ public class UserMenuView extends View<GameMenu_Model> {
 		MenuBar menuBar = new MenuBar();
 		menuFileUserMenu = new Menu();
 		menuFileExitUserMenu = new MenuItem();
+		menuFileUserMenu.getItems().add(menuFileExitUserMenu);
+		menuBar.getMenus().add(menuFileUserMenu);
 		
 		SplitPane mainWindow = new SplitPane();
 		SplitPane centerPane = new SplitPane();
 		SplitPane leftPanel = new SplitPane();
 		SplitPane rightPanel = new SplitPane();
+		SplitPane updatePanel = new SplitPane();
 		rightVBox = new VBox();
 		
 		mainWindow.setOrientation(Orientation.HORIZONTAL);
@@ -112,7 +119,7 @@ public class UserMenuView extends View<GameMenu_Model> {
 		
 		centerPane.setOrientation(Orientation.VERTICAL);
 		centerPane.getItems().addAll(lblIdDis, txtIdDis, lblUserNameDis, txtUserNameDis, lblPreNameDis, txtPreNameDis,lblSurNameDis, txtSurNameDis, lblWinsDis, txtWinsDis);
-		centerPane.setDividerPosition(0, 0.20);
+		centerPane.setDividerPosition(0, 0.30);
 		centerPane.setPrefSize(200, 200);
 		
 		this.btnChangeUser = new Button();
@@ -121,34 +128,42 @@ public class UserMenuView extends View<GameMenu_Model> {
 		this.btnDeleteUser = new Button();
 		btnDeleteUser.setVisible(false);
 		this.btnSearchUser = new Button();
+		this.btnGetAll = new Button();
 		
 		Label seperator1 = new Label();
 		Label seperator2 = new Label();
 		Label seperator3 = new Label();
+		Label seperator4 = new Label();
 		
 		leftPanel.setOrientation(Orientation.VERTICAL);
-		leftPanel.getItems().addAll(this.btnSearchUser,seperator1, this.btnCreateUser,seperator2, this.btnChangeUser,seperator3, this.btnDeleteUser);
+		leftPanel.getItems().addAll(this.btnSearchUser,seperator1, this.btnCreateUser,seperator2, this.btnChangeUser,seperator3, this.btnDeleteUser,seperator4, btnGetAll);
 		leftPanel.setDividerPosition(0, 0.1);
 		leftPanel.setPrefSize(200, 200);
 		
 		lblnewUser = new Label();
 		lblPreName = new Label();
 		lblSurName = new Label();
+		lblSearch = new Label();
 		txtPreName = new TextField();
 		txtSurName = new TextField();
+		lblChange = new Label();
 		
 		rightPanel.setOrientation(Orientation.VERTICAL);
-		rightPanel.getItems().addAll(lblPreName,txtPreName,lblSurName,txtSurName );
-		rightPanel.setDividerPosition(0, 0.20);
+		rightPanel.getItems().addAll(lblSearch, lblPreName,txtPreName,lblSurName,txtSurName );
+		rightPanel.setDividerPosition(0, 0.30);
 		rightPanel.setPrefSize(200, 200);
 		
+		lblChange = new Label();
 		this.txtPreNameEnter = new TextField();
 		this.txtSurNameEnter = new TextField();
 		this.txtUserNameEnter = new TextField();
 		this.pwfPasswordEnter = new PasswordField();
 		this.pwfOldPassword = new PasswordField();
 		
-		rightVBox.getChildren().addAll(lblnewUser, txtPreNameEnter, txtSurNameEnter, txtUserNameEnter, pwfPasswordEnter, pwfOldPassword);
+		updatePanel.setOrientation(Orientation.VERTICAL);
+		updatePanel.getItems().addAll(lblChange, lblnewUser, txtPreNameEnter, txtSurNameEnter, txtUserNameEnter, pwfPasswordEnter, pwfOldPassword);
+		updatePanel.setDividerPosition(0, 0.30);
+		updatePanel.setPrefSize(200, 200);
 		
 		HBox bottomBox = new HBox();
 		lblStatus = new Label();
@@ -159,7 +174,7 @@ public class UserMenuView extends View<GameMenu_Model> {
 		root.add(menuBar, 0, 0);
 		root.add(mainWindow, 0, 1);
 		root.add(bottomBox, 0, 2);
-		root.add(rightVBox, 1, 1);
+		root.add(updatePanel, 0, 3);
 
 		updateTexts();
 
@@ -181,6 +196,7 @@ public class UserMenuView extends View<GameMenu_Model> {
 		btnCreateUser.setText(t.getString("btnCreateUser"));
 		btnDeleteUser.setText(t.getString("btnDeleteUser"));
 		btnSearchUser.setText(t.getString("btnSearchUser"));
+		btnGetAll.setText(t.getString("btnGetAll"));
 		
 		//Labels
 		lblPreName.setText(t.getString("lblPreName"));
@@ -191,6 +207,8 @@ public class UserMenuView extends View<GameMenu_Model> {
 		lblWinsDis.setText(t.getString("lblWinsDis"));
 		lblIdDis.setText(t.getString("lblIdDis"));
 		lblnewUser.setText(t.getString("lblnewUser"));
+		lblSearch.setText(t.getString("lblSearch"));
+		lblChange.setText(t.getString("lblChange"));
 		
 		//TextField
 		txtPreNameEnter.setPromptText(t.getString("txtPreNameEnter"));
@@ -200,5 +218,6 @@ public class UserMenuView extends View<GameMenu_Model> {
 		pwfOldPassword.setPromptText(t.getString("pwfOldPassword"));
 
 	}
+
 
 }

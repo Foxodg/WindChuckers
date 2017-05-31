@@ -308,7 +308,7 @@ public class AI_View extends View<GameMenu_Model>{
 		
 		Scene scene = new Scene(root);
         scene.getStylesheets().add(
-                getClass().getResource("Example.css").toExternalForm());
+                getClass().getResource("Style.css").toExternalForm());
 		return scene;
 	}
 

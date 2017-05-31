@@ -23,21 +23,21 @@ public class DataBase {
 	private static final String DB_PASSWORD = "";
 
 	// only for test the DB and show the tables
-//	public static void main(String[] args) throws Exception {
-//		deleteDB();
+	public static void main(String[] args) throws Exception {
+		deleteDB();
 //		createDB();
 //		updatePreparedStatementWithId(1);
 //	}
-//		ArrayList<String> searchList = selectPlayer();
-//		for(int i = 0; i < searchList.size(); i++){
-//			System.out.println(searchList.get(i));
-//		}
+		ArrayList<String> searchList = selectPlayer();
+		for(int i = 0; i < searchList.size(); i++){
+			System.out.println(searchList.get(i));
+		}
 //		insertPlayer(1,"lukas","weber",1);
 //		isTheEntryThere(1);
 //		update("UPDATE PLAYER SET WINS = 2 WHERE PLAYERID = 1");
 //		System.out.println(selectWithName("weber"));
 //		update("UPDATE PLAYER SET WINS =0 WHERE PLAYERID = 1");
-//	}
+	}
 
 	public DataBase() {
 	}
@@ -366,16 +366,150 @@ public class DataBase {
 		}
 	}
 	
-	public static void updatePreparedStatementWithId(int id) throws SQLException {
+	/**
+	 * For Update the win with an id
+	 * @param win
+	 * @param id
+	 * @throws SQLException
+	 */
+	public static void updatePreparedStatementWithId(int win, int id) throws SQLException {
 		Connection connection = getDBConnection();
 		PreparedStatement updatePreparedStatement = null;
-		String UpdateQuery = ("UPDATE PLAYER SET WINS = 0 WHERE PLAYERID = ?");
+		String UpdateQuery = ("UPDATE PLAYER SET WINS = ? WHERE PLAYERID = ?");
 
 		try {
 			connection.setAutoCommit(false);
-
 			updatePreparedStatement = connection.prepareStatement(UpdateQuery);
-			updatePreparedStatement.setInt(1, id);
+			updatePreparedStatement.setInt(1, win);
+			updatePreparedStatement.setInt(2, id);
+			updatePreparedStatement.executeUpdate();
+			logger.info("H2 Database updated through PreparedStatement");
+		
+			updatePreparedStatement.close();
+
+			connection.commit();
+
+		} catch (SQLException e) {
+			logger.warning("Exception Message " + e.getLocalizedMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			connection.close();
+		}
+	}
+	
+	/**
+	 * Update the PreName
+	 * @param value
+	 * @param id
+	 * @throws SQLException
+	 */
+	public static void updatePreparedStatementPreName(String value, int id) throws SQLException {
+		Connection connection = getDBConnection();
+		PreparedStatement updatePreparedStatement = null;
+		String UpdateQuery = ("UPDATE PLAYER SET PRENAME = ? WHERE PLAYERID = ?");
+
+		try {
+			connection.setAutoCommit(false);
+			updatePreparedStatement = connection.prepareStatement(UpdateQuery);
+			updatePreparedStatement.setString(1, value);
+			updatePreparedStatement.setInt(2, id);
+			updatePreparedStatement.executeUpdate();
+			logger.info("H2 Database updated through PreparedStatement");
+		
+			updatePreparedStatement.close();
+
+			connection.commit();
+
+		} catch (SQLException e) {
+			logger.warning("Exception Message " + e.getLocalizedMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			connection.close();
+		}
+	}
+	
+	/**
+	 * Update the SurName
+	 * @param value
+	 * @param id
+	 * @throws SQLException
+	 */
+	public static void updatePreparedStatementSurName(String value, int id) throws SQLException {
+		Connection connection = getDBConnection();
+		PreparedStatement updatePreparedStatement = null;
+		String UpdateQuery = ("UPDATE PLAYER SET SURNAME = ? WHERE PLAYERID = ?");
+
+		try {
+			connection.setAutoCommit(false);
+			updatePreparedStatement = connection.prepareStatement(UpdateQuery);
+			updatePreparedStatement.setString(1, value);
+			updatePreparedStatement.setInt(2, id);
+			updatePreparedStatement.executeUpdate();
+			logger.info("H2 Database updated through PreparedStatement");
+		
+			updatePreparedStatement.close();
+
+			connection.commit();
+
+		} catch (SQLException e) {
+			logger.warning("Exception Message " + e.getLocalizedMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			connection.close();
+		}
+	}
+	
+	/**
+	 * Update the UserName
+	 * @param value
+	 * @param id
+	 * @throws SQLException
+	 */
+	public static void updatePreparedStatementUserName(String value, int id) throws SQLException {
+		Connection connection = getDBConnection();
+		PreparedStatement updatePreparedStatement = null;
+		String UpdateQuery = ("UPDATE PLAYER SET USERNAME = ? WHERE PLAYERID = ?");
+
+		try {
+			connection.setAutoCommit(false);
+			updatePreparedStatement = connection.prepareStatement(UpdateQuery);
+			updatePreparedStatement.setString(1, value);
+			updatePreparedStatement.setInt(2, id);
+			updatePreparedStatement.executeUpdate();
+			logger.info("H2 Database updated through PreparedStatement");
+		
+			updatePreparedStatement.close();
+
+			connection.commit();
+
+		} catch (SQLException e) {
+			logger.warning("Exception Message " + e.getLocalizedMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			connection.close();
+		}
+	}
+	
+	/**
+	 * Update the Password
+	 * @param value
+	 * @param id
+	 * @throws SQLException
+	 */
+	public static void updatePreparedStatementPassword(String value, int id) throws SQLException {
+		Connection connection = getDBConnection();
+		PreparedStatement updatePreparedStatement = null;
+		String UpdateQuery = ("UPDATE PLAYER SET PASSWORD = ? WHERE PLAYERID = ?");
+
+		try {
+			connection.setAutoCommit(false);
+			updatePreparedStatement = connection.prepareStatement(UpdateQuery);
+			updatePreparedStatement.setString(1, value);
+			updatePreparedStatement.setInt(2, id);
 			updatePreparedStatement.executeUpdate();
 			logger.info("H2 Database updated through PreparedStatement");
 		
@@ -437,7 +571,7 @@ public class DataBase {
 		} finally {
 			connection.close();
 		}
-		updatePreparedStatementWithId(id);
+		updatePreparedStatementWithId(0, id);
 	}
 	
 	/*********************************************************************************************
