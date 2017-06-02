@@ -132,9 +132,9 @@ public class GameMenu_Model extends Model {
 	 * @param value
 	 */
 	public void messageConstructorForCoordinate(boolean singlePlayer, int xCoordinate1, int yCoordinate1,
-			int xCoordinate2, int yCoordinate2, Value value) {
+			int xCoordinate2, int yCoordinate2) {
 		Message message = new Message(MessageType.Coordinate, singlePlayer, xCoordinate1, yCoordinate1, xCoordinate2,
-				yCoordinate2, value);
+				yCoordinate2);
 		sendMessage(message);
 	}
 

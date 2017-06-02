@@ -154,14 +154,13 @@ public class Message {
 	 * @param yCoordinate
 	 * @param value
 	 */
-	public Message (MessageType messageType, boolean singlePlayer, int xCoordinate1, int yCoordinate1, int xCoordinate2, int yCoordinate2, Value value) {
+	public Message (MessageType messageType, boolean singlePlayer, int xCoordinate1, int yCoordinate1, int xCoordinate2, int yCoordinate2) {
 		createStandardMessage(messageType);
 		this.singlePlayer = singlePlayer;
 		this.xCoordinate1 = xCoordinate1;
 		this.yCoordinate1 = yCoordinate1;
 		this.xCoordinate2 = xCoordinate2;
 		this.yCoordinate2 = yCoordinate2;
-		this.value = value;
 	}
 	
 	/**

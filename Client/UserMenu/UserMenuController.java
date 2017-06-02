@@ -267,6 +267,10 @@ public class UserMenuController extends Controller<GameMenu_Model, UserMenuView>
 			view.lblStatus.setText("Is deleted");
 			view.lblStatus.setStyle("-fx-text-fill: #33cc33");
 		});
+		
+		view.updatePanel.heightProperty().addListener((observable, oldValue, newValue) -> {
+			view.stage.sizeToScene();
+		});
 	}
 
 	public void fillPersonList() {
@@ -274,7 +278,7 @@ public class UserMenuController extends Controller<GameMenu_Model, UserMenuView>
 			ArrayList<String> searchList = ee.getValue();
 			// is for searching a entry
 			if (searchList.get(1).equals(view.txtPreName.getText())
-					|| searchList.get(2).equals(view.txtSurName.getText())) {
+					|| searchList.get(2).equals(view.txtSurName.getText()) || searchList.get(0).equals(view.txtUserName.getText())) {
 				view.txtIdDis.setText(ee.getKey().toString());
 				view.txtUserNameDis.setText(searchList.get(0));
 				view.txtPreNameDis.setText(searchList.get(1));

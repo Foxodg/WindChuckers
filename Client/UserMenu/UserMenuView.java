@@ -9,6 +9,7 @@ import commonClasses.ServiceLocator;
 import commonClasses.Translator;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -18,6 +19,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -40,6 +42,7 @@ public class UserMenuView extends View<GameMenu_Model> {
 	// TexFields
 	protected TextField txtPreName;
 	protected TextField txtSurName;
+	protected TextField txtUserName;
 	
 	protected TextField txtIdDis;
 	protected TextField txtUserNameDis;
@@ -56,22 +59,24 @@ public class UserMenuView extends View<GameMenu_Model> {
 	//Label
 	protected Label lblPreName;
 	protected Label lblSurName;
+	protected Label lblUserName;
 	protected Label lblIdDis;
 	protected Label lblUserNameDis;
 	protected Label lblPreNameDis;
 	protected Label lblSurNameDis;
 	protected Label lblWinsDis;
 	protected Label lblStatus;
-	protected Label lblnewUser;
 	protected Label lblSearch;
-	protected Label lblChange;
 	
 	//Panel
 	protected VBox rightVBox;
+	protected TitledPane updatePanel;
+	protected Stage stage;
 
 
 	public UserMenuView(Stage stage, GameMenu_Model model) {
 		super(stage, model);
+		this.stage = stage;
 
 		stage.setTitle("User Menu");
 	}
@@ -92,7 +97,7 @@ public class UserMenuView extends View<GameMenu_Model> {
 		SplitPane centerPane = new SplitPane();
 		SplitPane leftPanel = new SplitPane();
 		SplitPane rightPanel = new SplitPane();
-		SplitPane updatePanel = new SplitPane();
+		updatePanel = new TitledPane();
 		rightVBox = new VBox();
 		
 		mainWindow.setOrientation(Orientation.HORIZONTAL);
@@ -140,30 +145,31 @@ public class UserMenuView extends View<GameMenu_Model> {
 		leftPanel.setDividerPosition(0, 0.1);
 		leftPanel.setPrefSize(200, 200);
 		
-		lblnewUser = new Label();
 		lblPreName = new Label();
 		lblSurName = new Label();
+		lblUserName = new Label();
 		lblSearch = new Label();
 		txtPreName = new TextField();
 		txtSurName = new TextField();
-		lblChange = new Label();
+		txtUserName = new TextField();
 		
 		rightPanel.setOrientation(Orientation.VERTICAL);
-		rightPanel.getItems().addAll(lblSearch, lblPreName,txtPreName,lblSurName,txtSurName );
+		rightPanel.getItems().addAll(lblSearch, lblPreName,txtPreName,lblSurName,txtSurName, lblUserName, txtUserName );
 		rightPanel.setDividerPosition(0, 0.30);
 		rightPanel.setPrefSize(200, 200);
 		
-		lblChange = new Label();
 		this.txtPreNameEnter = new TextField();
 		this.txtSurNameEnter = new TextField();
 		this.txtUserNameEnter = new TextField();
 		this.pwfPasswordEnter = new PasswordField();
 		this.pwfOldPassword = new PasswordField();
 		
-		updatePanel.setOrientation(Orientation.VERTICAL);
-		updatePanel.getItems().addAll(lblChange, lblnewUser, txtPreNameEnter, txtSurNameEnter, txtUserNameEnter, pwfPasswordEnter, pwfOldPassword);
-		updatePanel.setDividerPosition(0, 0.30);
-		updatePanel.setPrefSize(200, 200);
+		VBox vBox = new VBox();
+		vBox.getChildren().addAll(txtPreNameEnter, txtSurNameEnter, txtUserNameEnter, pwfPasswordEnter, pwfOldPassword);
+		updatePanel.setContent(vBox);
+		updatePanel.setExpanded(false);
+		updatePanel.setText("Change User");
+				
 		
 		HBox bottomBox = new HBox();
 		lblStatus = new Label();
@@ -206,9 +212,8 @@ public class UserMenuView extends View<GameMenu_Model> {
 		lblSurNameDis.setText(t.getString("lblSurName"));
 		lblWinsDis.setText(t.getString("lblWinsDis"));
 		lblIdDis.setText(t.getString("lblIdDis"));
-		lblnewUser.setText(t.getString("lblnewUser"));
 		lblSearch.setText(t.getString("lblSearch"));
-		lblChange.setText(t.getString("lblChange"));
+		lblUserName.setText(t.getString("lblUserName"));
 		
 		//TextField
 		txtPreNameEnter.setPromptText(t.getString("txtPreNameEnter"));

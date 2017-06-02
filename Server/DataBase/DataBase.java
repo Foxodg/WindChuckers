@@ -587,7 +587,9 @@ public class DataBase {
 		DeleteDbFiles.execute("~", "WindChuckers", true);
 		try {
 			createDB();
-			insertPlayer(1,"testy","prename", "surname", "test");
+			insertPlayer(1,"admin","admin","admin","admin");
+			insertPlayer(2,"testy","prename", "surname", "test");
+			insertPlayer(3,"noname", "sowhat", "nonsens", "none");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

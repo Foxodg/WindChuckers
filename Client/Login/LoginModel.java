@@ -9,8 +9,8 @@ import javafx.beans.value.ObservableStringValue;
 import javafx.concurrent.Task;
 
 public class LoginModel extends Model {
-	ServiceLocator serviceLocator;
-	final String realPassword = "test";
+	private ServiceLocator serviceLocator;
+	private String realPassword;
 
 	
 	public LoginModel(){
@@ -26,16 +26,10 @@ public class LoginModel extends Model {
 		}
 		
 	}
-
-	public boolean checkUserList(String user, String name) {
-		if(user.equals(name)){
-			return true;
-		}
-		return false;
+	
+	public void setPassword(String password) {
+		this.realPassword = password;
 	}
-
-
-
 }
 
 

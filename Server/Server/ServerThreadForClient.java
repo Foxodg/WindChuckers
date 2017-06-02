@@ -68,7 +68,7 @@ public class ServerThreadForClient extends Thread {
 			//Safes the coordinates for the hidden-Board on the Server
 			if(this.wantAI){
 				Move move = kamisado.setPlayConfiguration(true, 5);
-				Message messageAI = new Message(MessageType.Coordinate, message.getSinglePlayer(), move.getX1(),move.getY1(),move.getX2(),move.getY2(), Value.Player2);
+				Message messageAI = new Message(MessageType.Coordinate, message.getSinglePlayer(), move.getX1(),move.getY1(),move.getX2(),move.getY2());
 				sendMessageBackToClient(messageAI);
 			}
 

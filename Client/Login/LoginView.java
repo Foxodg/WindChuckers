@@ -48,16 +48,15 @@ public class LoginView extends View <GameMenu_Model>{
 		
 		btnLogin = new Button();
 		//TODO set to false when work done
-		btnLogin.setVisible(true);
+		btnLogin.setDisable(false);
 		btnUserMenu = new Button();
 		btnRefresh = new Button();
+		btnRefresh.setDisable(true);
 		password = new PasswordField();
 		username = new TextField();
 		username.setPromptText("username");
 		username.setVisible(false);
 		password.setPromptText("password");
-		//TODO password 
-		password.setText("test");
 		password.setVisible(false);
 		HBox loginBox = new HBox();
 		HBox userBox = new HBox();
