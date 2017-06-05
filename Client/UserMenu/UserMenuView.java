@@ -168,7 +168,7 @@ public class UserMenuView extends View<GameMenu_Model> {
 		vBox.getChildren().addAll(txtPreNameEnter, txtSurNameEnter, txtUserNameEnter, pwfPasswordEnter, pwfOldPassword);
 		updatePanel.setContent(vBox);
 		updatePanel.setExpanded(false);
-		updatePanel.setText("Change User");
+		updatePanel.setText("Change User / create User");
 				
 		
 		HBox bottomBox = new HBox();

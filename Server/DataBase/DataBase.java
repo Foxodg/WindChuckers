@@ -23,22 +23,22 @@ public class DataBase {
 	private static final String DB_PASSWORD = "";
 
 	// only for test the DB and show the tables
-	public static void main(String[] args) throws Exception {
-		deleteDB();
+//	public static void main(String[] args) throws Exception {
+//		deleteDB();
 //		deletePlayer(2);
 //		createDB();
 //		updatePreparedStatementWithId(1);
 //	}
-		ArrayList<String> searchList = selectPlayer();
-		for(int i = 0; i < searchList.size(); i++){
-			System.out.println(searchList.get(i));
-		}
+//		ArrayList<String> searchList = selectPlayer();
+//		for(int i = 0; i < searchList.size(); i++){
+//			System.out.println(searchList.get(i));
+//		}
 //		insertPlayer(1,"lukas","weber",1);
 //		isTheEntryThere(1);
 //		update("UPDATE PLAYER SET WINS = 2 WHERE PLAYERID = 1");
 //		System.out.println(selectWithName("weber"));
 //		update("UPDATE PLAYER SET WINS =0 WHERE PLAYERID = 1");
-	}
+//	}
 
 	public DataBase() {
 	}

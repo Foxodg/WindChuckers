@@ -264,10 +264,25 @@ public class UserMenuController extends Controller<GameMenu_Model, UserMenuView>
 
 		view.btnDeleteUser.setOnAction(e -> {
 			// 3 for Delete
-			model.messageConstructorForDBUpdate(3, Integer.parseInt(view.txtIdDis.getText()));
-			updateGUI();
-			view.lblStatus.setText("Is deleted");
-			view.lblStatus.setStyle("-fx-text-fill: #33cc33");
+			if (view.pwfOldPassword.getText() != null) {
+				//is a password given?
+				for (Entry<Integer, ArrayList<String>> ee : userMap.entrySet()) {
+					ArrayList<String> searchList = ee.getValue();
+					if (searchList.get(3).equals(view.pwfOldPassword.getText()) && searchList.get(0).equals(view.txtUserNameDis.getText())) {
+						//is the password correct and the user is the correct
+						model.messageConstructorForDBUpdate(3, Integer.parseInt(view.txtIdDis.getText()));
+						updateGUI();
+						view.lblStatus.setText("Is deleted");
+						view.lblStatus.setStyle("-fx-text-fill: #33cc33");
+					} else {
+						view.lblStatus.setText("Fill the correct Password");
+						view.lblStatus.setStyle("-fx-text-fill: #ff3300");
+					}
+				}
+			} else {
+				view.lblStatus.setText("Fill Password");
+				view.lblStatus.setStyle("-fx-text-fill: #ff3300");
+			}
 		});
 
 		view.updatePanel.heightProperty().addListener((observable, oldValue, newValue) -> {
