@@ -110,7 +110,12 @@ public class ServerThreadForClient extends Thread {
 			}
 			else if(message.getDB() == 3){
 				//3 stands for Delete
-				
+				try {
+					h2.deletePlayer(message.getId());
+					sendMessageBackToClient(new Message(MessageType.DBMessageFull,0,h2.selectPlayer()));
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		else if(message.getMessageType() == MessageType.WinMessage){

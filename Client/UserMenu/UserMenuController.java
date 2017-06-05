@@ -3,11 +3,13 @@ package UserMenu;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import Message.Message;
 import Message.Message.MessageType;
 import WindChuckers_Main.GameMenu_Model;
 import abstractClasses.Controller;
+import commonClasses.ServiceLocator;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,6 +26,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class UserMenuController extends Controller<GameMenu_Model, UserMenuView> {
+	ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
+	Logger logger = serviceLocator.getLogger();
 
 	private HashMap<Integer, ArrayList<String>> userMap;
 
@@ -195,32 +199,30 @@ public class UserMenuController extends Controller<GameMenu_Model, UserMenuView>
 		model.getDBRequest().addListener((observable, oldValue, newValue) -> {
 			fillPersonList();
 		});
-		
 
 		view.btnGetAll.setOnAction(e -> {
-			
-			model.sendMessage(new Message(MessageType.DBMessage,0));
+
+			model.sendMessage(new Message(MessageType.DBMessage, 0));
 			userMap = model.getUserMap();
 
 			ListView<ArrayList<String>> list = new ListView<ArrayList<String>>();
 			ObservableList<ArrayList<String>> items = FXCollections.observableArrayList();
-			
+
 			for (Entry<Integer, ArrayList<String>> ee : userMap.entrySet()) {
 				ArrayList<String> searchList = ee.getValue();
 				items.add(searchList);
 			}
-			
+
 			list.setItems(items);
 			Stage stage = new Stage();
 			GridPane root = new GridPane();
 
 			root.add(list, 0, 0);
-			Scene scene = new Scene(root,200,200);
+			Scene scene = new Scene(root, 200, 200);
 			stage.setScene(scene);
-	        scene.getStylesheets().add(
-	                getClass().getResource("Example.css").toExternalForm());
+			scene.getStylesheets().add(getClass().getResource("Example.css").toExternalForm());
 			stage.show();
-			
+
 		});
 
 		view.btnCreateUser.setOnAction(e -> {
@@ -229,8 +231,8 @@ public class UserMenuController extends Controller<GameMenu_Model, UserMenuView>
 			int idcounter = 0;
 
 			// get the last id
-			for (int i = 0; i < userMap.size(); i++) {
-				idcounter++;
+			for (Entry<Integer, ArrayList<String>> ee : userMap.entrySet()) {
+				idcounter = ee.getKey();
 			}
 
 			if (view.txtPreName.getText() != null && view.txtSurName.getText() != null) {
@@ -262,12 +264,12 @@ public class UserMenuController extends Controller<GameMenu_Model, UserMenuView>
 
 		view.btnDeleteUser.setOnAction(e -> {
 			// 3 for Delete
-			// model.messageConstructorForDB(3,
-			// Integer.parseInt(view.txtIdDis.getText()));
+			model.messageConstructorForDBUpdate(3, Integer.parseInt(view.txtIdDis.getText()));
+			updateGUI();
 			view.lblStatus.setText("Is deleted");
 			view.lblStatus.setStyle("-fx-text-fill: #33cc33");
 		});
-		
+
 		view.updatePanel.heightProperty().addListener((observable, oldValue, newValue) -> {
 			view.stage.sizeToScene();
 		});
@@ -276,37 +278,48 @@ public class UserMenuController extends Controller<GameMenu_Model, UserMenuView>
 	public void fillPersonList() {
 		for (Entry<Integer, ArrayList<String>> ee : userMap.entrySet()) {
 			ArrayList<String> searchList = ee.getValue();
-			// is for searching a entry
-			if (searchList.get(1).equals(view.txtPreName.getText())
-					|| searchList.get(2).equals(view.txtSurName.getText()) || searchList.get(0).equals(view.txtUserName.getText())) {
-				view.txtIdDis.setText(ee.getKey().toString());
-				view.txtUserNameDis.setText(searchList.get(0));
-				view.txtPreNameDis.setText(searchList.get(1));
-				view.txtSurNameDis.setText(searchList.get(2));
-				view.txtWinsDis.setText(searchList.get(4));
-				view.lblStatus.setText("Found");
-				view.lblStatus.setStyle("-fx-text-fill: #33cc33");
-				view.btnChangeUser.setVisible(true);
-				view.btnDeleteUser.setVisible(true);
-			} else {
-				view.lblStatus.setText("Not found");
-				view.lblStatus.setStyle("-fx-text-fill: #ff3300");
-				view.btnChangeUser.setVisible(false);
-				view.btnDeleteUser.setVisible(false);
-				view.txtPreNameDis.clear();
-				view.txtSurNameDis.clear();
-				view.txtWinsDis.clear();
-				view.txtIdDis.clear();
-				view.txtUserNameDis.clear();
-			}
+			logger.info("Fill Person List");
+			// is for searching a entry$
+			try {
+				if (searchList.get(1).equals(view.txtPreName.getText())
+						|| searchList.get(2).equals(view.txtSurName.getText())
+						|| searchList.get(0).equals(view.txtUserName.getText())) {
+					view.txtIdDis.setText(ee.getKey().toString());
+					view.txtUserNameDis.setText(searchList.get(0));
+					view.txtPreNameDis.setText(searchList.get(1));
+					view.txtSurNameDis.setText(searchList.get(2));
+					view.txtWinsDis.setText(searchList.get(4));
+					view.lblStatus.setText("Found");
+					view.lblStatus.setStyle("-fx-text-fill: #33cc33");
+					view.btnChangeUser.setVisible(true);
+					view.btnDeleteUser.setVisible(true);
+					break;
+				} else {
+					view.lblStatus.setText("Not found");
+					view.lblStatus.setStyle("-fx-text-fill: #ff3300");
+					view.btnChangeUser.setVisible(false);
+					view.btnDeleteUser.setVisible(false);
+					view.txtPreNameDis.clear();
+					view.txtSurNameDis.clear();
+					view.txtWinsDis.clear();
+					view.txtIdDis.clear();
+					view.txtUserNameDis.clear();
+				}
 
+			} catch (Exception ex) {
+				logger.warning("Not found");
+			}
 		}
 	}
 
 	private void updateGUI() {
 		Platform.runLater(() -> {
-			model.sendMessage(new Message(MessageType.DBMessage,0));
+			// acutal. the Map from DB
+			logger.info("Update GUI");
+			model.sendMessage(new Message(MessageType.DBMessage, 0));
 			userMap = model.getUserMap();
+
+			// fill all in
 			for (Entry<Integer, ArrayList<String>> ee : userMap.entrySet()) {
 				ArrayList<String> searchList = ee.getValue();
 				view.txtIdDis.setText(ee.getKey().toString());

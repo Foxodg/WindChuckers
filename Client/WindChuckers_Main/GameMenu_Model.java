@@ -197,8 +197,8 @@ public class GameMenu_Model extends Model {
 	 * @param db
 	 * @param something
 	 */
-	public void messageConstructorForDBUpdate(int db, int id, String something){
-		Message message = new Message(MessageType.DBMessage, db, id, something);
+	public void messageConstructorForDBUpdate(int db, int id){
+		Message message = new Message(MessageType.DBMessage, db, id);
 		sendMessage(message);
 	}
 
@@ -272,27 +272,28 @@ public class GameMenu_Model extends Model {
 		userMap = new HashMap<Integer, ArrayList<String>>();
 		ArrayList<String> uList = new ArrayList<String>();
 		while (!userList.isEmpty()) {
-			uList.clear();			
-			id = Integer.parseInt(userList.get(0));
-			username = userList.get(1);
-			uList.add(username);
-			prename = userList.get(2);
-			uList.add(prename);
-			surname = userList.get(3);
-			uList.add(surname);
-			password = userList.get(4);
-			uList.add(password);
-			win = userList.get(5);
-			uList.add(win);
-			if(userMap.get(id) == null){
-				userMap.put(id, new ArrayList<String>());
-				userMap.get(id).addAll(uList);
+			if(!userList.get(1).equals("deleted")){
+				uList.clear();			
+				id = Integer.parseInt(userList.get(0));
+				username = userList.get(1);
+				uList.add(username);
+				prename = userList.get(2);
+				uList.add(prename);
+				surname = userList.get(3);
+				uList.add(surname);
+				password = userList.get(4);
+				uList.add(password);
+				win = userList.get(5);
+				uList.add(win);
+				if(userMap.get(id) == null){
+					userMap.put(id, new ArrayList<String>());
+					userMap.get(id).addAll(uList);
+				}
 			}
 			for(int i = 0; i < 6; i ++){
 				userList.remove(0);
 			}
 		}
-
 	}
 
 	// set a new move

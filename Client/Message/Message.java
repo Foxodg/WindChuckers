@@ -327,11 +327,10 @@ public class Message {
 	 * @param db2
 	 * @param something
 	 */
-	public Message(MessageType messageType, int db, int id, String something) {
+	public Message(MessageType messageType, int db, int id) {
 		createStandardMessage(messageType);
 		this.DB = db;
 		this.Id = id;
-		this.something = something;
 		
 	}
 

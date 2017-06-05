@@ -25,6 +25,7 @@ public class DataBase {
 	// only for test the DB and show the tables
 	public static void main(String[] args) throws Exception {
 		deleteDB();
+//		deletePlayer(2);
 //		createDB();
 //		updatePreparedStatementWithId(1);
 //	}
@@ -595,6 +596,36 @@ public class DataBase {
 		}
 	}	
 	
+	/**
+	 * delete the single Entry in the DB
+	 * @throws SQLException 
+	 */
+	public static void deletePlayer(int id) throws SQLException {
+		Connection connection = getDBConnection();
+		PreparedStatement deletePreparedStatement = null;
+		String deleteDBPlayer = ("DELETE FROM PLAYER WHERE PLAYERID = ?");
+		
+		try {
+			connection.setAutoCommit(false);
+			
+			deletePreparedStatement = connection.prepareStatement(deleteDBPlayer);
+			deletePreparedStatement.setInt(1, id);
+			logger.info("Delete id " + id);
+			deletePreparedStatement.executeUpdate();
+			deletePreparedStatement.close();
+			connection.commit();
+			
+		} catch (SQLException e) {
+			logger.warning("Exception Message " + e.getLocalizedMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			insertPlayer(id,"deleted","deleted","deleted","deleted");
+			connection.close();
+		}
+	}
+	
+
 	/**
 	 * generate a new Table
 	 * 
