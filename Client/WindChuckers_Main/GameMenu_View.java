@@ -54,6 +54,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	public MenuItem menuFileFriends;
 	public MenuItem menuMainMenu;
 	public MenuItem menuFileAI;
+	public MenuItem menuTutorial;
 	
 	// GameBoard
 	private GridPane GameBoard;
@@ -91,6 +92,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		menuFileLogin = new MenuItem();
 		menuFileFriends = new MenuItem();
 		menuMainMenu = new MenuItem();
+		menuTutorial = new MenuItem();
 		menuFile.getItems().addAll(menuFileRestart,menuFileLanguage,menuFileLobby, menuFileLogin, menuFileFriends, menuMainMenu,menuFileExit);
 
 		for (Locale locale : sl.getLocales()) {
@@ -109,7 +111,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		menuBar.getMenus().addAll(menuFile, menuHelp, menuClient, menuAI);
 
 		menuHelpAbout = new MenuItem();
-		menuHelp.getItems().add(menuHelpAbout);
+		menuHelp.getItems().addAll(menuHelpAbout, menuTutorial);
 		
 
 		menuClientGUI = new MenuItem();
@@ -335,6 +337,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		menuMainMenu.setText(t.getString("program.menu.file.mainmenu"));
 		menuFileAI.setText(t.getString("program.menu.file.AI"));
 		menuAI.setText(t.getString("program.menu.AI"));
+		menuTutorial.setText(t.getString("program.menu.help.tutorial"));
 		
 		// Buttons
 

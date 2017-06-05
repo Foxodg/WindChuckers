@@ -22,6 +22,9 @@ import Login.LoginView;
 import MainMenu.MainMenuController;
 import MainMenu.MainMenuView;
 import Server.TextAreaHandler;
+import Tutorial.TutorialController;
+import Tutorial.TutorialModel;
+import Tutorial.TutorialView;
 import UserMenu.UserMenuController;
 import UserMenu.UserMenuView;
 import WindChuckers_Main.Model_Extend.Board;
@@ -325,6 +328,17 @@ public class WindChuckers extends Application {
 		serviceLocator = ServiceLocator.getServiceLocator();
 		
 		userMenuView.start();
+	}
+	
+	public void startTutorial() {
+		Stage tutorialStage = new Stage();
+		model = GameMenu_Model.getGameModel();
+		TutorialModel tutorialModel = new TutorialModel();
+		TutorialView tutorialView = new TutorialView(tutorialStage, model, tutorialModel);
+		new TutorialController(model, tutorialView, tutorialModel);
+		
+		serviceLocator = ServiceLocator.getServiceLocator();
+		tutorialView.start();
 	}
 
     /**

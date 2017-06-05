@@ -19,9 +19,13 @@ import commonClasses.ServiceLocator;
 import commonClasses.Translator;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
 /**
  * Copyright 2015, FHNW, Prof. Dr. Brad Richards. All rights reserved. This code
@@ -146,6 +150,12 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			serviceLocator.getLogger().info("The Move Message reaches the GameMenu_Controller");
 			//TODO here is now the move - with model.getStartColumn/Row model.getEndColumn/Row it gets the start or end x-Coordinates or y-Coordinates
 
+		});
+		
+		view.menuTutorial.setOnAction(e -> {
+			serviceLocator.getLogger().info("Start Tutorial");
+			windChuckers = WindChuckers.getWindChuckers();
+			windChuckers.startTutorial();
 		});
 		
 		
