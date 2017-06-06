@@ -22,6 +22,9 @@ import Login.LoginView;
 import MainMenu.MainMenuController;
 import MainMenu.MainMenuView;
 import Server.TextAreaHandler;
+import Tutorial.LongView;
+import Tutorial.MarathonView;
+import Tutorial.StandardView;
 import Tutorial.TutorialController;
 import Tutorial.TutorialModel;
 import Tutorial.TutorialView;
@@ -319,6 +322,10 @@ public class WindChuckers extends Application {
 		
 	}
 	
+	/**
+	 * Start the View and Controller for the UserMenu
+	 * @author L.Weber
+	 */
 	public void startUserMenu(){
 		Stage userMenuStage = new Stage();
 		model = GameMenu_Model.getGameModel();
@@ -330,12 +337,22 @@ public class WindChuckers extends Application {
 		userMenuView.start();
 	}
 	
+	/**
+	 * Start the Tutorial
+	 * @author L.Weber
+	 */
 	public void startTutorial() {
 		Stage tutorialStage = new Stage();
+		Stage standardStage = new Stage();
+		Stage longStage = new Stage();
+		Stage marathonStage = new Stage();
 		model = GameMenu_Model.getGameModel();
 		TutorialModel tutorialModel = new TutorialModel();
-		TutorialView tutorialView = new TutorialView(tutorialStage, model, tutorialModel);
-		new TutorialController(model, tutorialView, tutorialModel);
+		TutorialView tutorialView = new TutorialView(tutorialStage, model, tutorialModel);	
+		StandardView sView = new StandardView(standardStage, model);
+		LongView lView = new LongView(longStage, model);
+		MarathonView mView = new MarathonView(marathonStage, model);
+		new TutorialController(model, tutorialView, tutorialModel, sView, lView, mView);
 		
 		serviceLocator = ServiceLocator.getServiceLocator();
 		tutorialView.start();

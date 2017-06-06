@@ -21,6 +21,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 public class TutorialView extends View<GameMenu_Model> {
@@ -45,6 +47,8 @@ public class TutorialView extends View<GameMenu_Model> {
 	public TutorialView(Stage stage, GameMenu_Model model, TutorialModel tutorialModel) {
 		super(stage, model);
 		this.tutorialModel = tutorialModel;
+		
+		stage.setTitle("Tutorial");
 
 	}
 
@@ -71,7 +75,7 @@ public class TutorialView extends View<GameMenu_Model> {
 		menuBar.getMenus().add(menuFileTutorialMenu);
 
 		try {
-			File file = new File("BeginTutorial.gif");
+			File file = new File("dragon-animated-gif-5.gif");
 			localUrl = file.toURI().toURL().toString();
 			Image localImage = new Image(localUrl, false);
 
@@ -81,8 +85,11 @@ public class TutorialView extends View<GameMenu_Model> {
 		Image img = new Image(localUrl);
 		ImageView imgView = new ImageView(img);
 		
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+		
 		HBox btnBox = new HBox();
-		btnBox.getChildren().addAll(btnBasicRules,btnLongPlay,btnMarathonPlay,btnOk);
+		btnBox.getChildren().addAll(btnBasicRules,btnLongPlay,btnMarathonPlay,spacer,btnOk);
 		
 		BorderPane pane = new BorderPane();
 		pane.setTop(welcome);
