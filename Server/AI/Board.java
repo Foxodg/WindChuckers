@@ -268,7 +268,7 @@ public class Board {
 		} else {
 			// the tower is a sumoTower so we can give him only more gems
 			int gems = tower.getGems();
-			tower.setGems(gems++);
+			tower.setGems(++gems);
 		}
 	}
 
@@ -968,5 +968,9 @@ public class Board {
 	
 	public Move getLastMove(){
 		return this.lastMove;
+	}
+	
+	public void setLastMove(Move lastMove) {
+		this.lastMove = lastMove;
 	}
 }

@@ -17,16 +17,6 @@ public enum Color {
 	Brown
 }
 
-enum Type {
-	normalTower,
-	sumoTower
-}
-
-enum PlayerType {
-	ONE,
-	TWO
-}
-
 enum End {
 	Bottom,
 	Top
