@@ -11,6 +11,8 @@ import java.util.logging.Logger;
 
 import org.h2.tools.DeleteDbFiles;
 
+import WindChuckers_Main.WindChuckers;
+
 public class DataBase {
 
 	private static Logger logger = Logger.getLogger("");
@@ -40,6 +42,7 @@ public class DataBase {
 //		update("UPDATE PLAYER SET WINS =0 WHERE PLAYERID = 1");
 //	}
 
+	/**
 	public DataBase() {
 	}
 
@@ -51,10 +54,36 @@ public class DataBase {
 	public static DataBase getDB() {
 		if (h2 == null)
 			h2 = new DataBase();
+			if(!checkIsDBThere()){
+				deleteDB();
+			}
 		return h2;
 	}
-
-
+	
+	/**
+	 * Check is the DB there? If its there return true, when not return false
+	 * @return is there = true, is not = false
+	 */
+	public static boolean checkIsDBThere(){
+		Connection conn = getDBConnection();
+		ResultSet rset = null;
+		try {
+			rset = conn.getMetaData().getTables(null, null, "PLAYER", null);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		try {
+			if(rset.next()){
+				return true;
+			} else {
+				return false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+		
+	}
 
 	/*********************************************************************************************
 	 * Select Statements
