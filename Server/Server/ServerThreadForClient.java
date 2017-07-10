@@ -23,6 +23,8 @@ public class ServerThreadForClient extends Thread {
 	private Socket clientSocket;
 	private Kamisado kamisado;
 	private Board board = Board.getBoard();
+	private int name;
+
 	
 	private boolean wantAI = false;
 	private boolean wantDoubleAI = false;
@@ -158,6 +160,9 @@ public class ServerThreadForClient extends Thread {
 				Move move = kamisado.setPlayConfiguration(false, 5);
 			}
 		}
+		else if(message.getMessageType() == MessageType.Hash){
+			ServerModel.getHashList().add(message.getDB());
+		}
 		else {
 			logger.info("Server" + "Error-Message: ");
 			//Else must be an Error-Message
@@ -196,6 +201,13 @@ public class ServerThreadForClient extends Thread {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public int getUserName(){
+		return this.name;
+	}
+	public void setUserName(int name){
+		this.name = name;
 	}
 	
 }

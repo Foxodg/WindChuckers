@@ -1,4 +1,4 @@
-package MainMenu;
+ package MainMenu;
 
 import java.util.logging.Logger;
 

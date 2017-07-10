@@ -72,13 +72,16 @@ public class ClientView {
         //Buttons
         btnGo = new Button();
         btnSendOther = new Button();
+        btnSendOther.setDisable(true);
         
         //Ohter
         txtMessages = new TextArea();
+        txtMessages.setEditable(false);
         cbchoice = new ComboBox();
+        cbchoice.setDisable(true);
         cbAutomaticLogin = new CheckBox();
         
-        stage.setTitle("SimpleXML client");
+        stage.setTitle("Client");
         
         GridPane root = new GridPane();
         
@@ -115,6 +118,7 @@ public class ClientView {
         		Message.Message.MessageType.WinMessage,
         		Message.Message.MessageType.Update
         		);
+        cbchoice.getSelectionModel().selectFirst();
         
         topBox.getChildren().addAll(lblIP, txtIP, spacer, lblPort, txtPort, spacer2, btnGo);
         txtIP.setId("IP");

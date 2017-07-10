@@ -9,6 +9,7 @@ import Message.Message.MessageType;
 import Message.Message.Value;
 import commonClasses.ServiceLocator;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class ClientThreadForServer extends Thread {
@@ -33,6 +34,9 @@ public class ClientThreadForServer extends Thread {
 	
 	// SimpleBooleanProperty for overwatching the incoming moves
 	private SimpleBooleanProperty dbRequest = new SimpleBooleanProperty();
+	
+	// SimpleIntegerProperty for HashCode
+	public SimpleIntegerProperty HashCode = new SimpleIntegerProperty();
 	
 	public void setSocket(Socket serverSocket) {
 		this.serverSocket = serverSocket;
@@ -111,6 +115,10 @@ public class ClientThreadForServer extends Thread {
 				setDBRequest(true);
 			}
 		}
+		else if(message.getMessageType() == Message.MessageType.Hash){
+			logger.info("Hash-Code comes back: " + message.getDB());
+			this.setHashCode(message.getDB());
+		}
 	}
 	
 	// Get the MessageProperty from the chat
@@ -157,6 +165,18 @@ public class ClientThreadForServer extends Thread {
 	
 	public SimpleBooleanProperty getValue(){
 		return this.moveProperty;
+	}
+	
+	public void setHashCode(int newValue){
+		this.HashCode.setValue(newValue);
+	}
+	
+	public SimpleIntegerProperty getHashCode(){
+		return this.HashCode;
+	}
+	
+	public int getHashCodeInt(){
+		return this.HashCode.get();
 	}
 	
 	public int getStartColumn(){

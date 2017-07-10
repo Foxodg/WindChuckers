@@ -13,6 +13,8 @@ import WindChuckers_Main.Model_Extend.Player;
 import abstractClasses.Model;
 import commonClasses.ServiceLocator;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 /**
  * Copyright 2015, FHNW, Prof. Dr. Brad Richards. All rights reserved. This code
@@ -81,6 +83,12 @@ public class GameMenu_Model extends Model {
 
 	// SimpleBooleanProperty for overwatching the incoming dbRequests
 	private SimpleBooleanProperty dbRequest = new SimpleBooleanProperty();
+	
+	// SimmpleStringProperty for chat
+	public SimpleStringProperty thisUserNameProperty = new SimpleStringProperty();	
+	
+	// SimpleIntegerProperty for HashCode
+	public SimpleIntegerProperty HashCode = new SimpleIntegerProperty();
 
 	public boolean connect(String ipAddress, Integer port) {
 		boolean success = false;
@@ -295,6 +303,7 @@ public class GameMenu_Model extends Model {
 			}
 		}
 	}
+	
 
 	// set a new move
 	public void setMoveProperty(Boolean newValue) {
@@ -322,6 +331,35 @@ public class GameMenu_Model extends Model {
 
 	public SimpleBooleanProperty getMoveProperty() {
 		return this.moveProperty;
+	}
+	
+	
+	public void setUserName(String newValue){
+		try{
+			this.thisUserNameProperty.setValue(newValue);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public SimpleStringProperty getuserName(){
+		return this.thisUserNameProperty;
+	}
+	
+	public String getUserNameString(){
+		return thisUserNameProperty.get();
+	}
+	
+	public void setHashCode(int newValue){
+		this.HashCode.setValue(newValue);
+	}
+	
+	public SimpleIntegerProperty getHashCode(){
+		return this.HashCode;
+	}
+	
+	public int getHashCodeInt(){
+		return this.HashCode.get();
 	}
 
 	// Getter and setter

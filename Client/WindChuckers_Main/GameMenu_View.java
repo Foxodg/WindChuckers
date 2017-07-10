@@ -22,7 +22,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 /**
@@ -33,6 +42,8 @@ import javafx.stage.Stage;
  * @author Brad Richards
  */
 public class GameMenu_View extends View<GameMenu_Model> {
+	protected Stage stage;
+	
 	private Board board;
 	private Movement movement;
 	private Position position;
@@ -45,6 +56,30 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	private Menu menuHelp;
 	private Menu menuClient;
 	private Menu menuAI;
+	
+	//chat
+	protected TitledPane chatPanel;
+	protected VBox chatBox;
+	protected Button btnSend;
+    protected TextArea txtMessages;
+    protected TextField txtChat;
+    
+    //user
+    protected VBox userBox;
+    protected Label lblUser1;
+    protected Label lblUser2;
+    private Label lblPointsUser1;
+    private Label lblPointsUser2;
+    protected TextField tfPointsUser1;
+    protected TextField tfPointsUser2;
+    private Label lblTimer;
+    protected TextField tfTimer;
+    protected TextField tfTimerTime;
+    private Label lblRound;
+    protected TextField tfRound;
+    protected Button btnStartTimer;
+    
+	
 	public MenuItem menuHelpAbout;
 	public MenuItem menuFileRestart;
 	public MenuItem menuFileExit;
@@ -64,6 +99,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 
 	public GameMenu_View(Stage stage, GameMenu_Model model, Board board, Movement movement, Position position, normalTower normalTower, sumoTower sumoTower, Player player) {
 		super(stage, model);
+		this.stage = stage;
 		this.board = board;
 		this.movement = movement;
 		this.position = position;
@@ -113,7 +149,49 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		menuHelpAbout = new MenuItem();
 		menuHelp.getItems().addAll(menuHelpAbout, menuTutorial);
 		
-
+		chatBox = new VBox();
+		btnSend = new Button();
+		txtMessages = new TextArea();
+		txtMessages.setEditable(false);
+		txtChat = new TextField();
+		chatBox.getChildren().addAll(txtMessages,txtChat, btnSend);
+		
+		chatPanel = new TitledPane();
+		chatPanel.setExpanded(true);
+		chatPanel.setText("Chat");
+		chatPanel.setContent(chatBox);
+		
+		userBox = new VBox();
+		lblTimer = new Label();
+		lblRound = new Label();
+	    lblUser1 = new Label();
+	    lblUser2 = new Label();
+	    lblPointsUser1 = new Label();
+	    lblPointsUser2 = new Label();
+	    tfPointsUser1 = new TextField();
+	    tfPointsUser1.setEditable(false);
+	    tfPointsUser2 = new TextField();
+	    tfPointsUser2.setEditable(false);
+	    tfTimer = new TextField();
+	    tfTimer.setEditable(false);
+	    tfTimerTime = new TextField();
+	    btnStartTimer = new Button();
+	    tfRound = new TextField();
+	    tfRound.setEditable(false);
+	    Region spacer1 = new Region();
+	    Region spacer2 = new Region();
+	    Region spacer3 = new Region();
+		userBox.setVgrow(spacer1, Priority.ALWAYS);
+		userBox.setVgrow(spacer2, Priority.ALWAYS);
+		userBox.setVgrow(spacer3, Priority.ALWAYS);
+		Label lblSpacer1 = new Label();
+		Label lblSpacer2 = new Label();
+		Label lblSpacer3 = new Label();
+		Label lblSpacer4 = new Label();
+		Label lblSpacer5 = new Label();
+	    
+	    userBox.getChildren().addAll(lblUser1,lblSpacer1,lblPointsUser1,tfPointsUser1,spacer1,lblUser2,lblSpacer2,lblPointsUser2,tfPointsUser2,spacer2,lblTimer,tfTimerTime,lblSpacer5,btnStartTimer,lblSpacer3,tfTimer,spacer3,lblRound,lblSpacer4,tfRound);
+	    
 		menuClientGUI = new MenuItem();
 		menuClient.getItems().add(menuClientGUI);
 		
@@ -121,7 +199,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		menuAI.getItems().add(menuFileAI);
 		
 		
-		// The GameBoard will be initialized
+		// The GameBoard will be initialize
 		fields = this.getFieldArray();
 		towersP1 = this.getTowersP1Array();
 		towersP2 = this.getTowersP2Array();
@@ -130,6 +208,8 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		GridPane root = new GridPane();
 		root.add(menuBar, 0, 0);
 		root.add(GameBoard, 0, 1);
+		root.add(chatPanel, 0, 2);
+		root.add(userBox, 1, 1);
 			
 		updateTexts();
 
@@ -340,8 +420,16 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		menuTutorial.setText(t.getString("program.menu.help.tutorial"));
 		
 		// Buttons
+		btnSend.setText(t.getString("program.btn.btnSend"));
+		btnStartTimer.setText(t.getString("program.btn.btnStartTimer"));
 
 		// Labels
+		lblUser1.setText(t.getString("program.lbl.lblUser1"));
+		lblUser2.setText(t.getString("program.lbl.lblUser2"));
+		lblPointsUser1.setText(t.getString("program.lbl.lblPointsUser1"));
+		lblPointsUser2.setText(t.getString("program.lbl.lblPointsUser2"));
+		lblTimer.setText(t.getString("program.lbl.lblTimer"));
+		lblRound.setText(t.getString("program.lbl.lblRound"));
 
 		// Other controls
 

@@ -2,6 +2,7 @@ package Client;
 
 import java.util.logging.Logger;
 
+import Login.LoginController;
 import Message.Message;
 import Message.Message.MessageType;
 import Message.Message.Value;
@@ -19,7 +20,7 @@ public class ClientController {
 	final private GameMenu_Model model;
 	final private ClientView view;
 	final private ClientThreadForServer clientserver;
-	
+
 	public ClientController getClientController(){
 		return this;
 	}
@@ -39,6 +40,8 @@ public class ClientController {
         		//Do a Request to the DB for all the Users
         		model.setMoveProperty(false);
                 model.sendMessage(new Message(MessageType.DBMessage,0));
+        		view.btnSendOther.setDisable(false);
+        		view.txtChat.setDisable(false);
                 view.stop();
             } else {
                 view.txtMessages.setText("Failed to establish connection");
@@ -58,16 +61,28 @@ public class ClientController {
             		//Do a Request to the DB for all the Users
             		model.setMoveProperty(false);
                     model.sendMessage(new Message(MessageType.DBMessage,0));
+            		view.btnSendOther.setDisable(false);
+            		view.txtChat.setDisable(false);
                 } else {
                     view.txtMessages.setText("Failed to establish connection");
                 }
             }
         });
         
+        // Watch the userName in the Model for test-rights
+        model.thisUserNameProperty.addListener((observable, oldValue, newValue) -> {
+        	if(model.getUserNameString().equals("admin")){
+        		view.cbchoice.setDisable(false);
+        	}
+        });
+
+        
         view.btnSendOther.setOnAction(event -> {
         	if (view.cbchoice.getSelectionModel().getSelectedItem() == MessageType.ChatMessage){
-        		String input = view.txtChat.getText();
+        		String input = model.getUserNameString();
+        		input += ": " + view.txtChat.getText();
         		model.messageContructorForChat(input);
+        		view.txtChat.clear();
         	}
         	else if(view.cbchoice.getSelectionModel().getSelectedItem() == MessageType.Coordinate){
         		boolean singlePlayer = true;
@@ -135,6 +150,11 @@ public class ClientController {
 	}
 		
 	
+		/**
+		 * Update the Chat-Field
+		 * @param newValue
+		 * @author L.Weber
+		 */
 		private void updateGUI(String newValue) {
 		Platform.runLater(() -> {
 			view.txtMessages.appendText("\n"+clientserver.getChatMessageInString());

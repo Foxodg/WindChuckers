@@ -11,10 +11,15 @@ import WindChuckers_Main.GameMenu_Model;
 import WindChuckers_Main.WindChuckers;
 import abstractClasses.Controller;
 import commonClasses.ServiceLocator;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.KeyCode;
+
+
 
 public class LoginController extends Controller<GameMenu_Model, LoginView> {
+
 	private GameMenu_Model model;
 	private LoginView view;
 	private LoginModel loginModel;
@@ -29,7 +34,7 @@ public class LoginController extends Controller<GameMenu_Model, LoginView> {
 	private HashMap<String, String> password;
 
 	private ArrayList<String> searchList;
-
+	
 	public LoginController(final WindChuckers main, GameMenu_Model model, LoginView view, LoginModel loginModel) {
 		super(model, view);
 		this.loginModel = loginModel;
@@ -61,8 +66,10 @@ public class LoginController extends Controller<GameMenu_Model, LoginView> {
 					}
 				}
 				loginModel.setPassword(this.password.get(view.username.getText()));
+				//when the password is three times false
 				if (this.counter.get(view.username.getText()) <= 3) {
 					if (loginModel.passwordCheck(view.password.getText())) {
+						model.setUserName(view.username.getText());
 						main.startMainMenu();
 						view.stop();
 					} else {
@@ -85,6 +92,7 @@ public class LoginController extends Controller<GameMenu_Model, LoginView> {
 				view.stop();
 			}
 		});
+		
 
 		/**
 		 * Make a new DB-Request
@@ -96,6 +104,11 @@ public class LoginController extends Controller<GameMenu_Model, LoginView> {
 			model.sendMessage(new Message(MessageType.DBMessage, 0));
 		});
 
+		/**
+		 * Set the username green if it exit or red for not existing
+		 * 
+		 * @author L.Weber
+		 */
 		view.username.textProperty().addListener((observable, oldValue, newValue) -> {
 			for (int i = 0; i < searchList.size(); i++) {
 				if (searchList.get(i).equals(view.username.getText())) {

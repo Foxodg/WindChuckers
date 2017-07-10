@@ -45,6 +45,10 @@
     -fx-opacity: 0.4;
 }
 
+.text-area {
+	-fx-test-fill: #000000;
+}
+
 .background {
     -fx-background-color: #1d1d1d;
 }

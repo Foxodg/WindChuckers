@@ -17,7 +17,6 @@ public class LoginModel extends Model {
 		super();
 	}
 
-	//TODO real password
 	public boolean passwordCheck(String text) {
 		if(text.equals(realPassword)){
 			return true;

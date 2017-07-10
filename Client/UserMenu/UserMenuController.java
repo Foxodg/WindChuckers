@@ -285,6 +285,7 @@ public class UserMenuController extends Controller<GameMenu_Model, UserMenuView>
 			}
 		});
 
+		//Listener for collapse
 		view.updatePanel.heightProperty().addListener((observable, oldValue, newValue) -> {
 			view.stage.sizeToScene();
 		});

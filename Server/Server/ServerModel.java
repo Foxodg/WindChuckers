@@ -4,6 +4,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Logger;
+
+import Message.Message;
+import Message.Message.MessageType;
 import Message.Message.Value;
 
 import javafx.concurrent.Task;
@@ -12,6 +15,7 @@ public class ServerModel {
     private Integer port;
     private final Logger logger = Logger.getLogger("");
     private ArrayList<Socket> clientSockets = new ArrayList<Socket>();
+	private static ArrayList<Integer> hashPlayers = new ArrayList<Integer>();
 	private static ServerModel serverModel;
     
 	/**
@@ -42,8 +46,10 @@ public class ServerModel {
                     Socket clientSocket = listener.accept();
                     
                     ServerThreadForClient client = new ServerThreadForClient(clientSocket);
+                    client.setUserName(client.hashCode());
                     clientSockets.add(clientSocket);
                     client.start();
+                    client.sendMessageBackToClient(new Message(MessageType.Hash,client.getUserName()));
                 }
             } catch (Exception e) {
                 System.err.println(e);
@@ -64,6 +70,10 @@ public class ServerModel {
     
 	public ArrayList<Socket> getSockets(){
 		return this.clientSockets;
+	}
+	
+	public static ArrayList<Integer> getHashList(){
+		return hashPlayers;
 	}
 }
 
