@@ -3,6 +3,7 @@ package WindChuckers_Main;
 import java.util.Locale;
 import java.util.logging.Logger;
 
+import Client.ClientThreadForServer;
 import WindChuckers_Main.Model_Extend.Board;
 import WindChuckers_Main.Model_Extend.Field;
 import WindChuckers_Main.Model_Extend.Tower;
@@ -66,6 +67,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
     
     //user
     protected VBox userBox;
+    protected TextField tfHashCode;
     protected Label lblUser1;
     protected Label lblUser2;
     private Label lblPointsUser1;
@@ -76,6 +78,8 @@ public class GameMenu_View extends View<GameMenu_Model> {
     protected TextField tfTimer;
     protected TextField tfTimerTime;
     private Label lblRound;
+    private Label lblRoundCounter;
+    protected TextField tfRoundMax;
     protected TextField tfRound;
     protected Button btnStartTimer;
     
@@ -92,10 +96,10 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	public MenuItem menuTutorial;
 	
 	// GameBoard
-	private GridPane GameBoard;
-	private Field[][] fields;
-	private normalTower[][] towersP1;
-	private normalTower[][] towersP2;
+	protected GridPane GameBoard;
+	protected Field[][] fields;
+	protected normalTower[][] towersP1;
+	protected normalTower[][] towersP2;
 
 	public GameMenu_View(Stage stage, GameMenu_Model model, Board board, Movement movement, Position position, normalTower normalTower, sumoTower sumoTower, Player player) {
 		super(stage, model);
@@ -162,8 +166,11 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		chatPanel.setContent(chatBox);
 		
 		userBox = new VBox();
+		tfHashCode = new TextField(Integer.toString(ClientThreadForServer.hashCodeStatic));
+		tfHashCode.setEditable(false);
 		lblTimer = new Label();
 		lblRound = new Label();
+		lblRoundCounter = new Label();
 	    lblUser1 = new Label();
 	    lblUser2 = new Label();
 	    lblPointsUser1 = new Label();
@@ -178,9 +185,12 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	    btnStartTimer = new Button();
 	    tfRound = new TextField();
 	    tfRound.setEditable(false);
+	    tfRoundMax = new TextField();
+	    Region spacer = new Region();
 	    Region spacer1 = new Region();
 	    Region spacer2 = new Region();
 	    Region spacer3 = new Region();
+	    userBox.setVgrow(spacer, Priority.ALWAYS);
 		userBox.setVgrow(spacer1, Priority.ALWAYS);
 		userBox.setVgrow(spacer2, Priority.ALWAYS);
 		userBox.setVgrow(spacer3, Priority.ALWAYS);
@@ -189,8 +199,10 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		Label lblSpacer3 = new Label();
 		Label lblSpacer4 = new Label();
 		Label lblSpacer5 = new Label();
+		Label lblSpacer6 = new Label();
+		Label lblSpacer7 = new Label();
 	    
-	    userBox.getChildren().addAll(lblUser1,lblSpacer1,lblPointsUser1,tfPointsUser1,spacer1,lblUser2,lblSpacer2,lblPointsUser2,tfPointsUser2,spacer2,lblTimer,tfTimerTime,lblSpacer5,btnStartTimer,lblSpacer3,tfTimer,spacer3,lblRound,lblSpacer4,tfRound);
+	    userBox.getChildren().addAll(tfHashCode,spacer,lblUser1,lblSpacer1,lblPointsUser1,tfPointsUser1,spacer1,lblUser2,lblSpacer2,lblPointsUser2,tfPointsUser2,spacer2,lblTimer,tfTimerTime,lblSpacer5,btnStartTimer,lblSpacer3,tfTimer,spacer3,lblRound,lblSpacer4,tfRoundMax,lblSpacer6,lblRoundCounter,lblSpacer7,tfRound);
 	    
 		menuClientGUI = new MenuItem();
 		menuClient.getItems().add(menuClientGUI);
@@ -430,6 +442,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		lblPointsUser2.setText(t.getString("program.lbl.lblPointsUser2"));
 		lblTimer.setText(t.getString("program.lbl.lblTimer"));
 		lblRound.setText(t.getString("program.lbl.lblRound"));
+		lblRoundCounter.setText(t.getString("program.lbl.lblRoundCounter"));
 
 		// Other controls
 
@@ -470,5 +483,13 @@ public class GameMenu_View extends View<GameMenu_Model> {
 
 	public void setGameBoard(GridPane gameBoard) {
 		GameBoard = gameBoard;
+	}
+	
+	public void setScene (Scene scene) {
+		this.scene = scene;
+	}
+	
+	public void setModel (GameMenu_Model model){
+		this.model = model;
 	}
 }

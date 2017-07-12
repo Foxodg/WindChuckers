@@ -43,16 +43,19 @@ public class Tower extends Button {
 		this.xPosition = xPosition;
 	}
 
+	/**
+	 * This method will show all possible moves and enable all possible fields
+	 * @param fields
+	 * @param gridPane
+	 * @param towersP1
+	 * @param towersP2
+	 */
 	public void showMoves(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {
 		
 		if(this.getPlayerNumber()==1){
 			
-				// Disable Towers of Player1
-				for(int y = 0; y < 7; y++){
-					for(int x = 0; x < 7; x++){
-						if(towersP1[x][y]!=null){
-							towersP1[x][y].setDisable(true);
-							}}}
+			//disable towers P1
+			this.disableTowers(towersP1);
 				
 				// Down move
 				for(int i = 1; i<=7 ; i++){
@@ -93,11 +96,7 @@ public class Tower extends Button {
 		if(this.getPlayerNumber()==2){
 			
 			// Disable Towers of Player2
-			for(int y = 0; y < 7; y++){
-				for(int x = 0; x < 7; x++){
-					if(towersP2[x][y]!=null){
-						towersP2[x][y].setDisable(true);
-				}}}
+			this.disableTowers(towersP2);
 
 			// Up move
 			for(int i = 1; i<=7 ; i++){
@@ -136,6 +135,16 @@ public class Tower extends Button {
 				}
 		}
 
+	/**
+	 * This method will change the position of the tower on the GridPane
+	 * @param fields
+	 * @param gameBoard
+	 * @param towersP1
+	 * @param towersP2
+	 * @param field
+	 * @param player1
+	 * @param player2
+	 */
 	public void move(Field[][] fields, GridPane gameBoard, Tower[][] towersP1, Tower[][] towersP2, Field field, Player player1, Player player2) {
 		int column = GridPane.getColumnIndex(field);
 		int row = GridPane.getRowIndex(field);
@@ -154,34 +163,65 @@ public class Tower extends Button {
 		GridPane.setRowIndex(this, row);
 		
 		// The turn is finished, disable all fields
+		this.disableFields(fields);
+		
+		// Towers of other player will be enabled
+		this.changeTurn(player1, player2, towersP1, towersP2);
+}
+
+	/**
+	 * This method will activate the opponents towers and change the turn
+	 * @param player1
+	 * @param player2
+	 * @param towersP1
+	 * @param towersP2
+	 */
+	public void changeTurn(Player player1, Player player2, Tower[][] towersP1, Tower[][] towersP2){
+		if(player1.isOnTurn()){
+			player2.setOnTurn(true);
+			player1.setOnTurn(false);
+			this.disableTowers(towersP1);
+			this.enableTowers(towersP2);
+		} else{
+			player1.setOnTurn(true);
+			player2.setOnTurn(false);
+			this.enableTowers(towersP1);
+			this.disableTowers(towersP2);
+		}
+	}
+	
+	/**
+	 * This method disables all towers of the tower array chosen
+	 * @param towers
+	 */
+	public void disableTowers(Tower[][] towers){
+		for(int y = 0; y < 8; y++){
+			for(int x = 0; x < 8; x++){
+				if(towers[x][y]!=null){
+					towers[x][y].setDisable(true);
+					}}}
+	}
+
+	/**
+	 * This method enables all towers of the tower array chosen
+	 * @param towers
+	 */
+	public void enableTowers(Tower[][] towers){
+		for(int y = 0; y < 8; y++){
+			for(int x = 0; x < 8; x++){
+				if(towers[x][y]!=null){
+					towers[x][y].setDisable(false);
+					}}}
+	}
+
+	/**
+	 * This method disable all fields. Is used after a turn is finished
+	 * @param fields
+	 */
+	public void disableFields(Field[][]fields){
 		for(int y = 0; y < 8; y++){
 			for(int x = 0; x < 8; x++){
 				fields[x][y].setDisable(true);
 			}}
-		
-		// Towers of other player will be enabled
-		if(player1.isOnTurn()){
-			player2.setOnTurn(true);
-			player1.setOnTurn(false);
-			for(int y = 0; y < 8; y++){
-				for(int x = 0; x < 8; x++){
-					if(towersP2[x][y]!=null){
-						towersP2[x][y].setDisable(false);
-					}
-					if(towersP1[x][y]!=null){
-						towersP1[x][y].setDisable(true);
-					}}}
-		} else{
-			player1.setOnTurn(true);
-			player2.setOnTurn(false);
-			for(int y = 0; y < 8; y++){
-				for(int x = 0; x < 8; x++){
-					if(towersP1[x][y]!=null){
-						towersP1[x][y].setDisable(false);
-						}
-					if(towersP2[x][y]!=null){
-						towersP2[x][y].setDisable(true);
-						}}}
-		}
-}
+	}
 }

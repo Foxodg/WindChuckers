@@ -50,6 +50,7 @@ public class ServerModel {
                     clientSockets.add(clientSocket);
                     client.start();
                     client.sendMessageBackToClient(new Message(MessageType.Hash,client.getUserName()));
+                    logger.info("Send the client-name back: " + client.getUserName());
                 }
             } catch (Exception e) {
                 System.err.println(e);

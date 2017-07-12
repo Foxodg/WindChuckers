@@ -119,6 +119,10 @@ public class ServerThreadForClient extends Thread {
 					e.printStackTrace();
 				}
 			}
+			//Round cap
+			else if(message.getDB() == 88){
+				sendMessageBackToClient(new Message(MessageType.DBMessage,message.getDB(),message.getId()));
+			}
 		}
 		else if(message.getMessageType() == MessageType.WinMessage){
 			logger.info("Server: " + "Win-Message: " );
@@ -160,8 +164,13 @@ public class ServerThreadForClient extends Thread {
 				Move move = kamisado.setPlayConfiguration(false, 5);
 			}
 		}
+		//the hashcode for unique identifier for the client
 		else if(message.getMessageType() == MessageType.Hash){
 			ServerModel.getHashList().add(message.getDB());
+		}
+		//timecap
+		else if(message.getMessageType() == MessageType.Time) {
+			sendMessageBackToClient(new Message(MessageType.Time,message.getTime()));
 		}
 		else {
 			logger.info("Server" + "Error-Message: ");

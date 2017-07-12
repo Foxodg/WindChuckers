@@ -10,6 +10,7 @@ import Message.Message.Value;
 import commonClasses.ServiceLocator;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class ClientThreadForServer extends Thread {
@@ -25,6 +26,7 @@ public class ClientThreadForServer extends Thread {
 	private int endRow;
 	private int userID;
 	private ArrayList<String> userList;
+	public static int hashCodeStatic;
 	
 	// SimpleStringProperty for overwatching the chat
 	private SimpleStringProperty chatMessage = new SimpleStringProperty();
@@ -37,6 +39,12 @@ public class ClientThreadForServer extends Thread {
 	
 	// SimpleIntegerProperty for HashCode
 	public SimpleIntegerProperty HashCode = new SimpleIntegerProperty();
+	
+	//SimpleLongProperty for TimeCap
+	public SimpleLongProperty timeCap = new SimpleLongProperty();
+	
+	//SimpleIntegerProperty for Round
+	public SimpleIntegerProperty roundCap = new SimpleIntegerProperty();
 	
 	public void setSocket(Socket serverSocket) {
 		this.serverSocket = serverSocket;
@@ -114,10 +122,21 @@ public class ClientThreadForServer extends Thread {
 				userList = message.getNameList();
 				setDBRequest(true);
 			}
+			// Round-_Cap
+			else if(message.getDB() == 88){
+				logger.info("Round-Cap has arrived");
+				this.setRound(message.getId());
+			}
 		}
 		else if(message.getMessageType() == Message.MessageType.Hash){
 			logger.info("Hash-Code comes back: " + message.getDB());
 			this.setHashCode(message.getDB());
+			hashCodeStatic = message.getDB();
+			
+		}
+		else if(message.getMessageType() == Message.MessageType.Time){
+			logger.info("Time-Cap has arrived");
+			this.setTime(message.getTime());
 		}
 	}
 	
@@ -177,6 +196,30 @@ public class ClientThreadForServer extends Thread {
 	
 	public int getHashCodeInt(){
 		return this.HashCode.get();
+	}
+	
+	public SimpleLongProperty getTime(){
+		return this.timeCap;
+	}
+	
+	public long getTimeLong(){
+		return this.timeCap.get();
+	}
+	
+	public void setTime(long time) {
+		this.timeCap.set(time);
+	}
+	
+	public SimpleIntegerProperty getRound(){
+		return this.roundCap;
+	}
+	
+	public int getRoundInt(){
+		return this.roundCap.get();
+	}
+	
+	public void setRound(int roundCap){
+		this.roundCap.set(roundCap);
 	}
 	
 	public int getStartColumn(){

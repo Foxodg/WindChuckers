@@ -117,6 +117,11 @@ public class GameMenu_Model extends Model {
 			e.printStackTrace();
 		}
 	}
+	
+	public void messageConstructorForTime(long time) {
+		Message message = new Message(MessageType.Time, time);
+		sendMessage(message);
+	}
 
 	/**
 	 * For the Chat-Messages

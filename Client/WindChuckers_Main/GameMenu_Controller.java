@@ -97,6 +97,14 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			serviceLocator.getLogger().info("Close the Application");
 			cleanUp();
 		});
+		
+		/**
+		 * Starts a new Game
+		 * @author L.Weber
+		 */
+		view.menuFileRestart.setOnAction(e -> {
+			cleanUp();
+		});
 
 		/**
 		 * For Help
@@ -212,15 +220,49 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			userMap = model.getUserMap();
 			fillPersonList();
 		});
-
+		
+		//this client has to know what is his hashcode for the server
 		clientServer.getHashCode().addListener((observable, oldValue, newValue) -> {
 			model.setHashCode(clientServer.getHashCodeInt());
 		});
 
+		//start the timer
 		view.btnStartTimer.setOnAction(e -> {
+			//send the time-cap also to the other player the start is then when the message come back from the server
+			model.messageConstructorForTime(Long.parseLong(view.tfTimerTime.getText()));
+		});
+		
+		//is there an timer?
+		clientServer.getTime().addListener((observable, oldValue, newValue) -> {
+			view.tfTimerTime.setText(Long.toString(clientServer.getTimeLong()));
 			stopTimer = Long.parseLong(view.tfTimerTime.getText());
 			timer.start();
 		});
+		
+		// if round is given - send it to the other players
+		view.tfRoundMax.focusedProperty().addListener((observable, oldValue, newValue) -> {
+			if(newValue){
+			} else {
+				model.messageConstructorForDBUpdate(88, Integer.parseInt(view.tfRoundMax.getText()));
+			}
+		});
+		
+		// set the round from the other and make it not changable
+		clientServer.getRound().addListener((observable, oldValue, newValue) -> {
+			view.tfRoundMax.setText(Integer.toString(clientServer.getRoundInt()));
+			view.tfRoundMax.setEditable(false);
+		});
+		
+		// check the rounds when change it - is the round equals to the maxround then stop the game
+		view.tfRound.textProperty().addListener((observable, oldValue, newValue) -> {
+			int max = Integer.parseInt(view.tfRoundMax.getText());
+			int acutal = Integer.parseInt(view.tfRound.getText());
+			if(acutal >= acutal){
+				disableAll();
+			}
+		});
+		
+		
 
 		/**
 		 * Start the AI Configurator
@@ -233,6 +275,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			windChuckers.startAI();
 		});
 
+		
 		model.getMoveProperty().addListener((observable, oldValue, newValue) -> {
 			serviceLocator.getLogger().info("The Move Message reaches the GameMenu_Controller");
 			// TODO here is now the move - with model.getStartColumn/Row
@@ -283,7 +326,37 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	private void cleanUp() {
 		serviceLocator.getLogger().info("Clean up");
 		view.stop();
-		// Implement more Methods for Cleanup
+		view.tfHashCode.setDisable(false);
+		view.tfPointsUser1.setDisable(false);
+		view.tfPointsUser2.setDisable(false);
+		view.tfRound.setDisable(false);
+		view.tfRoundMax.setDisable(false);
+		view.tfTimer.setDisable(false);
+		view.tfTimerTime.setDisable(false);
+		view.getStage().close();
+		Scene scene = view.create_GUI();
+		view.setScene(scene);
+		view.setModel(model);
+		this.setView(view);
+		this.setModel(model);
+		view.start();
+	}
+	
+	/**
+	 * Disable all
+	 * @author L.Weber
+	 */
+	private void disableAll(){
+		serviceLocator.getLogger().info("Disable all");
+		
+		view.tfHashCode.setDisable(true);
+		view.tfPointsUser1.setDisable(true);
+		view.tfPointsUser2.setDisable(true);
+		view.tfRound.setDisable(true);
+		view.tfRoundMax.setDisable(true);
+		view.tfTimer.setDisable(true);
+		view.tfTimerTime.setDisable(true);
+		view.GameBoard.setDisable(true);
 	}
 
 	/**
@@ -358,30 +431,11 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 
 				if (time >= TimeUnit.MINUTES.toSeconds(stopTimer)){
 					stop();
+					disableAll();
 				}
 			}
 		}
 	};
-
-	// /**
-	// * Setters for Model-Extend
-	// * @author L.Weber
-	// */
-	// public void setBoard(Board board){
-	// this.board = board;
-	// }
-	// public void setMovement(Movement movement){
-	// this.movement = movement;
-	// }
-	// public void setTower(Tower tower){
-	// this.tower = tower;
-	// }
-	// public void setPosition(Position position){
-	// this.position = position;
-	// }
-	// public void setAI(AI ai){
-	// this.ai = ai;
-	// }
 
 	protected class TowerHandler implements EventHandler<ActionEvent> {
 		@Override
@@ -425,5 +479,13 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			}
 
 		}
+	}
+	
+	public void setView(GameMenu_View view){
+		this.view = view;
+	}
+	
+	public void setModel(GameMenu_Model model){
+		this.model = model;
 	}
 }

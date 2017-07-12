@@ -26,7 +26,7 @@ import Message.Message.MessageType;
 @Root
 public class Message {
 	public enum MessageType {
-		Coordinate, WinMessage, ChatMessage, DBMessage, DBMessageFull, Error, Update, AISingle, AIDouble, Hash
+		Coordinate, WinMessage, ChatMessage, DBMessage, DBMessageFull, Error, Update, AISingle, AIDouble, Hash, Time
 	};
 	
 	public enum Value {
@@ -132,6 +132,9 @@ public class Message {
 	
 	@Element(required = false)
 	private String something;
+	
+	@Element(required = false)
+	private long time;
 	
 
 	// Generator for a unique message ID
@@ -301,9 +304,20 @@ public class Message {
 	 * @param lastName
 	 */
 	public Message(MessageType messageType, int db, String preName, String lastName){
+		createStandardMessage(messageType);
 		this.DB = db;
 		this.preName = preName;
 		this.lastName = lastName;
+	}
+	
+	/**
+	 * For Time-Cap-Message
+	 * @param messageType
+	 * @param time
+	 */
+	public Message(MessageType messageType, long time){
+		createStandardMessage(messageType);
+		this.time = time;
 	}
 		
 
@@ -512,5 +526,8 @@ public class Message {
 		return this.something;
 	}
 	
+	public long getTime(){
+		return this.time;
+	}
 
 }
