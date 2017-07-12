@@ -1,5 +1,3 @@
-// aaaaaa
-
 package WindChuckers_Main;
 
 import java.time.Duration;
