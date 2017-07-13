@@ -271,8 +271,13 @@ public class Tower extends Button {
 			fields[startColumn][startRow].setEmpty(true);
 			fields[endColumn][endRow].setEmpty(false);
 			
+			colorField = fields[endColumn][endRow].getColor();
+			
 			GridPane.setColumnIndex(this, column);
 			GridPane.setRowIndex(this, row);
+			
+			this.disableFields(fields);
+			this.gameStart = false;
 
 			changeTurn(player1, player2, tower1, tower2);
 			
