@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import Client.ClientThreadForServer;
+import Login.LoginModel;
 import Message.Message;
 import Message.Message.MessageType;
 import Message.Message.Value;
@@ -74,6 +75,7 @@ public class GameMenu_Model extends Model {
 	private int startRow;
 	private int endColumn;
 	private int endRow;
+	private int playerType;
 	private int userID;
 	private ArrayList<String> userList;
 	private HashMap<Integer, ArrayList<String>> userMap;
@@ -144,10 +146,10 @@ public class GameMenu_Model extends Model {
 	 * @param yCoordinate2
 	 * @param value
 	 */
-	public void messageConstructorForCoordinate(boolean singlePlayer, int xCoordinate1, int yCoordinate1,
-			int xCoordinate2, int yCoordinate2) {
-		Message message = new Message(MessageType.Coordinate, singlePlayer, xCoordinate1, yCoordinate1, xCoordinate2,
-				yCoordinate2);
+	public void messageConstructorForCoordinate(int xCoordinate1, int yCoordinate1,
+			int xCoordinate2, int yCoordinate2, int player) {
+		Message message = new Message(MessageType.Coordinate, xCoordinate1, yCoordinate1, xCoordinate2,
+				yCoordinate2, player);
 		sendMessage(message);
 	}
 
@@ -157,7 +159,7 @@ public class GameMenu_Model extends Model {
 	 * @author L.Weber
 	 * @param win
 	 */
-	public void messageConstructorForWin(boolean win) {
+	public void messageConstructorForWin(int win) {
 		Message message = new Message(MessageType.WinMessage, win);
 		sendMessage(message);
 	}
@@ -173,10 +175,8 @@ public class GameMenu_Model extends Model {
 	 * @param yCoordinate2
 	 * @param gems
 	 */
-	public void messageConstructorForUpdate(boolean update, int xCoordinate1, int yCoordinate1, int xCoordinate2,
-			int yCoordinate2, int gems) {
-		Message message = new Message(MessageType.Update, update, xCoordinate1, yCoordinate1, xCoordinate2,
-				yCoordinate2, gems);
+	public void messageConstructorForUpdate(boolean update, int xCoordinate2, int yCoordinate2, int gems, int player) {
+		Message message = new Message(MessageType.Update, xCoordinate2,	yCoordinate2, gems, player);
 		sendMessage(message);
 
 	}
@@ -376,12 +376,13 @@ public class GameMenu_Model extends Model {
 		return player2;
 	}
 
-	public void makeMove(int startColumn, int startRow, int endColumn, int endRow) {
+	public void makeMove(int startColumn, int startRow, int endColumn, int endRow, int playerType) {
 		this.setMoveProperty(false);
 		this.startColumn = startColumn;
 		this.startRow = startRow;
 		this.endColumn = endColumn;
 		this.endRow = endRow;
+		this.playerType = playerType;
 		this.setMoveProperty(true);
 
 	}
@@ -400,6 +401,10 @@ public class GameMenu_Model extends Model {
 
 	public int getEndRow() {
 		return this.endRow;
+	}
+	
+	public int getPlayerType(){
+		return this.playerType;
 	}
 
 	public void setUserID(int userID) {
@@ -422,4 +427,5 @@ public class GameMenu_Model extends Model {
 	public HashMap<Integer, ArrayList<String>> getUserMap(){
 		return this.userMap;
 	}
+	
 }

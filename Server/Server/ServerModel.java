@@ -77,28 +77,3 @@ public class ServerModel {
 		return hashPlayers;
 	}
 }
-
-
-class Board {
-	private static Value[][] board; // singleton
-	private static int boardSize = 8;
-
-	public Board() {
-	}
-
-	/**
-	 * Factory method for returning the singleton board
-	 * 
-	 * @param mainClass
-	 *            The main class of this program
-	 * @return The singleton resource locator
-	 */
-	public static Value[][] getBoard() {
-		if (board == null)
-			board = new Value[boardSize][boardSize];
-		return board;
-	}
-	
-
-
-}

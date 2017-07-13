@@ -13,7 +13,10 @@ import java.util.logging.Logger;
 import AI.Board;
 import AI.Kamisado;
 import AI.Move;
+import AI.NewRound;
+import AI.PlayerType;
 import DataBase.DataBase;
+import Login.LoginModel;
 import Message.Message;
 import Message.Message.MessageType;
 import Message.Message.Value;
@@ -69,15 +72,16 @@ public class ServerThreadForClient extends Thread {
 			sendMessageBackToClient(message);
 			//Safes the coordinates for the hidden-Board on the Server
 			if(this.wantAI){
-				Move move = kamisado.setPlayConfiguration(true, 5);
-				Message messageAI = new Message(MessageType.Coordinate, message.getSinglePlayer(), move.getX1(),move.getY1(),move.getX2(),move.getY2());
+				Move move = kamisado.setPlayConfiguration(true, 5, message.getPlayer());
+				Board board = Board.getBoard();
+				PlayerType playerType = board.getTile(move.getX2(), move.getY2()).getTower().getPlayerType();
+				Message messageAI = new Message(MessageType.Coordinate, move.getX1(),move.getY1(),move.getX2(),move.getY2(), ServerController.playerConverter(playerType));
 				sendMessageBackToClient(messageAI);
 			}
 
 		}
 		else if(message.getMessageType() == MessageType.Update){
-			logger.info("Server: " + "Update: " + message.getUpdate() + " x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: " + message.getYCoordinate1() +
-					" x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: " + message.getYCoordinate2() + " Gems: " + message.getGems());
+			logger.info("Server: " + "Update: " + message.getUpdate() + " x-Coordinates: " + message.getXCoordinate2() + " y-Coordinates: " + message.getYCoordinate2() + " Gems: " + message.getGems() + " Player: " + message.getPlayer());
 			//send the Message Back to all Clients
 			sendMessageBackToClient(message);
 		}
@@ -126,7 +130,13 @@ public class ServerThreadForClient extends Thread {
 		}
 		else if(message.getMessageType() == MessageType.WinMessage){
 			logger.info("Server: " + "Win-Message: " );
-			//Win-Message
+			try {
+				int id = h2.selectWithName(LoginModel.getSurname());
+				h2.updatePreparedStatementWithId(message.getDB(), id);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			sendMessageBackToClient(message);
 		}
 		else if(message.getMessageType() == MessageType.AISingle){
 			logger.info("Server: "+"Paramter-Injection SinglePlayer:\n"+message.getProgressTWO()+"\n"+message.getMovesTWO()+"\n"+message.getBlockTWO()+"\n"+message.getSumoBlockTWO()+"\n"+message.getSumoWinTWO()+"\n"+message.getWinTWO());
@@ -161,7 +171,7 @@ public class ServerThreadForClient extends Thread {
 			this.wantDoubleAI = true;
 			
 			if(this.wantAI && this.wantDoubleAI){
-				Move move = kamisado.setPlayConfiguration(false, 5);
+				Move move = kamisado.setPlayConfiguration(false, 5, message.getPlayer());
 			}
 		}
 		//the hashcode for unique identifier for the client
@@ -171,6 +181,17 @@ public class ServerThreadForClient extends Thread {
 		//timecap
 		else if(message.getMessageType() == MessageType.Time) {
 			sendMessageBackToClient(new Message(MessageType.Time,message.getTime()));
+		}
+		//NewRound
+		else if(message.getMessageType() == MessageType.NewRound) {
+			NewRound newRound;
+			if(message.getWin() == true){
+				newRound = NewRound.Left;
+			} else{
+				newRound = NewRound.Right;
+			}
+			board.newRound(newRound);
+			sendMessageBackToClient(message);
 		}
 		else {
 			logger.info("Server" + "Error-Message: ");

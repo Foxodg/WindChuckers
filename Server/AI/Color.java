@@ -21,8 +21,3 @@ enum End {
 	Bottom,
 	Top
 }
-
-enum NewRound {
-	Left,
-	Right
-}

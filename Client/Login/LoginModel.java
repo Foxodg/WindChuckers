@@ -11,6 +11,8 @@ import javafx.concurrent.Task;
 public class LoginModel extends Model {
 	private ServiceLocator serviceLocator;
 	private String realPassword;
+	private static String surname;
+	private static int wins;
 
 	
 	public LoginModel(){
@@ -28,6 +30,22 @@ public class LoginModel extends Model {
 	
 	public void setPassword(String password) {
 		this.realPassword = password;
+	}
+	
+	public static void setSurname(String name){
+		surname = name;
+	}
+	
+	public static String getSurname(){
+		return surname;
+	}
+	
+	public static void setWins(int win){
+		wins = win;
+	}
+	
+	public static int getWins(){
+		return wins;
 	}
 }
 

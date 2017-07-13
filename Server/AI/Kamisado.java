@@ -36,13 +36,20 @@ public class Kamisado {
 //		setPlayConfiguration(false, 5, 100, 100, 15, 25, 15, Double.POSITIVE_INFINITY);
 //	}
 
-	public Move setPlayConfiguration(boolean singlePlayer, int depth) {
+	public Move setPlayConfiguration(boolean singlePlayer, int depth, int player) {
 		Board board = Board.getBoard();
 
+		//has to change the playerType, because this here is the opponent
 		if (singlePlayer) {
-			AlphaBetaPlayer player2 = new AlphaBetaPlayer(PlayerType.TWO, depth, weightVerticalTwo, weightPossibleTwo,
+			PlayerType playerType;
+			if(player == 1){
+				playerType = PlayerType.ONE;
+			} else {
+				playerType = PlayerType.TWO;
+			}
+			AlphaBetaPlayer player2 = new AlphaBetaPlayer(playerType, depth, weightVerticalTwo, weightPossibleTwo,
 					weightBlockTwo, weightSumoWinTwo, weightSumoBlockTwo, winTwo);
-			return play(player2, board);
+			return play(player2, board, playerType);
 		} else {
 			AlphaBetaPlayer player1 = new AlphaBetaPlayer(PlayerType.ONE, depth, weightVerticalOne, weightPossibleOne,
 					weightBlockOne, weightSumoWinOne, weightSumoBlockOne, winOne);
@@ -54,14 +61,14 @@ public class Kamisado {
 
 	}
 
-	private Move play(AlphaBetaPlayer player2, Board board) {
+	private Move play(AlphaBetaPlayer player2, Board board, PlayerType playerType) {
 		long start;
 		long end;
 		Move move = null;
 
 		if (board.isWinSituation() == false) {
 			start = System.currentTimeMillis();
-			move = board.makeMove(player2.getNextMove(board, PlayerType.TWO));
+			move = board.makeMove(player2.getNextMove(board, playerType));
 			end = System.currentTimeMillis();
 			System.out.println("time: " + (end - start));
 			
@@ -91,7 +98,7 @@ public class Kamisado {
 					System.out.println("time: " + (end - start));
 				}
 			}
-			board.newRound(PlayerType.ONE, NewRound.Left);
+			board.newRound(NewRound.Left);
 			System.out.println(board);
 		}
 	}

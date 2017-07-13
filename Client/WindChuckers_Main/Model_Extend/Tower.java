@@ -1,12 +1,16 @@
 package WindChuckers_Main.Model_Extend;
 
+import com.sun.media.jfxmedia.logging.Logger;
+
 import WindChuckers_Main.GameMenu_Model;
 import abstractClasses.Model;
+import commonClasses.ServiceLocator;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
 public class Tower extends Button {
 	private int playerNumber;
+	private GameMenu_Model model = GameMenu_Model.getGameModel();
 	private String color;
 	private int yPosition;
 	private int xPosition;
@@ -149,6 +153,10 @@ public class Tower extends Button {
 		int column = GridPane.getColumnIndex(field);
 		int row = GridPane.getRowIndex(field);
 		
+		// Send the move to the server
+		ServiceLocator.getServiceLocator().getLogger().info("Move send to server: " + field.getxPosition() + " " + field.getyPosition() + " " + this.getxPosition() + " " + this.getyPosition() + " " + this.getPlayerNumber());
+		model.messageConstructorForCoordinate(this.getxPosition(), this.getyPosition(), field.getxPosition(), field.getyPosition(), this.getPlayerNumber());
+		
 		// The old field is empty and the new field is busy
 		fields[this.getxPosition()][this.getyPosition()].setEmpty(true);
 		field.setEmpty(false);
@@ -167,6 +175,8 @@ public class Tower extends Button {
 		
 		// Towers of other player will be enabled
 		this.changeTurn(player1, player2, towersP1, towersP2);
+		
+
 }
 
 	/**
@@ -223,5 +233,43 @@ public class Tower extends Button {
 			for(int x = 0; x < 8; x++){
 				fields[x][y].setDisable(true);
 			}}
+	}
+
+	/**
+	 * This method make a move coming from the Server
+	 * @param startColumn
+	 * @param startRow
+	 * @param endColumn
+	 * @param endRow
+	 * @param playerType
+	 */
+	public void move(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Tower[][] tower1, Tower[][] tower2, int startColumn, int startRow, int endColumn, int endRow, int playerType) {
+				
+		int column = GridPane.getColumnIndex(fields[endColumn][endRow]);
+		int row = GridPane.getRowIndex(fields[endColumn][endRow]);
+		
+		// only make the move if its not done
+		if(!fields[startColumn][startRow].isEmpty()){
+			this.setxPosition(endColumn);
+			this.setyPosition(endRow);
+			this.setText(endColumn + "." + endRow);
+			
+			fields[startColumn][startRow].setEmpty(true);
+			fields[endColumn][endRow].setEmpty(false);
+			
+			GridPane.setColumnIndex(this, column);
+			GridPane.setRowIndex(this, row);
+
+			changeTurn(player1, player2, tower1, tower2);
+			
+		}
+	}
+
+	public void upgradeTower(Field[][] fields, Tower tower, int xCoordinateUpgrade, int yCoordinateUpgrade, int gems) {
+		int column = GridPane.getColumnIndex(fields[xCoordinateUpgrade][yCoordinateUpgrade]);
+		int row = GridPane.getRowIndex(fields[xCoordinateUpgrade][yCoordinateUpgrade]);
+		
+		//TODO upgrade the tower
+		
 	}
 }

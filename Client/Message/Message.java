@@ -26,7 +26,7 @@ import Message.Message.MessageType;
 @Root
 public class Message {
 	public enum MessageType {
-		Coordinate, WinMessage, ChatMessage, DBMessage, DBMessageFull, Error, Update, AISingle, AIDouble, Hash, Time
+		Coordinate, WinMessage, ChatMessage, DBMessage, DBMessageFull, Error, Update, AISingle, AIDouble, Hash, Time, NewRound
 	};
 	
 	public enum Value {
@@ -136,6 +136,9 @@ public class Message {
 	@Element(required = false)
 	private long time;
 	
+	@Element(required = false)
+	private int player;
+	
 
 	// Generator for a unique message ID
 	private static long messageID = 0;
@@ -157,13 +160,13 @@ public class Message {
 	 * @param yCoordinate
 	 * @param value
 	 */
-	public Message (MessageType messageType, boolean singlePlayer, int xCoordinate1, int yCoordinate1, int xCoordinate2, int yCoordinate2) {
+	public Message (MessageType messageType, int xCoordinate1, int yCoordinate1, int xCoordinate2, int yCoordinate2, int player) {
 		createStandardMessage(messageType);
-		this.singlePlayer = singlePlayer;
 		this.xCoordinate1 = xCoordinate1;
 		this.yCoordinate1 = yCoordinate1;
 		this.xCoordinate2 = xCoordinate2;
 		this.yCoordinate2 = yCoordinate2;
+		this.player = player;
 	}
 	
 	/**
@@ -186,14 +189,12 @@ public class Message {
 	 * @param yCoordinate2
 	 * @param gems
 	 */
-	public Message(MessageType messageType, boolean update, int xCoordinate1, int yCoordinate1, int xCoordinate2, int yCoordinate2, int gems ){
+	public Message(MessageType messageType, int xCoordinate2, int yCoordinate2, int gems, int player ){
 		createStandardMessage(messageType);
-		this.update = update;
-		this.xCoordinate1 = xCoordinate1;
-		this.yCoordinate1 = yCoordinate1;
 		this.xCoordinate2 = xCoordinate2;
 		this.yCoordinate2 = yCoordinate2;
 		this.gems = gems;
+		this.player = player;
 	}
 	
 	/**
@@ -528,6 +529,10 @@ public class Message {
 	
 	public long getTime(){
 		return this.time;
+	}
+	
+	public int getPlayer(){
+		return this.player;
 	}
 
 }

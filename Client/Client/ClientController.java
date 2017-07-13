@@ -85,12 +85,12 @@ public class ClientController {
         		view.txtChat.clear();
         	}
         	else if(view.cbchoice.getSelectionModel().getSelectedItem() == MessageType.Coordinate){
-        		boolean singlePlayer = true;
         		int xCoordinate1 = 0;
         		int yCoordinate1 = 0;
         		int xCoordinate2 = 0;
         		int yCoordinate2 = 4;
-        		model.messageConstructorForCoordinate(singlePlayer, xCoordinate1, yCoordinate1, xCoordinate2, yCoordinate2);
+        		int player = 1;
+        		model.messageConstructorForCoordinate(xCoordinate1, yCoordinate1, xCoordinate2, yCoordinate2, player);
         	}
         	else if(view.cbchoice.getSelectionModel().getSelectedItem() == MessageType.Update){
         		boolean update = true;
@@ -99,15 +99,16 @@ public class ClientController {
         		int xCoordinate2 = 1;
         		int yCoordinate2 = 5;
         		int gems = 1;
-        		model.messageConstructorForUpdate(update, xCoordinate1, yCoordinate1, xCoordinate2, yCoordinate2, gems);
+        		int player = 1;
+        		model.messageConstructorForUpdate(update, xCoordinate2, yCoordinate2, gems, player);
         	}
         	else if(view.cbchoice.getSelectionModel().getSelectedItem() == MessageType.DBMessage){
         		int dbMessage = 1;
         		model.messageConstructorForDB(dbMessage);
         	}
         	else if(view.cbchoice.getSelectionModel().getSelectedItem() == MessageType.WinMessage){
-        		boolean win = true;
-        		model.messageConstructorForWin(win);
+        		int player = 1;
+        		model.messageConstructorForWin(player);
         	}
         	else {
         		model.messageConstructorForError();
@@ -126,7 +127,7 @@ public class ClientController {
         //Watch the client for Moves
         clientserver.getValue().addListener((observable, oldValue, newValue) -> {
         	logger.info("Client: New Move from Server is here");
-        	model.makeMove(clientserver.getStartColumn(),clientserver.getStartRow(), clientserver.getEndColumn(), clientserver.getEndRow());
+        	model.makeMove(clientserver.getStartColumn(),clientserver.getStartRow(), clientserver.getEndColumn(), clientserver.getEndRow(), clientserver.getPlayerType());
         });
         
 		//Watch for the DB-Request

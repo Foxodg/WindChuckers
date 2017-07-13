@@ -13,6 +13,7 @@ import com.sun.media.jfxmedia.logging.Logger;
 
 import Client.ClientThreadForServer;
 import Login.LoginController;
+import Login.LoginModel;
 import Message.Message;
 import Message.Message.MessageType;
 import WindChuckers_Main.WindChuckers;
@@ -177,6 +178,30 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			windChuckers = WindChuckers.getWindChuckers();
 			windChuckers.getStartetClient();
 		});
+		
+		/**
+		 * For give the details for upgrade a tower
+		 * @author L.Weber
+		 */
+		clientServer.getUpgrade().addListener((observable, oldValue, newValue) -> {
+			
+			Tower[][] towers;
+			if(model.getPlayerType() == 1){
+				towers = view.getTowersP1();
+			} else {
+				towers = view.getTowersP2();
+			}
+			Tower tower = towers[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()];
+			tower.upgradeTower(view.getFields(), tower, clientServer.getXCoordinateUpgrade(), clientServer.getYCoordinateUpgrade(), clientServer.getGems());
+		});
+		
+		/**
+		 * For know - now is time for a new round
+		 * @author L.Weber
+		 */
+		clientServer.getNewRound().addListener((observable, oldValue, newValue) -> {
+			this.buildNewRound(clientServer.getNewRoundLeftRight());
+		});
 
 		/**
 		 * All for the chat
@@ -274,13 +299,30 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			windChuckers = WindChuckers.getWindChuckers();
 			windChuckers.startAI();
 		});
-
 		
+		/**
+		 * When the moves are here, show it in the GUI
+		 * @author L.Weber
+		 */
 		model.getMoveProperty().addListener((observable, oldValue, newValue) -> {
 			serviceLocator.getLogger().info("The Move Message reaches the GameMenu_Controller");
-			// TODO here is now the move - with model.getStartColumn/Row
-			// model.getEndColumn/Row it gets the start or end x-Coordinates or
-			// y-Coordinates
+			
+			Tower[][] towers;
+			if(model.getPlayerType() == 1){
+				towers = view.getTowersP1();
+			} else {
+				towers = view.getTowersP2();
+			}
+			Tower tower = towers[model.getStartColumn()][model.getStartRow()];
+			Field[][] fields = view.getFields();
+			GridPane gameBoard= view.getGameBoard();
+			Player player1 = model.getPlayer1();
+			Player player2 = model.getPlayer2();
+			Tower[][] tower1 = view.getTowersP1();
+			Tower[][] tower2 = view.getTowersP2();
+			
+			serviceLocator.getLogger().info("Move coordinates: " + model.getStartColumn() + " " + model.getStartRow() + " " + model.getEndColumn() + " " + model.getEndRow() + " " + model.getPlayerType());
+			tower.move(view.getFields(), view.getGameBoard(), model.getPlayer1(), model.getPlayer2(), view.getTowersP1(), view.getTowersP2(), model.getStartColumn(), model.getStartRow(), model.getEndColumn(), model.getEndRow(), model.getPlayerType());
 
 		});
 
@@ -312,11 +354,12 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 																// wer anfängt
 																// -> müssen wir
 																// noch
-																// implementieren
+																// implementieren 
 				}
 			}
 		}
 	}
+
 
 	/**
 	 * Clean all up
@@ -479,6 +522,31 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			}
 
 		}
+	}
+	
+	/**
+	 * Build the game new
+	 * @param newRoundLeftRight
+	 */
+	private void buildNewRound(boolean newRoundLeftRight) {
+		//Left is true
+		//Right is false
+		
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/**
+	 * Do all when someone win the game
+	 * @param win
+	 */
+	private void win(int win){
+		//TODO Win Procedure
+		
+		//update the DB
+		int winsBevore = LoginModel.getWins();
+		win = win + winsBevore;
+		model.messageConstructorForWin(win);
 	}
 	
 	public void setView(GameMenu_View view){

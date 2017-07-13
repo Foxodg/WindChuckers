@@ -3,6 +3,8 @@ package AI;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javafx.beans.property.SimpleBooleanProperty;
+
 public class Board {
 	public static final int a = 0, b = 1, c = 2, d = 3, e = 4, f = 5, g = 6, h = 7;
 	private Tile[][] board;
@@ -10,6 +12,12 @@ public class Board {
 	Random rand = new Random();
 	private MiniMaxAlphaBeta minimax;
 	private static Board boardSingleton;
+	
+	private int gems;
+	private int xCoordinationUpgrade;
+	private int yCoordinationUpgrade;
+	
+	public SimpleBooleanProperty upgrade = new SimpleBooleanProperty();
 
 	// these are here, for optimising the code, don't build every time new -
 	// it's always the same top or bottom Line
@@ -235,6 +243,8 @@ public class Board {
 				winning = true;
 				// also update the tower
 				upgradeTower(board[topLine.get(j).getX1()][topLine.get(j).getY1() - 1].getTower());
+				this.xCoordinationUpgrade = topLine.get(j).getX1();
+			    this.yCoordinationUpgrade = topLine.get(j).getY1() - 1;
 			}
 		}
 		for (int i = 0; i < bottomLine.size(); i++) {
@@ -247,6 +257,8 @@ public class Board {
 						"Upgrade now: " + board[bottomLine.get(i).getX1()][bottomLine.get(i).getY1() - 1].getTower());
 				System.err.println("Position: " + (bottomLine.get(i).getX1()) + " " + (bottomLine.get(i).getY1() - 1));
 				upgradeTower(board[bottomLine.get(i).getX1()][bottomLine.get(i).getY1() - 1].getTower());
+				this.xCoordinationUpgrade = topLine.get(i).getX1();
+				this.yCoordinationUpgrade = topLine.get(i).getY1() -1;
 			}
 		}
 		return winning;
@@ -270,6 +282,8 @@ public class Board {
 			int gems = tower.getGems();
 			tower.setGems(++gems);
 		}
+		this.gems = tower.getGems();
+		this.setUpgrade(true);
 	}
 
 	/** *************************************************************************************************************************************** **/
@@ -627,7 +641,7 @@ public class Board {
 	 * @param playerType
 	 * @param newRound
 	 */
-	public void newRound(PlayerType playerType, NewRound newRound) {
+	public void newRound(NewRound newRound) {
 		ArrayList<Tile> bottomTiles = new ArrayList<Tile>();
 		ArrayList<Tile> topTiles = new ArrayList<Tile>();
 		ArrayList<Tower> towerListPlayerONE = new ArrayList<Tower>();
@@ -972,5 +986,25 @@ public class Board {
 	
 	public void setLastMove(Move lastMove) {
 		this.lastMove = lastMove;
+	}
+	
+	public SimpleBooleanProperty getUpgrade(){
+		return this.upgrade;
+	}
+	
+	public void setUpgrade(boolean upgrade) {
+		this.upgrade.set(upgrade);
+	}
+	
+	public int getGems(){
+		return this.gems;
+	}
+	
+	public int getXCoordinateUpgrade(){
+		return this.xCoordinationUpgrade;
+	}
+	
+	public int getYCoordinateUpgrade() {
+		return this.yCoordinationUpgrade;
 	}
 }

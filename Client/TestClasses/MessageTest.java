@@ -31,9 +31,9 @@ public class MessageTest {
 		dbMessageInsert = new Message(MessageType.DBMessage,1,1,"Testy","PreName","LastName","password");
 		MessageAIDouble = new Message(MessageType.AIDouble,100.0,100.0,10.0,10.0,10.0,100.0,100.0,100.0,10.0,10.0,10.0,100.0);
 		MessageAI = new Message(MessageType.AISingle,100.0,100.0,10.0,10.0,10.0,100.0);
-		MessageCoordinateSingle = new Message(MessageType.Coordinate,true,0,0,0,1);
-		MessageCoordinateMulti = new Message(MessageType.Coordinate,false,0,0,0,1);
-		MessageUpdate = new Message(MessageType.Update, true,0,0,0,1,15);
+		MessageCoordinateSingle = new Message(MessageType.Coordinate,0,0,0,1,1);
+		MessageCoordinateMulti = new Message(MessageType.Coordinate,0,0,0,1,1);
+		MessageUpdate = new Message(MessageType.Update,0,1,15,1);
 	}
 	
 	@Test

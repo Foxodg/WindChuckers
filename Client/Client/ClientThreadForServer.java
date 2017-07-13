@@ -24,7 +24,12 @@ public class ClientThreadForServer extends Thread {
 	private int startRow;
 	private int endColumn;
 	private int endRow;
+	private int gems;
+	private int xCoordinateUpgrade;
+	private int yCoordinateUpgrade;
+	private int playerType;
 	private int userID;
+	private boolean newRoundLeftRight; //left is true, right is false
 	private ArrayList<String> userList;
 	public static int hashCodeStatic;
 	
@@ -45,6 +50,12 @@ public class ClientThreadForServer extends Thread {
 	
 	//SimpleIntegerProperty for Round
 	public SimpleIntegerProperty roundCap = new SimpleIntegerProperty();
+	
+	//SimpleBooleanProperty for overwatching the incoming Updates
+	public SimpleBooleanProperty upgrade = new SimpleBooleanProperty();
+	
+	//SimpleBooleanProperty for new Round
+	public SimpleBooleanProperty newRound = new SimpleBooleanProperty();
 	
 	public void setSocket(Socket serverSocket) {
 		this.serverSocket = serverSocket;
@@ -106,12 +117,19 @@ public class ClientThreadForServer extends Thread {
 			startRow = message.getYCoordinate1();
 			endColumn = message.getXCoordinate2();
 			endRow = message.getYCoordinate2();
+			playerType = message.getPlayer();
 			setValue(true);
 			
 		}
 		else if (message.getMessageType() == MessageType.Update){
 			logger.info("Client: " + "Update: " + message.getUpdate() + " x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: " + message.getYCoordinate1() +
 					" x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: " + message.getYCoordinate2() + " Gems: " + message.getGems());
+			this.setUpgrade(false);
+			this.setGems(message.getGems());
+			this.setXCoordinateUpgrade(message.getXCoordinate2());
+			this.setYCoordinateUpgrade(message.getYCoordinate2());
+			this.setUpgrade(true);
+			
 		}
 		else if (message.getMessageType() == MessageType.DBMessage || message.getMessageType() == MessageType.DBMessageFull){
 			logger.info("Client: DB-Message is arrived " + message.getDB());
@@ -137,6 +155,12 @@ public class ClientThreadForServer extends Thread {
 		else if(message.getMessageType() == Message.MessageType.Time){
 			logger.info("Time-Cap has arrived");
 			this.setTime(message.getTime());
+		}
+		else if(message.getMessageType() == Message.MessageType.NewRound){
+			logger.info("New Round");
+			this.setNewRound(false);
+			this.newRoundLeftRight = message.getWin();
+			this.setNewRound(true);
 		}
 	}
 	
@@ -214,6 +238,22 @@ public class ClientThreadForServer extends Thread {
 		return this.roundCap;
 	}
 	
+	public void setUpgrade(boolean upgrade){
+		this.upgrade.set(upgrade);
+	}
+	
+	public SimpleBooleanProperty getUpgrade(){
+		return this.upgrade;
+	}
+	
+	public void setNewRound(boolean newRound){
+		this.newRound.set(newRound);
+	}
+	
+	public SimpleBooleanProperty getNewRound(){
+		return this.newRound;
+	}
+	
 	public int getRoundInt(){
 		return this.roundCap.get();
 	}
@@ -238,12 +278,48 @@ public class ClientThreadForServer extends Thread {
 		return this.endRow;
 	}
 	
+	public int getPlayerType(){
+		return this.playerType;
+	}
+	
 	public int getUserID(){
 		return this.userID;
 	}
 	
 	public ArrayList<String> getUserList(){
 		return this.userList;
+	}
+	
+	public void setXCoordinateUpgrade(int upgrade){
+		this.xCoordinateUpgrade = upgrade;
+	}
+	
+	public void setYCoordinateUpgrade(int upgrade){
+		this.yCoordinateUpgrade = upgrade;
+	}
+	
+	public void setGems(int gems){
+		this.gems = gems;
+	}
+	
+	public int getXCoordinateUpgrade(){
+		return this.xCoordinateUpgrade;
+	}
+	
+	public int getYCoordinateUpgrade() {
+		return this.yCoordinateUpgrade;
+	}
+	
+	public int getGems(){
+		return this.gems;
+	}
+	
+	public boolean getNewRoundLeftRight(){
+		return this.newRoundLeftRight;
+	}
+	
+	public void setNewRoundLeftRight(boolean newRound){
+		this.newRoundLeftRight = newRound;
 	}
 
 }
