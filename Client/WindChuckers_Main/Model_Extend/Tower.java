@@ -15,6 +15,9 @@ public class Tower extends Button {
 	private int yPosition;
 	private int xPosition;
 	
+	private boolean gameStart = true;
+	private String colorField;
+	
 	protected Tower (String color){
 		super();
 		this.color = color;
@@ -165,13 +168,16 @@ public class Tower extends Button {
 		this.setxPosition(field.getxPosition());
 		this.setyPosition(field.getyPosition());
 		this.setText(field.getxPosition()+"."+field.getyPosition());
-
+		colorField = field.getColor();
 		// The Tower will be moved on the GridPane
 		GridPane.setColumnIndex(this, column);
 		GridPane.setRowIndex(this, row);
 		
+		
 		// The turn is finished, disable all fields
+//		Achtung Änderung LKU
 		this.disableFields(fields);
+		this.gameStart = false;
 		
 		// Towers of other player will be enabled
 		this.changeTurn(player1, player2, towersP1, towersP2);
@@ -214,14 +220,22 @@ public class Tower extends Button {
 
 	/**
 	 * This method enables all towers of the tower array chosen
+//	 * Achtung Änderung LKu
 	 * @param towers
 	 */
 	public void enableTowers(Tower[][] towers){
+		if (gameStart){
 		for(int y = 0; y < 8; y++){
 			for(int x = 0; x < 8; x++){
 				if(towers[x][y]!=null){
 					towers[x][y].setDisable(false);
-					}}}
+					}}}} else if(!gameStart){
+						for(int y = 0; y < 8; y++){
+							for(int x = 0; x < 8; x++){
+								if(towers[x][y]!=null && towers[x][y].getColor().equals(colorField)){
+									towers[x][y].setDisable(false);
+								}}}
+		}
 	}
 
 	/**
