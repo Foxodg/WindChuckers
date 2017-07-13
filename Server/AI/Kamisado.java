@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 public class Kamisado {
 	private static Kamisado kamisado;
 	private Move move;
+	private int depth = 5;
 	
 	private double weightVerticalOne = 100;
 	private double weightPossibleOne = 100;
@@ -38,6 +39,7 @@ public class Kamisado {
 
 	public Move setPlayConfiguration(boolean singlePlayer, int depth, int player) {
 		Board board = Board.getBoard();
+		depth = this.getDepth();
 
 		//has to change the playerType, because this here is the opponent
 		if (singlePlayer) {
@@ -167,5 +169,13 @@ public class Kamisado {
 	
 	public void setWinTwo(double weight) {
 		this.winTwo = weight;
+	}
+	
+	public void setDepth(int depth){
+		this.depth = depth;
+	}
+	
+	public int getDepth(){
+		return this.depth;
 	}
 }

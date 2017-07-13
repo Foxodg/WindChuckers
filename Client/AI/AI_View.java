@@ -31,7 +31,9 @@ public class AI_View extends View<GameMenu_Model>{
 	protected MenuItem menuFileAIExit;
 	
 	//Top
-	CheckBox cb;
+	protected CheckBox cb;
+	protected TextField tfDepth;
+	private Label lblDepth;
 
 
 	//Left side Player
@@ -100,6 +102,7 @@ public class AI_View extends View<GameMenu_Model>{
 		menuBar.getMenus().add(menuFileAI);
 		cb = new CheckBox();
 		cb.setSelected(true);
+		tfDepth = new TextField();
 		
 
 		//Left side
@@ -292,7 +295,12 @@ public class AI_View extends View<GameMenu_Model>{
 		spacerBox.setPrefHeight(10);
 		
 		HBox topBox = new HBox();
-		topBox.getChildren().add(cb);
+		Region spacer = new Region();
+		topBox.setHgrow(spacer, Priority.ALWAYS);
+		tfDepth.setPromptText("5");
+		lblDepth = new Label();
+		Label lblSpacer = new Label(" ");
+		topBox.getChildren().addAll(cb, spacer, lblDepth,lblSpacer, tfDepth);
 		
 		menuFileAI.getItems().add(menuFileAIExit);
 		
@@ -336,6 +344,7 @@ public class AI_View extends View<GameMenu_Model>{
 		lblWeightWinR.setText(t.getString("lblWeightWin"));
 		lblPlayerONE.setText(t.getString("lblPlayerONE"));
 		lblPlayerTWO.setText(t.getString("lblPlayerTWO"));
+		lblDepth.setText(t.getString("lblDepth"));
 		
 		//Buttons
 		btnSingePlayer.setText(t.getString("btnSinglePlayer"));

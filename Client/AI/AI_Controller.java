@@ -202,6 +202,19 @@ public class AI_Controller extends Controller<GameMenu_Model, AI_View> {
 			}
 		});
 		
+		view.tfDepth.focusedProperty().addListener((oberservable, oldValue, newValue)-> {
+			if(newValue){
+			} else {
+				serviceLocator.getLogger().info("Depth is: " + view.tfDepth.getText());
+				model.messageConstructorForDBUpdate(90, Integer.parseInt(view.tfDepth.getText()));
+			}
+		});
+		view.tfDepth.textProperty().addListener((observable, oldValue, newValue)-> {
+			if(!newValue.matches("\\d")) {
+				view.tfDepth.setText(newValue.replaceAll("[^\\d]", ""));
+			}
+		});
+		
 	}
 	
 	

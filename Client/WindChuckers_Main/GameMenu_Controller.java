@@ -271,6 +271,12 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 				model.messageConstructorForDBUpdate(88, Integer.parseInt(view.tfRoundMax.getText()));
 			}
 		});
+		//only numbers allowed
+		view.tfRoundMax.textProperty().addListener((observable, oldValue, newValue)-> {
+			if(!newValue.matches("\\d")) {
+				view.tfRoundMax.setText(newValue.replaceAll("[^\\d]", ""));
+			}
+		});
 		
 		// set the round from the other and make it not changable
 		clientServer.getRound().addListener((observable, oldValue, newValue) -> {

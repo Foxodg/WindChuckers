@@ -125,7 +125,13 @@ public class ServerThreadForClient extends Thread {
 			}
 			//Round cap
 			else if(message.getDB() == 88){
+				logger.info("Round cap: " + message.getDB());
 				sendMessageBackToClient(new Message(MessageType.DBMessage,message.getDB(),message.getId()));
+			}
+			//Depth
+			else if(message.getDB() == 90){
+				logger.info("Depth is: " + message.getId());
+				kamisado.setDepth(message.getId());
 			}
 		}
 		else if(message.getMessageType() == MessageType.WinMessage){
