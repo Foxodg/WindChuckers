@@ -10,6 +10,7 @@ public class Tower extends Button {
 	private String color;
 	private int yPosition;
 	private int xPosition;
+	
 	private boolean gameStart = true;
 	private String colorField;
 	
@@ -166,6 +167,7 @@ public class Tower extends Button {
 		
 		
 		// The turn is finished, disable all fields
+//		Achtung Änderung LKU
 		this.disableFields(fields);
 		this.gameStart = false;
 		
@@ -208,6 +210,7 @@ public class Tower extends Button {
 
 	/**
 	 * This method enables all towers of the tower array chosen
+//	 * Achtung Änderung LKu
 	 * @param towers
 	 */
 	public void enableTowers(Tower[][] towers){
