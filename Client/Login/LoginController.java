@@ -62,6 +62,8 @@ public class LoginController extends Controller<GameMenu_Model, LoginView> {
 						if (this.counter.get(name) == null) {
 							this.counter.put(name, new Integer(passwordCounter));
 							this.password.put(name, searchList.get(3));
+							LoginModel.setSurname(searchList.get(2));
+							LoginModel.setWins(Integer.parseInt(searchList.get(4)));
 						}
 					}
 				}
@@ -69,8 +71,6 @@ public class LoginController extends Controller<GameMenu_Model, LoginView> {
 				//when the password is three times false
 				if (this.counter.get(view.username.getText()) <= 3) {
 					if (loginModel.passwordCheck(view.password.getText())) {
-						loginModel.setSurname(searchList.get(2));
-						loginModel.setWins(Integer.parseInt(searchList.get(4)));
 						model.setUserName(view.username.getText());
 						main.startMainMenu();
 						view.stop();
