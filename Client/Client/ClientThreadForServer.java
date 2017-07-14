@@ -57,6 +57,9 @@ public class ClientThreadForServer extends Thread {
 	//SimpleBooleanProperty for new Round
 	public SimpleBooleanProperty newRound = new SimpleBooleanProperty();
 	
+	//SimpleIntegerProperty for Random-Start the Game
+	public SimpleIntegerProperty randomStart = new SimpleIntegerProperty();
+	
 	public void setSocket(Socket serverSocket) {
 		this.serverSocket = serverSocket;
 		}
@@ -144,6 +147,10 @@ public class ClientThreadForServer extends Thread {
 			else if(message.getDB() == 88){
 				logger.info("Round-Cap has arrived");
 				this.setRound(message.getId());
+			}
+			else if(message.getDB() == 91) {
+				logger.info("RandomStartObject is here: " + message.getId());
+				this.setRandomStart(message.getId());
 			}
 		}
 		else if(message.getMessageType() == Message.MessageType.Hash){
@@ -260,6 +267,18 @@ public class ClientThreadForServer extends Thread {
 	
 	public void setRound(int roundCap){
 		this.roundCap.set(roundCap);
+	}
+	
+	public SimpleIntegerProperty getRandomStart() {
+		return this.randomStart;
+	}
+	
+	public int getRandomStartInt() {
+		return this.randomStart.get();
+	}
+	
+	public void setRandomStart(int randomStart) {
+		this.randomStart.set(randomStart);
 	}
 	
 	public int getStartColumn(){

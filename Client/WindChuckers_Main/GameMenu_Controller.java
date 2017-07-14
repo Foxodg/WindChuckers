@@ -82,6 +82,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		this.player = player;
 		this.clientServer = ClientThreadForServer.getClientServer();
 		serviceLocator = ServiceLocator.getServiceLocator();
+		model.messageConstructorForDB(91); //For the random start
 		model.sendMessage(new Message(MessageType.DBMessage, 0)); // Get
 																	// User-Data
 		TowerHandler towerHandler = new TowerHandler(); // Anonym Class to
@@ -202,6 +203,14 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		 */
 		clientServer.getNewRound().addListener((observable, oldValue, newValue) -> {
 			this.buildNewRound(clientServer.getNewRoundLeftRight());
+		});
+		
+		/**
+		 * Set the randomStart Integer for start the game
+		 */
+		clientServer.getRandomStart().addListener((observable, oldValue, newValue) -> {
+			model.setRandomStart(clientServer.getRandomStartInt());
+			serviceLocator.getLogger().info("Random-Object: " + clientServer.getRandomStartInt());
 		});
 
 		/**
@@ -347,10 +356,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 //		Anmerkung LKu Hier müssen wir noch die Fälle nach einer neuen Runde implementieren.
 //		Immer der Verlierer beginnt
 
-		Random ran = new Random();
-		int oneOrTwo = ran.nextInt(2);
-		System.out.println(oneOrTwo);
-		if (oneOrTwo == 1){
+		if (model.getRandomStart() == 2){
 			model.getPlayer1().setOnTurn(true);
 			model.getPlayer2().setOnTurn(false);
 		for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
@@ -370,7 +376,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			}
 		}
 		
-		}else if (oneOrTwo == 0){
+		}else if (model.getRandomStart() == 1){
 			model.getPlayer1().setOnTurn(false);
 			model.getPlayer2().setOnTurn(true);
 		for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
@@ -393,7 +399,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 					}
 				}
 			}
-		}else if (oneOrTwo == 0){
+		}else if (model.getRandomStart() == 0){
 			model.getPlayer1().setOnTurn(false);
 			model.getPlayer2().setOnTurn(true);
 		for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {

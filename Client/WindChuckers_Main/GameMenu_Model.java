@@ -77,6 +77,7 @@ public class GameMenu_Model extends Model {
 	private int endRow;
 	private int playerType;
 	private int userID;
+	private int randomStart;
 	private ArrayList<String> userList;
 	private HashMap<Integer, ArrayList<String>> userMap;
 
@@ -426,6 +427,14 @@ public class GameMenu_Model extends Model {
 	
 	public HashMap<Integer, ArrayList<String>> getUserMap(){
 		return this.userMap;
+	}
+	
+	public void setRandomStart(int randomStart) {
+		this.randomStart = randomStart;
+	}
+	
+	public int getRandomStart() {
+		return this.randomStart;
 	}
 	
 }

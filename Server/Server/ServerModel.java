@@ -3,6 +3,7 @@ package Server;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.logging.Logger;
 
 import Message.Message;
@@ -17,6 +18,7 @@ public class ServerModel {
     private ArrayList<Socket> clientSockets = new ArrayList<Socket>();
 	private static ArrayList<Integer> hashPlayers = new ArrayList<Integer>();
 	private static ServerModel serverModel;
+	private static Integer randomStart;
     
 	/**
 	 * Factory method for returning the singleton board
@@ -60,6 +62,22 @@ public class ServerModel {
             return null;
         }
     };
+    
+    /**
+     * For the Random start the game
+     * Must be an Singleton, there is only one start-point
+     * @author L.Weber
+     */
+    public static Integer buildRandomStart() {
+    	if(randomStart == null) {
+        	Random rand = new Random();
+    		randomStart = rand.nextInt(2)+1;
+    		return randomStart;
+    	} else {
+    		return randomStart;
+    	}
+
+    }
     
     /**
      * Called by the controller, to start the serverSocket task

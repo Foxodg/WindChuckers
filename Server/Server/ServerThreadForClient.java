@@ -133,6 +133,12 @@ public class ServerThreadForClient extends Thread {
 				logger.info("Depth is: " + message.getId());
 				kamisado.setDepth(message.getId());
 			}
+			//Random-Object for Game-Start
+			else if(message.getDB() == 91) {
+				ServerModel model = ServerModel.getServerModel();
+				int oneOrTwo = model.buildRandomStart();
+				sendMessageBackToClient(new Message(MessageType.DBMessage,91,oneOrTwo));
+			}
 		}
 		else if(message.getMessageType() == MessageType.WinMessage){
 			logger.info("Server: " + "Win-Message: " );
