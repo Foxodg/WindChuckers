@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -343,7 +344,15 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		 * 
 		 * @author robin
 		 */
+//		Anmerkung LKu Hier müssen wir noch die Fälle nach einer neuen Runde implementieren.
+//		Immer der Verlierer beginnt
 
+		Random ran = new Random();
+		int oneOrTwo = ran.nextInt(2);
+		System.out.println(oneOrTwo);
+		if (oneOrTwo == 1){
+			model.getPlayer1().setOnTurn(true);
+			model.getPlayer2().setOnTurn(false);
 		for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
 			for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
 				if (view.getTowersP1()[x][y] != null) {
@@ -356,13 +365,58 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
 				if (view.getTowersP2()[x][y] != null) {
 					view.getTowersP2()[x][y].setOnAction(towerHandler);
-					view.getTowersP2()[x][y].setDisable(true); // Je nach dem
+					view.getTowersP2()[x][y].setDisable(true);
+				}
+			}
+		}
+		
+		}else if (oneOrTwo == 0){
+			model.getPlayer1().setOnTurn(false);
+			model.getPlayer2().setOnTurn(true);
+		for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+			for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+				if (view.getTowersP2()[x][y] != null) {
+					view.getTowersP2()[x][y].setOnAction(towerHandler);
+				}
+			}
+		}
+
+		for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+			for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+				if (view.getTowersP1()[x][y] != null) {
+					view.getTowersP1()[x][y].setOnAction(towerHandler);
+					view.getTowersP1()[x][y].setDisable(true); // Je nach dem
 																// wer anfängt
 																// -> müssen wir
 																// noch
 																// implementieren 
+					}
 				}
 			}
+		}else if (oneOrTwo == 0){
+			model.getPlayer1().setOnTurn(false);
+			model.getPlayer2().setOnTurn(true);
+		for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+			for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+				if (view.getTowersP2()[x][y] != null) {
+					view.getTowersP2()[x][y].setOnAction(towerHandler);
+				}
+			}
+		}
+
+		for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+			for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+				if (view.getTowersP1()[x][y] != null) {
+					view.getTowersP1()[x][y].setOnAction(towerHandler);
+					view.getTowersP1()[x][y].setDisable(true); // Je nach dem
+																// wer anfängt
+																// -> müssen wir
+																// noch
+																// implementieren
+					}
+				}
+			}
+		
 		}
 	}
 

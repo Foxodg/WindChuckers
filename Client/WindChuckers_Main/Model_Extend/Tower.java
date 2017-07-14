@@ -16,6 +16,7 @@ public class Tower extends Button {
 	private int xPosition;
 	
 	private boolean gameStart = true;
+	private boolean Winner = false;
 	private String colorField;
 	
 	protected Tower (String color){
@@ -49,6 +50,13 @@ public class Tower extends Button {
 	public void setxPosition(int xPosition) {
 		this.xPosition = xPosition;
 	}
+	
+	public void setPlayerSign(){
+		if (this.getPlayerNumber() == 1){
+			this.setText("\u2160");
+	} else if(this.getPlayerNumber() == 2){
+		this.setText("\u2161");
+	}}
 
 	/**
 	 * This method will show all possible moves and enable all possible fields
@@ -172,18 +180,31 @@ public class Tower extends Button {
 		// The Tower will be moved on the GridPane
 		GridPane.setColumnIndex(this, column);
 		GridPane.setRowIndex(this, row);
-		
+		this.setPlayerSign();
 		
 		// The turn is finished, disable all fields
 //		Achtung Änderung LKU
 		this.disableFields(fields);
 		this.gameStart = false;
+		this.checkWin(player1, player2);
+
 		
 		// Towers of other player will be enabled
 		this.changeTurn(player1, player2, towersP1, towersP2);
 		
 
 }
+	
+	// Anmerkung LKu (Ich muss falsche Koordinaten prüfen)
+	private void checkWin(Player player1, Player player2) {
+		if (player1.isOnTurn() == true && yPosition == 0){
+		Winner = true;
+		System.out.println("We have a Winner");
+		} else if(player2.isOnTurn() == true && yPosition == 7){
+		Winner = true;
+		System.out.println("We have a Winner");
+		}
+	}
 
 	/**
 	 * This method will activate the opponents towers and change the turn
