@@ -1,8 +1,8 @@
 package WindChuckers_Main.Model_Extend;
 
-public class sumoTower extends Tower {
+public class SumoTower extends Tower {
 
-	public sumoTower(String color) {
+	public SumoTower(String color) {
 		super(color);
 		// TODO Auto-generated constructor stub
 	}

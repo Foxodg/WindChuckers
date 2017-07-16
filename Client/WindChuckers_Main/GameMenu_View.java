@@ -7,11 +7,10 @@ import Client.ClientThreadForServer;
 import WindChuckers_Main.Model_Extend.Board;
 import WindChuckers_Main.Model_Extend.Field;
 import WindChuckers_Main.Model_Extend.Tower;
-import WindChuckers_Main.Model_Extend.normalTower;
 import WindChuckers_Main.Model_Extend.Movement;
 import WindChuckers_Main.Model_Extend.Player;
 import WindChuckers_Main.Model_Extend.Position;
-import WindChuckers_Main.Model_Extend.sumoTower;
+import WindChuckers_Main.Model_Extend.SumoTower;
 import abstractClasses.View;
 import commonClasses.ServiceLocator;
 import commonClasses.Translator;
@@ -48,8 +47,6 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	private Board board;
 	private Movement movement;
 	private Position position;
-	private normalTower normalTower;
-	private sumoTower sumoTower;
 	private Player player;
 	
 	private Menu menuFile;
@@ -98,17 +95,15 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	// GameBoard
 	protected GridPane GameBoard;
 	protected Field[][] fields;
-	protected normalTower[][] towersP1;
-	protected normalTower[][] towersP2;
+	protected Tower[][] towersP1;
+	protected Tower[][] towersP2;
 
-	public GameMenu_View(Stage stage, GameMenu_Model model, Board board, Movement movement, Position position, normalTower normalTower, sumoTower sumoTower, Player player) {
+	public GameMenu_View(Stage stage, GameMenu_Model model, Board board, Movement movement, Position position, Player player) {
 		super(stage, model);
 		this.stage = stage;
 		this.board = board;
 		this.movement = movement;
 		this.position = position;
-		this.normalTower = normalTower;
-		this.sumoTower = sumoTower;
 		this.player = player;
 		
 		stage.setTitle("WindChuckers Kamisado");
@@ -234,7 +229,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	 * Each element of the GameBoard will be set to the right place on the GridPane
 	 * @author robin
 	 */
-	private GridPane getCompleteGameBoard(Field[][] fields, normalTower[][] towersP1,normalTower[][] towersP2) {
+	private GridPane getCompleteGameBoard(Field[][] fields, Tower[][] towersP1,Tower[][] towersP2) {
 		GridPane pane = new GridPane();
 		pane.setAlignment(Pos.CENTER);
 		
@@ -257,6 +252,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 //			towersP1[x][towersP1.length-1].setText(""+towersP1[x][7].getxPosition()+"."+towersP1[x][7].getyPosition());
 			towersP1[x][towersP1.length-1].setPlayerSign();
 //			towersP1[x][towersP1.length-1].setText("\u2160");
+			
 			towersP2[x][towersP2.length-towersP2.length].setxPosition(x);
 			towersP2[x][towersP2.length-towersP2.length].setyPosition(towersP2.length-towersP2.length);
 //			towersP2[x][towersP2.length-towersP2.length].setText(""+towersP2[x][0].getxPosition()+"."+towersP2[x][0].getyPosition());
@@ -277,17 +273,17 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	 * An Array with all towers of Player 1 will be created
 	 * @author robin
 	 */
-	private normalTower[][] getTowersP1Array() {
-		normalTower[][]towersP1 = new normalTower[GameMenu_Model.DIMENSION][GameMenu_Model.DIMENSION];
+	private Tower[][] getTowersP1Array() {
+		Tower[][]towersP1 = new Tower[GameMenu_Model.DIMENSION][GameMenu_Model.DIMENSION];
 		
-		towersP1[0][7] = normalTower.getOrangeTower();
-		towersP1[1][7] = normalTower.getBlueTower();
-		towersP1[2][7] = normalTower.getVioletTower();
-		towersP1[3][7] = normalTower.getPinkTower();
-		towersP1[4][7] = normalTower.getYellowTower();
-		towersP1[5][7] = normalTower.getRedTower();
-		towersP1[6][7] = normalTower.getGreenTower();
-		towersP1[7][7] = normalTower.getBrownTower();
+		towersP1[0][7] = Tower.getOrangeTower();
+		towersP1[1][7] = Tower.getBlueTower();
+		towersP1[2][7] = Tower.getVioletTower();
+		towersP1[3][7] = Tower.getPinkTower();
+		towersP1[4][7] = Tower.getYellowTower();
+		towersP1[5][7] = Tower.getRedTower();
+		towersP1[6][7] = Tower.getGreenTower();
+		towersP1[7][7] = Tower.getBrownTower();
 		
 		for(int i = 0; i< GameMenu_Model.DIMENSION; i++){
 			towersP1[i][towersP1.length-1].setPlayerNumber(1);
@@ -302,17 +298,17 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	 * An Array with all towers of Player 2 will be created
 	 * @author robin
 	 */
-	private normalTower[][] getTowersP2Array() {
-		normalTower[][]towersP2 = new normalTower[GameMenu_Model.DIMENSION][GameMenu_Model.DIMENSION];
+	private Tower[][] getTowersP2Array() {
+		Tower[][]towersP2 = new Tower[GameMenu_Model.DIMENSION][GameMenu_Model.DIMENSION];
 
-		towersP2[7][0] = normalTower.getOrangeTower();
-		towersP2[6][0] = normalTower.getBlueTower();
-		towersP2[5][0] = normalTower.getVioletTower();
-		towersP2[4][0] = normalTower.getPinkTower();
-		towersP2[3][0] = normalTower.getYellowTower();
-		towersP2[2][0] = normalTower.getRedTower();
-		towersP2[1][0] = normalTower.getGreenTower();
-		towersP2[0][0] = normalTower.getBrownTower();
+		towersP2[7][0] = Tower.getOrangeTower();
+		towersP2[6][0] = Tower.getBlueTower();
+		towersP2[5][0] = Tower.getVioletTower();
+		towersP2[4][0] = Tower.getPinkTower();
+		towersP2[3][0] = Tower.getYellowTower();
+		towersP2[2][0] = Tower.getRedTower();
+		towersP2[1][0] = Tower.getGreenTower();
+		towersP2[0][0] = Tower.getBrownTower();
 		
 		for(int i = 0; i < GameMenu_Model.DIMENSION;i++){
 			towersP2[i][towersP2.length-towersP2.length].setPlayerNumber(2);
@@ -451,7 +447,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	}
 
 	// getter and setter
-	protected normalTower[][] getTowers(){
+	protected Tower[][] getTowers(){
 		return null;
 	}
 
@@ -467,7 +463,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		return towersP1;
 	}
 
-	public void setTowersP1(normalTower[][] towersP1) {
+	public void setTowersP1(Tower[][] towersP1) {
 		this.towersP1 = towersP1;
 	}
 
@@ -475,7 +471,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		return towersP2;
 	}
 
-	public void setTowersP2(normalTower[][] towersP2) {
+	public void setTowersP2(Tower[][] towersP2) {
 		this.towersP2 = towersP2;
 	}
 

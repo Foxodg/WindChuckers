@@ -37,6 +37,8 @@ public class GameMenu_Model extends Model {
 	protected static final String RED = "#B22222";
 	protected static final String GREEN = "#008000";
 	protected static final String BROWN = "#8B4513";
+	
+	public static SimpleBooleanProperty Winner = new SimpleBooleanProperty(false);
 
 	private Player player1 = new Player(1);
 	private Player player2 = new Player(2);

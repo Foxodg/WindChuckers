@@ -1,10 +1,13 @@
 package WindChuckers_Main.Model_Extend;
 
+import org.omg.Messaging.SyncScopeHelper;
+
 import com.sun.media.jfxmedia.logging.Logger;
 
 import WindChuckers_Main.GameMenu_Model;
 import abstractClasses.Model;
 import commonClasses.ServiceLocator;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
@@ -16,7 +19,6 @@ public class Tower extends Button {
 	private int xPosition;
 	
 	private boolean gameStart = true;
-	private boolean Winner = false;
 	private String colorField;
 	
 	protected Tower (String color){
@@ -57,6 +59,54 @@ public class Tower extends Button {
 	} else if(this.getPlayerNumber() == 2){
 		this.setText("\u2161");
 	}}
+
+	/**
+	 * Following methods will provide the towers in each color
+	 * @param xPosition
+	 * @param yPosition
+	 * @return
+	 * @author robin
+	 */
+	public static Tower getOrangeTower(){
+		Tower orangeTower = new Tower("orange");
+		orangeTower.setStyle(" -fx-background-color: #FF8C00;");
+		return orangeTower;
+	}
+	public static Tower getBlueTower(){
+		Tower blueTower = new Tower("blue");
+		blueTower.setStyle(" -fx-background-color: #4169E1;");
+		return blueTower;
+	}
+	public static Tower getVioletTower(){
+		Tower violetTower = new Tower("violet");
+		violetTower.setStyle(" -fx-background-color: #663399 ;");
+		return violetTower;
+	}
+	public static Tower getPinkTower(){
+		Tower pinkTower = new Tower("pink");
+		pinkTower.setStyle(" -fx-background-color: #FF69B4;");
+		return pinkTower;
+	}
+	public static Tower getYellowTower(){
+		Tower yellowTower = new Tower("yellow");
+		yellowTower.setStyle(" -fx-background-color: #FFD700;");
+		return yellowTower;
+	}
+	public static Tower getRedTower(){
+		Tower redTower = new Tower("red");
+		redTower.setStyle(" -fx-background-color: #B22222;");
+		return redTower;
+	}
+	public static Tower getGreenTower(){
+		Tower greenTower = new Tower("green");
+		greenTower.setStyle(" -fx-background-color: #008000;");
+		return greenTower;
+	}
+	public static Tower getBrownTower(){
+		Tower brownTower = new Tower("brown");
+		brownTower.setStyle(" -fx-background-color: #8B4513;");
+		return brownTower;
+	}
 
 	/**
 	 * This method will show all possible moves and enable all possible fields
@@ -183,10 +233,10 @@ public class Tower extends Button {
 		this.setPlayerSign();
 		
 		// The turn is finished, disable all fields
-//		Achtung Änderung LKU
+		//	Achtung Änderung LKU
 		this.disableFields(fields);
 		this.gameStart = false;
-		this.checkWin(player1, player2);
+		this.checkWin(fields, player1, player2, this, this.xPosition, this.yPosition, 2, towersP1, towersP2);
 
 		
 		// Towers of other player will be enabled
@@ -196,12 +246,14 @@ public class Tower extends Button {
 }
 	
 	// Anmerkung LKu (Ich muss falsche Koordinaten prüfen)
-	private void checkWin(Player player1, Player player2) {
+	private void checkWin(Field[][] fields, Player player1, Player player2, Tower tower, int xPosition, int yPosition, int gems, Tower[][] towersP1, Tower[][] towersP2) {
 		if (player1.isOnTurn() == true && yPosition == 0){
-		Winner = true;
+		this.upgradeTower(fields, tower, this.xPosition, this.yPosition, gems, towersP1, towersP2);
+		model.Winner.set(true);
 		System.out.println("We have a Winner");
 		} else if(player2.isOnTurn() == true && yPosition == 7){
-		Winner = true;
+		this.upgradeTower(fields, tower, this.xPosition, this.yPosition, gems, towersP1, towersP2);
+		model.Winner.set(true);
 		System.out.println("We have a Winner");
 		}
 	}
@@ -305,11 +357,36 @@ public class Tower extends Button {
 		}
 	}
 
-	public void upgradeTower(Field[][] fields, Tower tower, int xCoordinateUpgrade, int yCoordinateUpgrade, int gems) {
+	public void upgradeTower(Field[][] fields, Tower tower, int xCoordinateUpgrade, int yCoordinateUpgrade, int gems, Tower[][] towersP1, Tower[][] towersP2) {
 		int column = GridPane.getColumnIndex(fields[xCoordinateUpgrade][yCoordinateUpgrade]);
 		int row = GridPane.getRowIndex(fields[xCoordinateUpgrade][yCoordinateUpgrade]);
+		SumoTower sumoTower = new SumoTower(this.getColor());
+		sumoTower.setxPosition(this.getxPosition());
+		sumoTower.setyPosition(this.getyPosition());
+		sumoTower.setPlayerNumber(this.getPlayerNumber());
+		if(this.getPlayerNumber()==1){
+			towersP1[this.getxPosition()][this.getyPosition()]=null;
+			towersP1[this.getxPosition()][this.getyPosition()]=sumoTower;
+			System.out.println("1");
+			
+		} else{
+			towersP2[this.getxPosition()][this.getyPosition()]=null;
+			towersP1[this.getxPosition()][this.getyPosition()]=sumoTower;
+			System.out.println("2");
+			
+		}
+		
+		
 		
 		//TODO upgrade the tower
 		
 	}
-}
+
+	
+	public static void moveRight() {
+		// TODO Auto-generated method stub
+		
+	}
+
+		
+	}

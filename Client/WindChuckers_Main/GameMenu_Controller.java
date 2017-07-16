@@ -24,8 +24,7 @@ import WindChuckers_Main.Model_Extend.Movement;
 import WindChuckers_Main.Model_Extend.Player;
 import WindChuckers_Main.Model_Extend.Position;
 import WindChuckers_Main.Model_Extend.Tower;
-import WindChuckers_Main.Model_Extend.normalTower;
-import WindChuckers_Main.Model_Extend.sumoTower;
+import WindChuckers_Main.Model_Extend.SumoTower;
 import abstractClasses.Controller;
 import commonClasses.ServiceLocator;
 import commonClasses.Translator;
@@ -63,8 +62,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	private Board board;
 	private Movement movement;
 	private Tower tower;
-	private normalTower normalTower;
-	private sumoTower sumoTower;
+	private SumoTower SumoTower;
 	private Position position;
 	private Player player;
 	private ClientThreadForServer clientServer;
@@ -72,13 +70,11 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	private long stopTimer;
 
 	public GameMenu_Controller(GameMenu_Model model, GameMenu_View view, Board board, Movement movement,
-			Position position, normalTower normalTower, sumoTower sumoTower, Player player) {
+			Position position, Player player) {
 		super(model, view);
 		this.board = board;
 		this.movement = movement;
 		this.position = position;
-		this.normalTower = normalTower;
-		this.sumoTower = sumoTower;
 		this.player = player;
 		this.clientServer = ClientThreadForServer.getClientServer();
 		serviceLocator = ServiceLocator.getServiceLocator();
@@ -194,7 +190,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 				towers = view.getTowersP2();
 			}
 			Tower tower = towers[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()];
-			tower.upgradeTower(view.getFields(), tower, clientServer.getXCoordinateUpgrade(), clientServer.getYCoordinateUpgrade(), clientServer.getGems());
+			tower.upgradeTower(view.getFields(), tower, clientServer.getXCoordinateUpgrade(), clientServer.getYCoordinateUpgrade(), clientServer.getGems(), view.getTowersP1(), view.getTowersP2());
 		});
 		
 		/**
@@ -422,6 +418,13 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 					}
 				}
 			}
+		// Boolean Winner will be watcher with a property. As soon as someone wins the win method will be started
+		model.Winner.addListener(
+				(observable, oldValue, newValue) -> {
+					if(newValue=true){
+						this.win(1);
+					}
+				});
 		
 		}
 	}
@@ -595,11 +598,57 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	 * @param newRoundLeftRight
 	 */
 	private void buildNewRound(boolean newRoundLeftRight) {
-		//Left is true
-		//Right is false
+		Tower[][] towersP1Temp = new Tower[model.DIMENSION][model.DIMENSION];
+		Tower[][] towersP2Temp = new Tower[model.DIMENSION][model.DIMENSION];
+		// Player 1
+		for(int y = 0; y < 8; y++){
+			for(int x = 0; x < 8; x++){
+				if(view.towersP1[x][y]!=null){
+					for(int i = 0 ; i<model.DIMENSION; i++){
+						towersP1Temp[i][7] = view.towersP1[x][y];			
+					}
+					}}}
+	// Player 2
+		for(int y = 0; y < 8; y++){
+			for(int x = 0; x < 8; x++){
+				if(view.towersP2[x][y]!=null){
+					for(int i = 0 ; i<model.DIMENSION; i++){
+						towersP2Temp[7-i][0] = view.towersP2[x][y];
+
+					}
+					}}}
 		
-		// TODO Auto-generated method stub
-		
+//				System.out.println("yolo2");
+//				// Towers will be added
+//				for(int x = 0; x < GameMenu_Model.DIMENSION;x++){
+//					System.out.println("yolo3");
+//					//towersP1Temp[x][towersP1Temp.length-1].setxPosition(x);
+//					//towersP1Temp[x][towersP1Temp.length-1].setyPosition(towersP1Temp.length-1);
+////					towersP1Temp[x][towersP1Temp.length-1].setText(""+towersP1Temp[x][7].getxPosition()+"."+towersP1Temp[x][7].getyPosition());
+//					//towersP1Temp[x][towersP1Temp.length-1].setPlayerSign();
+////					towersP1Temp[x][towersP1Temp.length-1].setText("\u2160");
+//					//view.towersP1=towersP1Temp;
+//					GridPane.setColumnIndex(towersP1Temp[x][7], 1);
+//					GridPane.setRowIndex(towersP1Temp[x][7], 2);
+//					System.out.println(x);
+//					//towersP2Temp[x][towersP2Temp.length-towersP2Temp.length].setxPosition(x);
+//					//towersP2Temp[x][towersP2Temp.length-towersP2Temp.length].setyPosition(towersP2Temp.length-towersP2Temp.length);
+////					towersP2Temp[x][towersP2Temp.length-towersP2Temp.length].setText(""+towersP2Temp[x][0].getxPosition()+"."+towersP2Temp[x][0].getyPosition());
+////					towersP2Temp[x][towersP2Temp.length-towersP2Temp.length].setText("\u2161");
+//					//towersP2Temp[x][towersP2Temp.length-towersP2Temp.length].setPlayerSign();			
+//					//view.towersP2=towersP2Temp;
+//					GridPane.
+//					GridPane.setColumnIndex(towersP2Temp[x][0], 1);
+//					GridPane.setRowIndex(towersP2Temp[x][0], 2);
+//					
+//					
+//					System.out.println("testtesttest");
+//				}
+//				
+//				
+//		} else{
+//			
+
 	}
 	
 	/**
@@ -608,6 +657,9 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	 */
 	private void win(int win){
 		//TODO Win Procedure
+		System.out.println("yolo");
+		this.buildNewRound(true);
+		model.Winner.set(false);
 		
 		//update the DB
 		int winsBevore = LoginModel.getWins();
