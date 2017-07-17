@@ -239,7 +239,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 			fields[x][y].setxPosition(x);
 			fields[x][y].setyPosition(y);
 			fields[x][y].setDisable(true);
-//			fields[x][y].setText(""+fields[x][y].getxPosition()+"."+fields[x][y].getyPosition());
+			fields[x][y].setText(""+fields[x][y].getxPosition()+"."+fields[x][y].getyPosition());
 			pane.add(fields[x][y],x,(fields.length-1)-y);
 			
 			}

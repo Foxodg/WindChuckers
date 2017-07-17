@@ -613,7 +613,6 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 							for(int x1 = 0; x1 < 8; x1++)
 								if (view.fields[x][y].getxPosition() == view.towersP1[x1][7].getxPosition() && view.fields[x][y].getyPosition() == view.towersP1[x1][7].getyPosition()){
 						towersP1Temp[i][7] = view.towersP1[x1][7];
-						System.out.println(towersP1Temp[i][7].getClass().getCanonicalName().equals("WindChuckers_Main.Model_Extend.SumoTower"));
 						i++;
 								}}
 						}}
@@ -628,26 +627,31 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 									towersP2Temp[7-k][0] = view.towersP2[x1][0];
 									System.out.println("Player 2" +towersP2Temp[7-k][0].getClass().getCanonicalName().equals("WindChuckers_Main.Model_Extend.SumoTower"));
 									k++;
-						}}
+						}
+							view.fields[x][y].setEmpty(true);
+							}
 				}}}
+				
+				
 				
 				
 				
 						// Towers will be reset on a startposition (right or left)
 						for(int x = 0; x < GameMenu_Model.DIMENSION;x++){
 							towersP1Temp[x][7].setxPosition(x);
-							towersP1Temp[x][7].setyPosition(0);
+							towersP1Temp[x][7].setyPosition(7);
 							GridPane.setColumnIndex(towersP1Temp[x][7], x);
 							GridPane.setRowIndex(towersP1Temp[x][7], 0);
 							
 							towersP2Temp[x][0].setxPosition(x);
-							towersP2Temp[x][0].setyPosition(7);	
+							towersP2Temp[x][0].setyPosition(0);	
 							GridPane.setColumnIndex(towersP2Temp[x][0], x);
 							GridPane.setRowIndex(towersP2Temp[x][0], 7);
 							
 							view.towersP1 = towersP1Temp;
 							view.towersP2 = towersP2Temp;
-						
+							view.fields[x][view.towersP1.length-1].setEmpty(false);
+							view.fields[x][view.towersP2.length-view.towersP2.length].setEmpty(false);
 			
 				}}
 	
@@ -657,7 +661,6 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	 */
 	private void win(int win){
 		//TODO Win Procedure
-		System.out.println("yolo");
 		this.buildNewRound(true);
 		model.Winner.set(false);
 		

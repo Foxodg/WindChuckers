@@ -1,6 +1,6 @@
 package WindChuckers_Main.Model_Extend;
 
-public class SumoTower extends Tower {
+public class SumoTower extends Tower{
 
 	public SumoTower(String color) {
 		super(color);
