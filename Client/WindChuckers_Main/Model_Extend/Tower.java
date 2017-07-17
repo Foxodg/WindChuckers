@@ -358,28 +358,36 @@ public class Tower extends Button {
 	}
 
 	public void upgradeTower(Field[][] fields, Tower tower, int xCoordinateUpgrade, int yCoordinateUpgrade, int gems, Tower[][] towersP1, Tower[][] towersP2) {
-		int column = GridPane.getColumnIndex(fields[xCoordinateUpgrade][yCoordinateUpgrade]);
-		int row = GridPane.getRowIndex(fields[xCoordinateUpgrade][yCoordinateUpgrade]);
-		SumoTower sumoTower = new SumoTower(this.getColor());
-		sumoTower.setxPosition(this.getxPosition());
-		sumoTower.setyPosition(this.getyPosition());
-		sumoTower.setPlayerNumber(this.getPlayerNumber());
-		if(this.getPlayerNumber()==1){
-			towersP1[this.getxPosition()][this.getyPosition()]=null;
-			towersP1[this.getxPosition()][this.getyPosition()]=sumoTower;
-			System.out.println("1");
-			
-		} else{
-			towersP2[this.getxPosition()][this.getyPosition()]=null;
-			towersP1[this.getxPosition()][this.getyPosition()]=sumoTower;
-			System.out.println("2");
-			
-		}
-		
-		
-		
-		//TODO upgrade the tower
-		
+//		int column = GridPane.getColumnIndex(fields[xCoordinateUpgrade][yCoordinateUpgrade]);
+//		int row = GridPane.getRowIndex(fields[xCoordinateUpgrade][yCoordinateUpgrade]);
+//		SumoTower sumoTower = new SumoTower(this.getColor());
+//		if(this.getPlayerNumber()==1){
+//			for(int y = 0; y < 8; y++){
+//				for(int x = 0; x < 8; x++){
+//					if(fields[x][y].isEmpty() == false){
+//						for(int x1 = 0; x1 < 8; x1++)
+//							if (this.getxPosition() == towersP1[x1][7].getxPosition() && this.getyPosition() == towersP1[x1][7].getyPosition()){
+////								towersP1[x1][7] = null;
+//								towersP1[x1][7] = sumoTower;
+////								towersP1[x1][7].setText("\u2163");
+//								
+//			
+//		}}}}} else{
+//			for(int y = 0; y < 8; y++){
+//				for(int x = 0; x < 8; x++){
+//					if(fields[x][y].isEmpty() == false){
+//						for(int x1 = 0; x1 < 8; x1++)
+//							if (this.getxPosition() == towersP2[x1][0].getxPosition() && this.getyPosition() == towersP2[x1][0].getyPosition()){
+////								towersP2[x1][0] = null;
+//								towersP2[x1][0] = sumoTower;
+////								towersP2[x1][0].setText("\u2163");
+//			
+//		}}}}}
+//		
+//		sumoTower.setxPosition(this.getxPosition());
+//		sumoTower.setyPosition(this.getyPosition());
+//		sumoTower.setPlayerNumber(this.getPlayerNumber());
+//	
 	}
 
 	

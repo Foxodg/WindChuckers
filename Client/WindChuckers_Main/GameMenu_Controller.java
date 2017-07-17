@@ -597,59 +597,59 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	 * Build the game new
 	 * @param newRoundLeftRight
 	 */
-	private void buildNewRound(boolean newRoundLeftRight) {
-		Tower[][] towersP1Temp = new Tower[model.DIMENSION][model.DIMENSION];
-		Tower[][] towersP2Temp = new Tower[model.DIMENSION][model.DIMENSION];
-		// Player 1
-		for(int y = 0; y < 8; y++){
-			for(int x = 0; x < 8; x++){
-				if(view.towersP1[x][y]!=null){
-					for(int i = 0 ; i<model.DIMENSION; i++){
-						towersP1Temp[i][7] = view.towersP1[x][y];			
-					}
-					}}}
-	// Player 2
-		for(int y = 0; y < 8; y++){
-			for(int x = 0; x < 8; x++){
-				if(view.towersP2[x][y]!=null){
-					for(int i = 0 ; i<model.DIMENSION; i++){
-						towersP2Temp[7-i][0] = view.towersP2[x][y];
-
-					}
-					}}}
-		
-//				System.out.println("yolo2");
-//				// Towers will be added
-//				for(int x = 0; x < GameMenu_Model.DIMENSION;x++){
-//					System.out.println("yolo3");
-//					//towersP1Temp[x][towersP1Temp.length-1].setxPosition(x);
-//					//towersP1Temp[x][towersP1Temp.length-1].setyPosition(towersP1Temp.length-1);
-////					towersP1Temp[x][towersP1Temp.length-1].setText(""+towersP1Temp[x][7].getxPosition()+"."+towersP1Temp[x][7].getyPosition());
-//					//towersP1Temp[x][towersP1Temp.length-1].setPlayerSign();
-////					towersP1Temp[x][towersP1Temp.length-1].setText("\u2160");
-//					//view.towersP1=towersP1Temp;
-//					GridPane.setColumnIndex(towersP1Temp[x][7], 1);
-//					GridPane.setRowIndex(towersP1Temp[x][7], 2);
-//					System.out.println(x);
-//					//towersP2Temp[x][towersP2Temp.length-towersP2Temp.length].setxPosition(x);
-//					//towersP2Temp[x][towersP2Temp.length-towersP2Temp.length].setyPosition(towersP2Temp.length-towersP2Temp.length);
-////					towersP2Temp[x][towersP2Temp.length-towersP2Temp.length].setText(""+towersP2Temp[x][0].getxPosition()+"."+towersP2Temp[x][0].getyPosition());
-////					towersP2Temp[x][towersP2Temp.length-towersP2Temp.length].setText("\u2161");
-//					//towersP2Temp[x][towersP2Temp.length-towersP2Temp.length].setPlayerSign();			
-//					//view.towersP2=towersP2Temp;
-//					GridPane.
-//					GridPane.setColumnIndex(towersP2Temp[x][0], 1);
-//					GridPane.setRowIndex(towersP2Temp[x][0], 2);
-//					
-//					
-//					System.out.println("testtesttest");
-//				}
-//				
-//				
-//		} else{
-//			
-
-	}
+	private void buildNewRound(boolean newRoundLeftRight) {				
+				Tower[][] towersP1Temp = new Tower[model.DIMENSION][model.DIMENSION];
+				Tower[][] towersP2Temp = new Tower[model.DIMENSION][model.DIMENSION];
+				// Player 1
+				
+				if (model.Winner.get()){
+					model.Winner.set(false);
+					
+			// Player 1 Towers will be added in a Temp Array
+				int i = 0;
+				for(int y = 0; y < 8; y++){
+					for(int x = 0; x < 8; x++){
+						if(view.fields[x][y].isEmpty() == false){
+							for(int x1 = 0; x1 < 8; x1++)
+								if (view.fields[x][y].getxPosition() == view.towersP1[x1][7].getxPosition() && view.fields[x][y].getyPosition() == view.towersP1[x1][7].getyPosition()){
+						towersP1Temp[i][7] = view.towersP1[x1][7];
+						System.out.println(towersP1Temp[i][7].getClass().getCanonicalName().equals("WindChuckers_Main.Model_Extend.SumoTower"));
+						i++;
+								}}
+						}}
+				
+			// Player 2 Towers will be added in a Temp Array
+				int k = 0;
+				for(int y = 0; y < 8; y++){
+					for(int x = 0; x < 8; x++){
+						if(view.fields[x][y].isEmpty() == false){
+							for(int x1 = 7; x1 >= 0; x1--)
+								if (view.fields[x][y].getxPosition() == view.towersP2[x1][0].getxPosition() && view.fields[x][y].getyPosition() == view.towersP2[x1][0].getyPosition()){
+									towersP2Temp[7-k][0] = view.towersP2[x1][0];
+									System.out.println("Player 2" +towersP2Temp[7-k][0].getClass().getCanonicalName().equals("WindChuckers_Main.Model_Extend.SumoTower"));
+									k++;
+						}}
+				}}}
+				
+				
+				
+						// Towers will be reset on a startposition (right or left)
+						for(int x = 0; x < GameMenu_Model.DIMENSION;x++){
+							towersP1Temp[x][7].setxPosition(x);
+							towersP1Temp[x][7].setyPosition(0);
+							GridPane.setColumnIndex(towersP1Temp[x][7], x);
+							GridPane.setRowIndex(towersP1Temp[x][7], 0);
+							
+							towersP2Temp[x][0].setxPosition(x);
+							towersP2Temp[x][0].setyPosition(7);	
+							GridPane.setColumnIndex(towersP2Temp[x][0], x);
+							GridPane.setRowIndex(towersP2Temp[x][0], 7);
+							
+							view.towersP1 = towersP1Temp;
+							view.towersP2 = towersP2Temp;
+						
+			
+				}}
 	
 	/**
 	 * Do all when someone win the game
