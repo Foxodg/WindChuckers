@@ -62,7 +62,7 @@ public class WindChuckers extends Application {
     private FriendsView friendsView;
     private AddFriendsView addFriendsView;
     private MainMenuView mainMenuView;
-
+    private WindChuckers_Main.newRoundPopup.newRoundView newRoundView;
     
     //Game
     private GameMenu_View view;
@@ -182,7 +182,7 @@ public class WindChuckers extends Application {
         // resources initialized by the splash screen
         model = GameMenu_Model.getGameModel();
         view = new GameMenu_View(appStage, model,board,movement,position, player);
-        controller = new GameMenu_Controller(model, view,board,movement,position, player);
+        controller = new GameMenu_Controller(model, view, newRoundView, board,movement,position, player);
         
         // Resources are now initialized
         serviceLocator = ServiceLocator.getServiceLocator();
@@ -355,6 +355,17 @@ public class WindChuckers extends Application {
 		tutorialView.start();
 	}
 
+	/**
+	 * A pop up will be shown. The Winner can choose in which direction the towers will be ordered
+	 * @author robin
+	 */
+	public void  startNewRound() {
+		Stage newRoundStage = new Stage();
+    	model = GameMenu_Model.getGameModel();
+    	newRoundView = new WindChuckers_Main.newRoundPopup.newRoundView(newRoundStage, model);	
+    	newRoundView.start();
+	}
+	
     /**
      * The stop method is the opposite of the start method. It provides an
      * opportunity to close down the program, including GUI components. If the
@@ -381,6 +392,8 @@ public class WindChuckers extends Application {
     protected static WindChuckers getMainProgram() {
         return mainProgram;
     }
+
+	
 
 
 }

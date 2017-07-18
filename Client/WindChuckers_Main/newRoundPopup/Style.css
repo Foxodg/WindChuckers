@@ -1,60 +1,10 @@
-.label {
-}
-
-.button {
-}
-
-.menu .label {
-}
-
-#towersP1{
-	-fx-border-color: #FFFFFF; 
-	-fx-background-radius: 50;
-	-fx-border-radius: 50;
-	-fx-pref-height:60px;
-    -fx-pref-width:60px;
-    -fx-border-width: 5px
-}
-
-#towersP2{
-	-fx-border-color: #000000; 
-  	-fx-background-radius: 50;
-	-fx-border-radius: 50;
-	-fx-pref-height:60px;
-    -fx-pref-width:60px;
-    -fx-border-width: 5px
-}
-
-#towersP1:hover, #towersP2:hover{
-	-fx-pref-height:65px;
-    -fx-pref-width:65px;
-    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 20, 0.0 , 0 , 1 );
-}
-
-#gameField{
-	-fx-pref-height:90px;
-    -fx-pref-width:90px;
-}
-#gameField:hover{
-	-fx-effect: innershadow( three-pass-box , rgba(0,0,10,10) , 20, 0.0 , 0 , 1 );
-}
-
-#gameField:disabled{
-	-fx-pref-height:90px;
-    -fx-pref-width:90px;
-    -fx-opacity: 0.4;
-}
-
-.text-area {
-	-fx-test-fill: #000000;
-}
-
 .background {
     -fx-background-color: #1d1d1d;
 }
 
 .label {
-    -fx-font-size: 11pt;
+	-fx-padding: 40,40,40,40;
+    -fx-font-size: 18pt;
     -fx-font-family: "Segoe UI Semibold";
     -fx-text-fill: #000000;
     -fx-opacity: 0.6;
@@ -150,13 +100,13 @@
  * http://pixelduke.wordpress.com/2012/10/23/jmetro-windows-8-controls-on-java/
  */
 .button {
-    -fx-padding: 5 22 5 22;   
+    -fx-padding: 5 40 5 40;   
     -fx-border-color: #e2e2e2;
     -fx-border-width: 2;
     -fx-background-radius: 0;
     -fx-background-color: #1d1d1d;
     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
-    -fx-font-size: 11pt;
+    -fx-font-size: 14pt;
     -fx-text-fill: #d8d8d8;
     -fx-background-insets: 0 0 0 0, 0, 1, 2;
 }

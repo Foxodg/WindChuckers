@@ -17,7 +17,8 @@ public class Tower extends Button {
 	private String color;
 	private int yPosition;
 	private int xPosition;
-		
+	private int gems; 
+	
 	protected Tower (String color){
 		super();
 		this.color = color;
@@ -233,12 +234,11 @@ public class Tower extends Button {
 		// The coordinates of the tower will be changed
 		this.setxPosition(newX);
 		this.setyPosition(newY);
-		this.setText(field.getxPosition()+"."+field.getyPosition());
-		
+
 		// The Tower will be moved on the GridPane
 		GridPane.setColumnIndex(this, newColumnGridPane);
 		GridPane.setRowIndex(this, newRowGridPane);
-		this.setPlayerSign();
+		//this.setPlayerSign();
 		
 		// The tower will be set on the right position in the tower array
 		if(model.getPlayer1().isOnTurn()){
@@ -258,7 +258,7 @@ public class Tower extends Button {
 		model.gameStart = false;
 		
 		// We check if a tower reached the last row
-		this.checkWin(fields, player1, player2, this, this.xPosition, this.yPosition, 2, towersP1, towersP2);
+		this.checkWin(fields, player1, player2, this, towersP1, towersP2);
 
 		// Towers of other player will be enabled
 		this.changeTurn(player1, player2, towersP1, towersP2, field);
@@ -291,7 +291,7 @@ public class Tower extends Button {
 	 * @param towers
 	 * @author robin
 	 */
-	public void disableTowers(Tower[][] towers){
+	public static void disableTowers(Tower[][] towers){
 		for(int y = 0; y < 8; y++){
 			for(int x = 0; x < 8; x++){
 				if(towers[x][y]!=null){
@@ -404,15 +404,15 @@ public class Tower extends Button {
 	}
 
 	// Anmerkung LKu (Ich muss falsche Koordinaten prüfen)
-	private void checkWin(Field[][] fields, Player player1, Player player2, Tower tower, int xPosition, int yPosition, int gems, Tower[][] towersP1, Tower[][] towersP2) {
-			if (player1.isOnTurn() == true && yPosition == 0){
+	private void checkWin(Field[][] fields, Player player1, Player player2, Tower tower, Tower[][] towersP1, Tower[][] towersP2) {
+			if (player1.isOnTurn()&& yPosition == 0){
+			this.upgradeTower(fields, tower, this.getxPosition(), this.getyPosition(), this.getGems(), towersP1, towersP2);
+			GameMenu_Model.Winner.set(true);
+			System.out.println("We have a Winner: 1");
+			} else if(player2.isOnTurn()&& yPosition == 7){
 			this.upgradeTower(fields, tower, this.xPosition, this.yPosition, gems, towersP1, towersP2);
-			model.Winner.set(true);
-			System.out.println("We have a Winner");
-			} else if(player2.isOnTurn() == true && yPosition == 7){
-			this.upgradeTower(fields, tower, this.xPosition, this.yPosition, gems, towersP1, towersP2);
-			model.Winner.set(true);
-			System.out.println("We have a Winner");
+			GameMenu_Model.Winner.set(true);
+			System.out.println("We have a Winner: 2");
 			}
 		}
 	
@@ -449,6 +449,15 @@ public class Tower extends Button {
 	public void setxPosition(int xPosition) {
 		this.xPosition = xPosition;
 	}
+	
+	public int getGems() {
+		return gems;
+	}
+
+	public void setGems(int gems) {
+		this.gems = gems;
+	}
+
 	
 	public void setPlayerSign(){
 		if (this.getPlayerNumber() == 1){

@@ -24,6 +24,7 @@ import WindChuckers_Main.Model_Extend.Movement;
 import WindChuckers_Main.Model_Extend.Player;
 import WindChuckers_Main.Model_Extend.Position;
 import WindChuckers_Main.Model_Extend.Tower;
+import WindChuckers_Main.newRoundPopup.newRoundView;
 import WindChuckers_Main.Model_Extend.SumoTower;
 import abstractClasses.Controller;
 import commonClasses.ServiceLocator;
@@ -69,7 +70,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	private HashMap<Integer, ArrayList<String>> userMap;
 	private long stopTimer;
 
-	public GameMenu_Controller(GameMenu_Model model, GameMenu_View view, Board board, Movement movement,
+	public GameMenu_Controller(GameMenu_Model model, GameMenu_View view, newRoundView newRoundView, Board board, Movement movement,
 			Position position, Player player) {
 		super(model, view);
 		this.board = board;
@@ -418,13 +419,19 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 					}
 				}
 			}
-		// Boolean Winner will be watcher with a property. As soon as someone wins the win method will be started
+		
+		/**
+		 *  Boolean Winner will be watched with a property. As soon as someone wins the win method will be started
+		 *  @author robin
+		 */
 		model.Winner.addListener(
 				(observable, oldValue, newValue) -> {
 					if(newValue=true){
 						this.win(1);
 					}
 				});
+		
+		
 		
 		}
 	}
@@ -696,15 +703,27 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	 */
 	private void win(int win){
 		//TODO Win Procedure
+		if (model.Winner.get()){
+			model.Winner.set(false);
 		
-		this.buildNewRound(false);
-		model.Winner.set(false);
+		windChuckers = WindChuckers.getWindChuckers();
+		windChuckers.startNewRound();
+				
+		// a new Round with left order will be created
+		newRoundView.leftPlay.setOnAction(e -> {
+			this.buildNewRound(true);
+		});
 		
+		// a new Round with right order will be created
+		newRoundView.rightPlay.setOnAction(e -> {
+			this.buildNewRound(false);
+		});
+
 		//update the DB
 		int winsBevore = LoginModel.getWins();
 		win = win + winsBevore;
 		model.messageConstructorForWin(win);
-	}
+	}}
 	
 	public void setView(GameMenu_View view){
 		this.view = view;
