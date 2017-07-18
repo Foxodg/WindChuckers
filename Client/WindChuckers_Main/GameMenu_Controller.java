@@ -696,6 +696,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	 */
 	private void win(int win){
 		//TODO Win Procedure
+		
 		this.buildNewRound(false);
 		model.Winner.set(false);
 		
