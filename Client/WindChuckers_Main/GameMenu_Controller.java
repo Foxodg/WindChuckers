@@ -549,6 +549,11 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		}
 	};
 
+	/**
+	 * This Handler controls the towers and fields 
+	 * @author robin
+	 *
+	 */
 	protected class TowerHandler implements EventHandler<ActionEvent> {
 		@Override
 		public void handle(ActionEvent event) {

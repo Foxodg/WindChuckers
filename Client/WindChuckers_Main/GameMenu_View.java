@@ -206,11 +206,16 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		menuAI.getItems().add(menuFileAI);
 		
 		
-		// The GameBoard will be initialize
+		/**
+		 * The gameBoard will be created
+		 * @author robin
+		 */
 		fields = this.getFieldArray();
 		towersP1 = this.getTowersP1Array();
 		towersP2 = this.getTowersP2Array();
 		GameBoard = this.getCompleteGameBoard(fields, towersP1, towersP2);
+		
+		
 		
 		GridPane root = new GridPane();
 		root.add(menuBar, 0, 0);
@@ -239,9 +244,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 			fields[x][y].setxPosition(x);
 			fields[x][y].setyPosition(y);
 			fields[x][y].setDisable(true);
-			fields[x][y].setText(""+fields[x][y].getxPosition()+"."+fields[x][y].getyPosition());
 			pane.add(fields[x][y],x,(fields.length-1)-y);
-			
 			}
 		}
 	
@@ -249,16 +252,13 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		for(int x = 0; x < GameMenu_Model.DIMENSION;x++){
 			towersP1[x][towersP1.length-1].setxPosition(x);
 			towersP1[x][towersP1.length-1].setyPosition(towersP1.length-1);
-//			towersP1[x][towersP1.length-1].setText(""+towersP1[x][7].getxPosition()+"."+towersP1[x][7].getyPosition());
 			towersP1[x][towersP1.length-1].setPlayerSign();
-//			towersP1[x][towersP1.length-1].setText("\u2160");
+			towersP1[x][towersP1.length-1].setText("\u2160");
 			
 			towersP2[x][towersP2.length-towersP2.length].setxPosition(x);
 			towersP2[x][towersP2.length-towersP2.length].setyPosition(towersP2.length-towersP2.length);
-//			towersP2[x][towersP2.length-towersP2.length].setText(""+towersP2[x][0].getxPosition()+"."+towersP2[x][0].getyPosition());
-//			towersP2[x][towersP2.length-towersP2.length].setText("\u2161");
+			towersP2[x][towersP2.length-towersP2.length].setText("\u2161");
 			towersP2[x][towersP2.length-towersP2.length].setPlayerSign();			
-			
 			
 			pane.add(towersP1[x][towersP1.length-1],x,towersP1.length-towersP1.length);
 			pane.add(towersP2[x][towersP2.length-towersP2.length],x,towersP2.length-1);
@@ -447,40 +447,20 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	}
 
 	// getter and setter
-	protected Tower[][] getTowers(){
-		return null;
-	}
-
 	public Field[][] getFields() {
 		return fields;
-	}
-
-	public void setFields(Field[][] fields) {
-		this.fields = fields;
 	}
 
 	public Tower[][] getTowersP1() {
 		return towersP1;
 	}
 
-	public void setTowersP1(Tower[][] towersP1) {
-		this.towersP1 = towersP1;
-	}
-
 	public Tower[][] getTowersP2() {
 		return towersP2;
 	}
 
-	public void setTowersP2(Tower[][] towersP2) {
-		this.towersP2 = towersP2;
-	}
-
 	public GridPane getGameBoard() {
 		return GameBoard;
-	}
-
-	public void setGameBoard(GridPane gameBoard) {
-		GameBoard = gameBoard;
 	}
 	
 	public void setScene (Scene scene) {

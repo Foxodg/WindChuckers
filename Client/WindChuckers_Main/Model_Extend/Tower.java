@@ -17,94 +17,97 @@ public class Tower extends Button {
 	private String color;
 	private int yPosition;
 	private int xPosition;
-	
-	private boolean gameStart = true;
-	private String colorField;
-	
+		
 	protected Tower (String color){
 		super();
 		this.color = color;
 	}
 
-	public int getPlayerNumber(){
-		return this.playerNumber;
-	}
-	public void setPlayerNumber(int playerNumber){
-		this.playerNumber=playerNumber;
-	}
-	
-	public String getColor(){
-		return this.color;
-	}
-
-	public int getyPosition() {
-		return yPosition;
-	}
-
-	public void setyPosition(int yPosition) {
-		this.yPosition = yPosition;
-	}
-
-	public int getxPosition() {
-		return xPosition;
-	}
-
-	public void setxPosition(int xPosition) {
-		this.xPosition = xPosition;
-	}
-	
-	public void setPlayerSign(){
-		if (this.getPlayerNumber() == 1){
-			this.setText("\u2160");
-	} else if(this.getPlayerNumber() == 2){
-		this.setText("\u2161");
-	}}
-
 	/**
-	 * Following methods will provide the towers in each color
-	 * @param xPosition
-	 * @param yPosition
+	 * Following method will provide the towers in each color
 	 * @return
 	 * @author robin
 	 */
 	public static Tower getOrangeTower(){
 		Tower orangeTower = new Tower("orange");
-		orangeTower.setStyle(" -fx-background-color: #FF8C00;");
+		orangeTower.setStyle(" -fx-background-color: "+GameMenu_Model.ORANGE+";"); 
 		return orangeTower;
 	}
+	
+	/**
+	 * Following methods will provide the towers in each color
+	 * @return
+	 * @author robin
+	 */
 	public static Tower getBlueTower(){
 		Tower blueTower = new Tower("blue");
-		blueTower.setStyle(" -fx-background-color: #4169E1;");
+		blueTower.setStyle(" -fx-background-color: "+GameMenu_Model.BLUE+";"); 
 		return blueTower;
 	}
+	
+	/**
+	 * Following methods will provide the towers in each color
+	 * @return
+	 * @author robin
+	 */
 	public static Tower getVioletTower(){
 		Tower violetTower = new Tower("violet");
-		violetTower.setStyle(" -fx-background-color: #663399 ;");
+		violetTower.setStyle(" -fx-background-color: "+GameMenu_Model.VIOLET+";"); 
 		return violetTower;
 	}
+	
+	/**
+	 * Following methods will provide the towers in each color
+	 * @return
+	 * @author robin
+	 */
 	public static Tower getPinkTower(){
 		Tower pinkTower = new Tower("pink");
-		pinkTower.setStyle(" -fx-background-color: #FF69B4;");
+		pinkTower.setStyle(" -fx-background-color: "+GameMenu_Model.PINK+";"); 
 		return pinkTower;
 	}
+	
+	/**
+	 * Following methods will provide the towers in each color
+	 * @return
+	 * @author robin
+	 */
 	public static Tower getYellowTower(){
 		Tower yellowTower = new Tower("yellow");
-		yellowTower.setStyle(" -fx-background-color: #FFD700;");
+		yellowTower.setStyle(" -fx-background-color: "+GameMenu_Model.YELLOW+";"); 
 		return yellowTower;
 	}
+	
+	/**
+	 * Following methods will provide the towers in each color
+	 * @return
+	 * @author robin
+	 */
 	public static Tower getRedTower(){
 		Tower redTower = new Tower("red");
-		redTower.setStyle(" -fx-background-color: #B22222;");
+		redTower.setStyle(" -fx-background-color: "+GameMenu_Model.RED+";"); 
 		return redTower;
 	}
+	
+	/**
+	 * Following methods will provide the towers in each color
+	 * @return
+	 * @author robin
+	 */
 	public static Tower getGreenTower(){
 		Tower greenTower = new Tower("green");
-		greenTower.setStyle(" -fx-background-color: #008000;");
+		greenTower.setStyle(" -fx-background-color: "+GameMenu_Model.GREEN+";"); 
 		return greenTower;
 	}
+	
+	/**
+	 * Following methods will provide the towers in each color
+	 * @return
+	 * @author robin
+	 */
 	public static Tower getBrownTower(){
 		Tower brownTower = new Tower("brown");
-		brownTower.setStyle(" -fx-background-color: #8B4513;");
+		brownTower.setStyle(" -fx-background-color: "+GameMenu_Model.BROWN+";"); 
 		return brownTower;
 	}
 
@@ -114,6 +117,7 @@ public class Tower extends Button {
 	 * @param gridPane
 	 * @param towersP1
 	 * @param towersP2
+	 * @author robin
 	 */
 	public void showMoves(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {
 		if(this.getPlayerNumber()==1){
@@ -206,72 +210,78 @@ public class Tower extends Button {
 	 * @param field
 	 * @param player1
 	 * @param player2
+	 * @author robin
 	 */
 	public void move(Field[][] fields, GridPane gameBoard, Tower[][] towersP1, Tower[][] towersP2, Field field, Player player1, Player player2) {
-		int column = GridPane.getColumnIndex(field);
-		int row = GridPane.getRowIndex(field);
-		
+
+		int oldX = this.getxPosition();
+		int newX = field.getxPosition();
+		int oldY = this.getyPosition();
+		int newY = field.getyPosition();
+
+		int newColumnGridPane = GridPane.getColumnIndex(field);
+		int newRowGridPane = GridPane.getRowIndex(field);
+
 		// Send the move to the server
 		ServiceLocator.getServiceLocator().getLogger().info("Move send to server: " + field.getxPosition() + " " + field.getyPosition() + " " + this.getxPosition() + " " + this.getyPosition() + " " + this.getPlayerNumber());
-		model.messageConstructorForCoordinate(this.getxPosition(), this.getyPosition(), field.getxPosition(), field.getyPosition(), this.getPlayerNumber());
+		model.messageConstructorForCoordinate(oldX, oldY, newX, newY, this.getPlayerNumber());
 		
 		// The old field is empty and the new field is busy
-		fields[this.getxPosition()][this.getyPosition()].setEmpty(true);
+		fields[oldX][oldY].setEmpty(true);
 		field.setEmpty(false);
-
+				
 		// The coordinates of the tower will be changed
-		this.setxPosition(field.getxPosition());
-		this.setyPosition(field.getyPosition());
+		this.setxPosition(newX);
+		this.setyPosition(newY);
 		this.setText(field.getxPosition()+"."+field.getyPosition());
-		colorField = field.getColor();
+		
 		// The Tower will be moved on the GridPane
-		GridPane.setColumnIndex(this, column);
-		GridPane.setRowIndex(this, row);
+		GridPane.setColumnIndex(this, newColumnGridPane);
+		GridPane.setRowIndex(this, newRowGridPane);
 		this.setPlayerSign();
 		
+		// The tower will be set on the right position in the tower array
+		if(model.getPlayer1().isOnTurn()){
+			towersP1[newX][newY]=this;
+			towersP1[oldX][oldY]= null;
+		}
+		
+		if(model.getPlayer2().isOnTurn()){
+			towersP2[newX][newY]=this;
+			towersP2[oldX][oldY]= null;
+		}
+		
 		// The turn is finished, disable all fields
-		//	Achtung Änderung LKU
-		this.disableFields(fields);
-		this.gameStart = false;
+		Field.disableFields(fields);
+		
+		// After the first move the boolean gameStart is false
+		model.gameStart = false;
+		
+		// We check if a tower reached the last row
 		this.checkWin(fields, player1, player2, this, this.xPosition, this.yPosition, 2, towersP1, towersP2);
 
-		
 		// Towers of other player will be enabled
-		this.changeTurn(player1, player2, towersP1, towersP2);
-		
-
-}
-	
-	// Anmerkung LKu (Ich muss falsche Koordinaten prüfen)
-	private void checkWin(Field[][] fields, Player player1, Player player2, Tower tower, int xPosition, int yPosition, int gems, Tower[][] towersP1, Tower[][] towersP2) {
-		if (player1.isOnTurn() == true && yPosition == 0){
-		this.upgradeTower(fields, tower, this.xPosition, this.yPosition, gems, towersP1, towersP2);
-		model.Winner.set(true);
-		System.out.println("We have a Winner");
-		} else if(player2.isOnTurn() == true && yPosition == 7){
-		this.upgradeTower(fields, tower, this.xPosition, this.yPosition, gems, towersP1, towersP2);
-		model.Winner.set(true);
-		System.out.println("We have a Winner");
-		}
+		this.changeTurn(player1, player2, towersP1, towersP2, field);
 	}
-
+	
 	/**
 	 * This method will activate the opponents towers and change the turn
 	 * @param player1
 	 * @param player2
 	 * @param towersP1
 	 * @param towersP2
+	 * @author robin
 	 */
-	public void changeTurn(Player player1, Player player2, Tower[][] towersP1, Tower[][] towersP2){
+	public void changeTurn(Player player1, Player player2, Tower[][] towersP1, Tower[][] towersP2, Field field){
 		if(player1.isOnTurn()){
 			player2.setOnTurn(true);
 			player1.setOnTurn(false);
 			this.disableTowers(towersP1);
-			this.enableTowers(towersP2);
+			this.enableTowers(towersP2, field);
 		} else{
 			player1.setOnTurn(true);
 			player2.setOnTurn(false);
-			this.enableTowers(towersP1);
+			this.enableTowers(towersP1, field);
 			this.disableTowers(towersP2);
 		}
 	}
@@ -279,6 +289,7 @@ public class Tower extends Button {
 	/**
 	 * This method disables all towers of the tower array chosen
 	 * @param towers
+	 * @author robin
 	 */
 	public void disableTowers(Tower[][] towers){
 		for(int y = 0; y < 8; y++){
@@ -289,34 +300,23 @@ public class Tower extends Button {
 	}
 
 	/**
-	 * This method enables all towers of the tower array chosen
-//	 * Achtung Änderung LKu
+	 * This method enables all towers of the tower array chosen. If it is the first round, all towers are enabled. Otherwise only the tower with the matching color
 	 * @param towers
+	 * @author robin
 	 */
-	public void enableTowers(Tower[][] towers){
-		if (gameStart){
+	public void enableTowers(Tower[][] towers, Field field){
+		if (model.gameStart){
 		for(int y = 0; y < 8; y++){
 			for(int x = 0; x < 8; x++){
 				if(towers[x][y]!=null){
 					towers[x][y].setDisable(false);
-					}}}} else if(!gameStart){
+					}}}} else if(!model.gameStart){
 						for(int y = 0; y < 8; y++){
 							for(int x = 0; x < 8; x++){
-								if(towers[x][y]!=null && towers[x][y].getColor().equals(colorField)){
+								if(towers[x][y]!=null && towers[x][y].getColor().equals(field.getColor())){
 									towers[x][y].setDisable(false);
 								}}}
 		}
-	}
-
-	/**
-	 * This method disable all fields. Is used after a turn is finished
-	 * @param fields
-	 */
-	public void disableFields(Field[][]fields){
-		for(int y = 0; y < 8; y++){
-			for(int x = 0; x < 8; x++){
-				fields[x][y].setDisable(true);
-			}}
 	}
 
 	/**
@@ -327,29 +327,38 @@ public class Tower extends Button {
 	 * @param endRow
 	 * @param playerType
 	 */
-	public void move(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Tower[][] tower1, Tower[][] tower2, int startColumn, int startRow, int endColumn, int endRow, int playerType) {
-				
-		int column = GridPane.getColumnIndex(fields[endColumn][endRow]);
-		int row = GridPane.getRowIndex(fields[endColumn][endRow]);
+	public void move(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Tower[][] towersP1, Tower[][] towersP2, int oldX, int oldY, int newX, int newY, int playerType) {
+
+		int column = GridPane.getColumnIndex(fields[newX][newY]);
+		int row = GridPane.getRowIndex(fields[newX][newY]);
 		
-		// only make the move if its not done
-		if(!fields[startColumn][startRow].isEmpty()){
-			this.setxPosition(endColumn);
-			this.setyPosition(endRow);
-			this.setText(endColumn + "." + endRow);
+		// Only make the move if its not done
+		if(!fields[oldX][oldY].isEmpty()){
+			this.setxPosition(newX);
+			this.setyPosition(newY);
+			this.setText(newX + "." + newY);
 			
-			fields[startColumn][startRow].setEmpty(true);
-			fields[endColumn][endRow].setEmpty(false);
-			
-			colorField = fields[endColumn][endRow].getColor();
+			fields[oldX][oldY].setEmpty(true);
+			fields[newX][newY].setEmpty(false);
 			
 			GridPane.setColumnIndex(this, column);
 			GridPane.setRowIndex(this, row);
 			
-			this.disableFields(fields);
-			this.gameStart = false;
+			Field.disableFields(fields);
+			model.gameStart = false;
 
-			changeTurn(player1, player2, tower1, tower2);
+			// The tower will be set on the right position in the tower array
+			if(model.getPlayer1().isOnTurn()){
+				towersP1[newX][newY]=this;
+				towersP1[oldX][oldY]= null;
+			}
+			
+			if(model.getPlayer2().isOnTurn()){
+				towersP2[newX][newY]=this;
+				towersP2[oldX][oldY]= null;
+			}
+			
+			changeTurn(player1, player2, towersP1, towersP2, fields[newX][newY]);
 			
 		}
 	}
@@ -394,11 +403,62 @@ public class Tower extends Button {
 	
 	}
 
+	// Anmerkung LKu (Ich muss falsche Koordinaten prüfen)
+	private void checkWin(Field[][] fields, Player player1, Player player2, Tower tower, int xPosition, int yPosition, int gems, Tower[][] towersP1, Tower[][] towersP2) {
+			if (player1.isOnTurn() == true && yPosition == 0){
+			this.upgradeTower(fields, tower, this.xPosition, this.yPosition, gems, towersP1, towersP2);
+			model.Winner.set(true);
+			System.out.println("We have a Winner");
+			} else if(player2.isOnTurn() == true && yPosition == 7){
+			this.upgradeTower(fields, tower, this.xPosition, this.yPosition, gems, towersP1, towersP2);
+			model.Winner.set(true);
+			System.out.println("We have a Winner");
+			}
+		}
 	
 	public static void moveRight() {
 		// TODO Auto-generated method stub
 		
 	}
 
-		
+	// Getters and Setters
+	public int getPlayerNumber(){
+		return this.playerNumber;
 	}
+	
+	public void setPlayerNumber(int playerNumber){
+		this.playerNumber=playerNumber;
+	}
+	
+	public String getColor(){
+		return this.color;
+	}
+
+	public int getyPosition() {
+		return yPosition;
+	}
+
+	public void setyPosition(int yPosition) {
+		this.yPosition = yPosition;
+	}
+
+	public int getxPosition() {
+		return xPosition;
+	}
+
+	public void setxPosition(int xPosition) {
+		this.xPosition = xPosition;
+	}
+	
+	public void setPlayerSign(){
+		if (this.getPlayerNumber() == 1){
+			this.setText("\u2160");
+	} else if(this.getPlayerNumber() == 2){
+		this.setText("\u2161");
+	}}
+		
+	public String toString(){
+		String s = "X: "+this.getxPosition()+"\nY: "+this.getyPosition();
+		return "Tower Koordinaten:\n"+s; 
+	}
+}

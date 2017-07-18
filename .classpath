@@ -3,8 +3,8 @@
 	<classpathentry kind="src" path="Client"/>
 	<classpathentry kind="src" path="Server"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/Users/lukaskunz/git/WindChuckers/LibraryForInstall/h2-1.4.194.jar"/>
-	<classpathentry kind="lib" path="/Users/lukaskunz/git/WindChuckers/LibraryForInstall/simple-xml-2.7.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/robin/eclipse/Workspace/WindChuckers/LibraryForInstall/h2-1.4.194.jar"/>
+	<classpathentry kind="lib" path="C:/Users/robin/eclipse/Workspace/WindChuckers/LibraryForInstall/simple-xml-2.7.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

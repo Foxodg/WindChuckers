@@ -28,15 +28,16 @@ public class GameMenu_Model extends Model {
 
 	protected static final int DIMENSION = 8;
 	protected static final int MAX_FIELDS = DIMENSION * DIMENSION;
+	public static boolean gameStart = true;
 
-	protected static final String ORANGE = "#FF8C00";
-	protected static final String BLUE = "#4169E1";
-	protected static final String VIOLET = "#663399";
-	protected static final String PINK = "#FF69B4";
-	protected static final String YELLOW = "#FFD700";
-	protected static final String RED = "#B22222";
-	protected static final String GREEN = "#008000";
-	protected static final String BROWN = "#8B4513";
+	public final static String ORANGE = "#FF8C00";
+	public final static String BLUE = "#4169E1";
+	public final static String VIOLET = "#663399";
+	public final static String PINK = "#FF69B4";
+	public final static String YELLOW = "#FFD700";
+	public final static String RED = "#B22222";
+	public final static String GREEN = "#008000";
+	public final static String BROWN = "#8B4513";
 	
 	public static SimpleBooleanProperty Winner = new SimpleBooleanProperty(false);
 
@@ -340,7 +341,6 @@ public class GameMenu_Model extends Model {
 	public SimpleBooleanProperty getMoveProperty() {
 		return this.moveProperty;
 	}
-	
 	
 	public void setUserName(String newValue){
 		try{
