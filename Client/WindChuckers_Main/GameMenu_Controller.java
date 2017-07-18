@@ -702,7 +702,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	 * @param win
 	 */
 	private void win(int win){
-		//TODO Win Procedure
+		//Win Procedure
 		if (model.Winner.get()){
 			model.Winner.set(false);
 		

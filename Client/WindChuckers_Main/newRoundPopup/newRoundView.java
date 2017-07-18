@@ -15,6 +15,10 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+/**
+ * The view will be shown as soon as a tower reached the last line. The user can decide the direction in which the towers will be ordered the next round
+ * @author robin
+ */
 public class newRoundView  extends View<GameMenu_Model> {
 	private GameMenu_Model model;
     private Stage stage;
