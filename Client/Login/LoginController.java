@@ -64,6 +64,7 @@ public class LoginController extends Controller<GameMenu_Model, LoginView> {
 							this.password.put(name, searchList.get(3));
 							LoginModel.setSurname(searchList.get(2));
 							LoginModel.setWins(Integer.parseInt(searchList.get(4)));
+							LoginModel.setUserName(searchList.get(0));
 						}
 					}
 				}

@@ -2,8 +2,11 @@ package WindChuckers_Main;
 
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map.Entry;
 
 import Client.ClientThreadForServer;
 import Login.LoginModel;
@@ -13,6 +16,7 @@ import Message.Message.Value;
 import WindChuckers_Main.Model_Extend.Player;
 import abstractClasses.Model;
 import commonClasses.ServiceLocator;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -83,6 +87,9 @@ public class GameMenu_Model extends Model {
 	private int randomStart;
 	private ArrayList<String> userList;
 	private HashMap<Integer, ArrayList<String>> userMap;
+	private static Hashtable<Integer, String> users = new Hashtable<Integer, String>();
+	private static Hashtable<Integer, String> friends = new Hashtable<Integer, String>();
+	private static Hashtable<Integer, Boolean> friendsRequest = new Hashtable<Integer, Boolean>();
 
 	// SimpleBooleanProperty for overwatching the incoming moves
 	private SimpleBooleanProperty moveProperty = new SimpleBooleanProperty();
@@ -218,6 +225,19 @@ public class GameMenu_Model extends Model {
 		Message message = new Message(MessageType.DBMessage, db, id);
 		sendMessage(message);
 	}
+	
+	/**
+	 * Make new Friends
+	 * 
+	 * @param db
+	 * @param id
+	 * @param friendId
+	 * @author L.Weber
+	 */
+	public void messageConstructorForFriendsInsert(int db, int id, int friendId) {
+		Message message = new Message(MessageType.DBMessage, db, id, friendId);
+		sendMessage(message);
+	}
 
 	/**
 	 * For the Error-Message
@@ -278,6 +298,11 @@ public class GameMenu_Model extends Model {
 	}
 	
 
+	/**
+	 * Create the userList
+	 * @param userList
+	 * @author L.Weber
+	 */
 	public void makeUserList(ArrayList<String> userList) {
 		int id;
 		String prename;
@@ -289,8 +314,9 @@ public class GameMenu_Model extends Model {
 		userMap = new HashMap<Integer, ArrayList<String>>();
 		ArrayList<String> uList = new ArrayList<String>();
 		while (!userList.isEmpty()) {
-			if(!userList.get(1).equals("deleted")){
-				uList.clear();			
+			if (!userList.get(1).equals("deleted")) {
+				users.put(Integer.parseInt(userList.get(0)), userList.get(1));
+				uList.clear();
 				id = Integer.parseInt(userList.get(0));
 				username = userList.get(1);
 				uList.add(username);
@@ -302,17 +328,171 @@ public class GameMenu_Model extends Model {
 				uList.add(password);
 				win = userList.get(5);
 				uList.add(win);
-				if(userMap.get(id) == null){
+				if (userMap.get(id) == null) {
 					userMap.put(id, new ArrayList<String>());
 					userMap.get(id).addAll(uList);
 				}
 			}
-			for(int i = 0; i < 6; i ++){
+			for (int i = 0; i < 6; i++) {
 				userList.remove(0);
 			}
 		}
 	}
-	
+
+	/**
+	 * 
+	 * @return
+	 * @author L.Weber / T.Bosshard
+	 */
+	public ArrayList<String> getFriends() {
+		ArrayList<String> friendsLocal = new ArrayList<String>();
+		this.messageConstructorForDB(4);
+
+		Enumeration e = friends.keys();
+		while (e.hasMoreElements()) {
+			int key = (int) e.nextElement();
+			friendsLocal.add(friends.get(key));
+		}
+
+		return friendsLocal;
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @author L.Weber / T.Bosshard
+	 */
+	public ArrayList<String> getFriendsRequests() {
+		ArrayList<String> friendsRequests = new ArrayList<String>();
+		this.messageConstructorForDB(4);
+		
+		Enumeration e = friendsRequest.keys();
+		int key;
+		boolean request;
+		while (e.hasMoreElements()) {
+			key = (int) e.nextElement();
+			request = (boolean) friendsRequest.get(key);
+			if(!request) {
+				friendsRequests.add(users.get(key));
+			}
+		}
+		return friendsRequests;
+	}
+
+	/**
+	 * 
+	 * @param searchString
+	 * @author L.Weber / T.Bosshard
+	 */
+	public ArrayList<String> getFriendsSearchResults(String searchString) {
+		ArrayList<String> allPossibleFriends = new ArrayList<String>();
+		ArrayList<String> matchingSearchResults = new ArrayList<String>();
+
+		Enumeration e = users.keys();
+		while (e.hasMoreElements()) {
+			int key = (int) e.nextElement();
+			allPossibleFriends.add(users.get(key));
+		}
+		if (searchString.equalsIgnoreCase("") || searchString.isEmpty()) {
+			for (int i = 0; i < allPossibleFriends.size(); i++) {
+				matchingSearchResults.add(allPossibleFriends.get(i));
+			}
+		} else {
+			for (int i = 0; i < allPossibleFriends.size(); i++) {
+				if (searchString.equalsIgnoreCase(allPossibleFriends.get(i))) {
+					matchingSearchResults.add(allPossibleFriends.get(i));
+				}
+			}
+		}
+
+		return matchingSearchResults;
+	}
+
+	/**
+	 * 
+	 * @param friend
+	 * @author L.Weber / T.Bosshard
+	 */
+	public void acceptFriendsRequest(String friend, String self) {
+		int id = 0;
+		int friendId = 0;
+		String friendSplit[] = friend.split(" ");
+		String selfSplit[] = self.split(" ");
+		for (int i = 1; i <= users.size(); i++) {
+			if (friendSplit[0].equalsIgnoreCase(users.get(i))) {
+				friendId = i;
+			}
+		}
+		for (int j = 1; j <= users.size(); j++) {
+			if (selfSplit[0].equalsIgnoreCase(users.get(j))) {
+				id = j;
+			}
+		}
+
+		this.messageConstructorForFriendsInsert(5, id, friendId);
+
+		System.out.println("Friend added: " + self + " : " + friend);
+	}
+
+	/**
+	 * 
+	 * @param friend
+	 * @author L.Weber / T.Bosshard
+	 */
+	public void refuseFriendsRequest(String friend) {
+		int friendId = 0;
+		
+		for (int i = 1; i <= users.size(); i++) {
+			String[] name = friend.split(" ");
+			if (name[0].equalsIgnoreCase(users.get(i))) {
+				friendId = i;
+			}
+		}
+		
+		this.messageConstructorForDBUpdate(6, friendId);
+		System.out.println("FriendsRequest refused: " + friend);
+	}
+
+	/**
+	 * 
+	 * @param friend
+	 * @author T.Bosshard
+	 */
+	public void playAgainstFriend(String friend) {
+		System.out.println("Play against: " + friend);
+	}
+
+	/**
+	 * 
+	 * @param friend
+	 * @author T.Bosshard
+	 */
+	public void removeFriend(String friend) {
+		System.out.println("Friend removed: " + friend);
+	}
+
+	/**
+	 * 
+	 * @param friend
+	 * @author T.Bosshard
+	 */
+	public void addFriend(String friend, String self) {
+		int id = 0;
+		int friendId = 0;
+		for (int i = 1; i <= users.size(); i++) {
+			if (friend.equalsIgnoreCase(users.get(i))) {
+				friendId = i;
+			}
+		}
+		for (int j = 1; j <= users.size(); j++) {
+			if (self.equalsIgnoreCase(users.get(j))) {
+				id = j;
+			}
+		}
+		this.messageConstructorForFriendsInsert(5, id, friendId);
+
+		System.out.println("Friend added: " + self + " : " + friend);
+	}
 
 	// set a new move
 	public void setMoveProperty(Boolean newValue) {
@@ -439,4 +619,41 @@ public class GameMenu_Model extends Model {
 		return this.randomStart;
 	}
 	
+	public void setFriends(ArrayList<String> friendsList) {
+		int id = 0;
+		String username = null;
+		boolean request = false;
+
+		if(!(friendsList == null)) {
+			while (!friendsList.isEmpty()) {
+				id = Integer.parseInt(friendsList.get(2));
+				if(friendsList.get(3).equals("TRUE")) {
+					request = true;
+				} else {
+					request = false;
+				}
+
+				Enumeration e = users.keys();
+				while (e.hasMoreElements()) {
+					int key = (int) e.nextElement();
+					if (key == id) {
+						username = users.get(key);
+					}
+				}
+				// add the found to the list
+				if(request) {
+					friends.put(id, username);
+				} else {
+					serviceLocator.getLogger().info("Not both player will this");
+				}
+				friendsRequest.put(id, request);
+
+				// remove this because the while loop
+				friendsList.remove(0);
+				friendsList.remove(0);
+				friendsList.remove(0);
+				friendsList.remove(0);
+			}
+		}
+	}
 }

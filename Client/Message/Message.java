@@ -139,6 +139,9 @@ public class Message {
 	@Element(required = false)
 	private int player;
 	
+	@Element(required = false)
+	private int friendId;
+	
 
 	// Generator for a unique message ID
 	private static long messageID = 0;
@@ -348,6 +351,20 @@ public class Message {
 		this.Id = id;
 		
 	}
+	
+	/**
+	 * For make new Friends
+	 * @param messageType
+	 * @param db
+	 * @param id
+	 * @param friendId
+	 */
+	public Message(MessageType messageType, int db, int id, int friendId) {
+		createStandardMessage(messageType);
+		this.DB = db;
+		this.Id = id;
+		this.friendId = friendId;
+	}
 
 
 	/**
@@ -533,6 +550,10 @@ public class Message {
 	
 	public int getPlayer(){
 		return this.player;
+	}
+	
+	public int getFriendId() {
+		return this.friendId;
 	}
 
 }

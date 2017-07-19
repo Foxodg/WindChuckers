@@ -87,6 +87,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 														// events
 		model.getPlayer1().setOnTurn(true); // Je nach dem wer anfängt, müssen
 											// wir noch implementieren
+		model.setFriends(clientServer.getFriendsList());
 
 		/**
 		 * For End the Application
@@ -241,6 +242,11 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 				model.messageContructorForChat(input);
 				view.txtChat.clear();
 			}
+		});
+		
+		// Friendslist overwatch
+		clientServer.getDBFriends().addListener((observable, oldValue, newValue) -> {
+			model.setFriends(clientServer.getFriendsList());
 		});
 
 		/**

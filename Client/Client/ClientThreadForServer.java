@@ -32,6 +32,7 @@ public class ClientThreadForServer extends Thread {
 	private boolean newRoundLeftRight; //left is true, right is false
 	private ArrayList<String> userList;
 	public static int hashCodeStatic;
+	private ArrayList<String> friendsList = new ArrayList<String>();
 	
 	// SimpleStringProperty for overwatching the chat
 	private SimpleStringProperty chatMessage = new SimpleStringProperty();
@@ -59,6 +60,9 @@ public class ClientThreadForServer extends Thread {
 	
 	//SimpleIntegerProperty for Random-Start the Game
 	public SimpleIntegerProperty randomStart = new SimpleIntegerProperty();
+	
+	//SimpleBooleanProperty for Friendsincoming
+	public SimpleBooleanProperty friends = new SimpleBooleanProperty();
 	
 	public void setSocket(Socket serverSocket) {
 		this.serverSocket = serverSocket;
@@ -143,6 +147,12 @@ public class ClientThreadForServer extends Thread {
 				userList = message.getNameList();
 				setDBRequest(true);
 			}
+			else if(message.getDB() == 4) {
+				//4 Stands for Friends
+				setDBFriends(false);
+				friendsList = message.getNameList();
+				setDBFriends(true);
+			}			
 			// Round-_Cap
 			else if(message.getDB() == 88){
 				logger.info("Round-Cap has arrived");
@@ -209,8 +219,20 @@ public class ClientThreadForServer extends Thread {
 		}
 	}
 	
+	public void setDBFriends(Boolean newValue) {
+		try {
+			this.friends.setValue(newValue);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public SimpleBooleanProperty getDBRequest(){
 		return this.dbRequest;
+	}
+	
+	public SimpleBooleanProperty getDBFriends() {
+		return this.friends;
 	}
 	
 	public SimpleBooleanProperty getValue(){
@@ -339,6 +361,10 @@ public class ClientThreadForServer extends Thread {
 	
 	public void setNewRoundLeftRight(boolean newRound){
 		this.newRoundLeftRight = newRound;
+	}
+	
+	public ArrayList<String> getFriendsList(){
+		return this.friendsList;
 	}
 
 }

@@ -13,6 +13,7 @@ public class LoginModel extends Model {
 	private String realPassword;
 	private static String surname;
 	private static int wins;
+	private static String username;
 
 	
 	public LoginModel(){
@@ -46,6 +47,14 @@ public class LoginModel extends Model {
 	
 	public static int getWins(){
 		return wins;
+	}
+	
+	public static void setUserName(String user) {
+		username = user;
+	}
+	
+	public static String getUserName() {
+		return username;
 	}
 }
 

@@ -315,6 +315,9 @@ public class WindChuckers extends Application {
 		
 		serviceLocator = ServiceLocator.getServiceLocator();
 		
+    	//get the friends
+		model.messageConstructorForDB(4);
+		
 		mainMenuView.start();
 		
 	}

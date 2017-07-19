@@ -53,6 +53,7 @@ public class ServerThreadForClient extends Thread {
 				getMessageType(message);
 				
 			} catch (Exception e) {
+				logger.severe(e.getLocalizedMessage());
 				logger.severe(e.toString());
 			}
 		}
@@ -119,6 +120,34 @@ public class ServerThreadForClient extends Thread {
 				try {
 					h2.deletePlayer(message.getId());
 					sendMessageBackToClient(new Message(MessageType.DBMessageFull,0,h2.selectPlayer()));
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			else if(message.getDB() == 4) {
+				//4 stands for all Friends
+				try {
+					ArrayList<String> friends = new ArrayList<String>();
+					friends = h2.selectFriends();
+					sendMessageBackToClient(new Message(MessageType.DBMessage,4,friends));
+				} catch (SQLException e) {
+					e.printStackTrace();	
+				}
+			}
+			else if(message.getDB() == 5) {
+				//5 Stands for make new Friends
+				try {
+					h2.insertFriend(message.getId(), message.getFriendId());
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				logger.info("New Friend: " + message.getId() + message.getFriendId());
+			}
+			else if(message.getDB() == 6) {
+				//6 Stands for delete a Friend Enty
+				try {
+					h2.deleteFriend(message.getId());
+					logger.info("ServerThread: Deleted Friend with Id: " + message.getId());
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}

@@ -40,12 +40,25 @@ public class DataBase {
 //		update("UPDATE PLAYER SET WINS = 2 WHERE PLAYERID = 1");
 //		System.out.println(selectWithName("weber"));
 //		update("UPDATE PLAYER SET WINS =0 WHERE PLAYERID = 1");
+//		insertFriend(2,1);
+//		
+//		ArrayList<String> friendsList = selectFriends();
+//		for(int i = 0; i < friendsList.size(); i++){
+//		System.out.println(friendsList.get(i));
+//		}	
+//		
+//		System.out.println(selectLastIdFriends());
+//		
+//		boolean request = selectFriendsRequest(1,2);
+//		System.out.println(request);
+		
+//		boolean request = areBothRequestHere(1,2);
+//		System.out.println(request);
 //	}
 
 	/**
 	public DataBase() {
 	}
-
 	/**
 	 * Factory method for returning the singleton database
 	 * @param DataBase
@@ -178,7 +191,7 @@ public class DataBase {
 	public static ArrayList<String> selectFriends() throws SQLException {
 		Connection connection = getDBConnection();
 		PreparedStatement selectPreparedStatement = null;
-		String SelectQuery = "select * from FRIENDS";
+		String SelectQuery = "select * from FRIENDSPOINTS";
 		ArrayList<String> answerList = new ArrayList<String>();
 
 		try {
@@ -190,8 +203,9 @@ public class DataBase {
 			while (rs.next()) {
 				logger.info("Select:" + SelectQuery);
 				answerList.add(rs.getString("id").toString());
-				answerList.add(rs.getString("prename"));
-				answerList.add(rs.getString("surname"));
+				answerList.add(rs.getString("friendId1").toString());
+				answerList.add(rs.getString("friendId2").toString());
+				answerList.add(rs.getString("request").toString());
 			}
 			selectPreparedStatement.close();
 
@@ -363,6 +377,80 @@ public class DataBase {
 		}
 		return answer;
 	}
+	
+	
+	/**
+	 * For check are both friendrequest here?
+	 * @param id
+	 * @param friendId
+	 * @return
+	 * @throws SQLException
+	 */
+	public static boolean selectFriendsRequest(int id, int friendId) throws SQLException {
+		Connection connection = getDBConnection();
+		PreparedStatement selectPreparedStatement = null;
+		String SelectQuery = ("SELECT * FROM FRIENDSPOINTS WHERE friendId1 = ? AND friendId2 = ?");
+		int answer = 0;
+
+		try {
+			connection.setAutoCommit(false);
+
+			selectPreparedStatement = connection.prepareStatement(SelectQuery);
+			selectPreparedStatement.setInt(1, id);
+			selectPreparedStatement.setInt(2, friendId);
+			ResultSet rs = selectPreparedStatement.executeQuery();
+			logger.info("H2 Database selected through PreparedStatement");
+			int entry = 0;
+			while (rs.next()) {
+				entry = rs.getInt("friendId1");
+			}
+			if (entry != 0) {
+				logger.info("EntryThere");
+				return true;
+			}
+			
+			selectPreparedStatement.close();
+
+			connection.commit();
+
+		} catch (SQLException e) {
+			logger.warning("Exception Message " + e.getLocalizedMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			connection.close();
+		}
+		return false;
+	}
+	
+	public static int selectLastIdFriends() throws SQLException {
+		Connection connection = getDBConnection();
+		PreparedStatement selectPreparedStatement = null;
+		String SelectQuery = ("SELECT id FROM FRIENDSPOINTS ORDER BY id DESC");
+		int answer = 0;
+
+		try {
+			connection.setAutoCommit(false);
+
+			selectPreparedStatement = connection.prepareStatement(SelectQuery);
+			ResultSet rs = selectPreparedStatement.executeQuery();
+			logger.info("H2 Database selected through PreparedStatement");
+			int entry = 0;
+			while (rs.next()) {
+				entry = rs.getInt("id");
+			}
+			return entry;
+
+		} catch (SQLException e) {
+			logger.warning("Exception Message " + e.getLocalizedMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			connection.close();
+		}
+		return 0;
+	}
+	
 
 	/*********************************************************************************************
 	 * Update Statements
@@ -556,6 +644,36 @@ public class DataBase {
 		}
 	}
 	
+	/**
+	 * Set the request in Friends true when both will the request
+	 * @param id
+	 * @throws SQLException
+	 */
+	public static void updateFriendsRequest(int id) throws SQLException {
+		Connection connection = getDBConnection();
+		PreparedStatement updatePreparedStatement = null;
+		String UpdateQuery = ("UPDATE FRIENDSPOINTS SET request = true WHERE friendId1 = ?");
+
+		try {
+			connection.setAutoCommit(false);
+			updatePreparedStatement = connection.prepareStatement(UpdateQuery);
+			updatePreparedStatement.setInt(1, id);
+			updatePreparedStatement.executeUpdate();
+			logger.info("H2 Database updated through PreparedStatement");
+		
+			updatePreparedStatement.close();
+
+			connection.commit();
+
+		} catch (SQLException e) {
+			logger.warning("Exception Message " + e.getLocalizedMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			connection.close();
+		}
+	}
+	
 	/*********************************************************************************************
 	 * Insert Statements
 	 * @author L.Weber
@@ -604,6 +722,50 @@ public class DataBase {
 		updatePreparedStatementWithId(0, id);
 	}
 	
+	/**
+	 * For make new Friends
+	 * @param id
+	 * @param idfriend
+	 * @throws SQLException
+	 */
+	public static void insertFriend(int id,int idfriend) throws SQLException {
+		Connection connection = getDBConnection();
+		PreparedStatement insertPreparedStatement = null;
+		String InsertQuery = "INSERT INTO FRIENDSPOINTS" + "(id, friendId1, friendId2, request) values" + "(?,?,?,?)";
+		
+		int uniqueid = (selectLastIdFriends()+1);
+		boolean request = false;
+		try {
+			connection.setAutoCommit(false);
+
+			insertPreparedStatement = connection.prepareStatement(InsertQuery);
+			insertPreparedStatement.setInt(1, uniqueid);
+			insertPreparedStatement.setInt(2, id);
+			insertPreparedStatement.setInt(3, idfriend);
+			insertPreparedStatement.setBoolean(4, request);
+					
+			logger.info("Insert: " + uniqueid + " "+ id + " "+ idfriend + " " + request);
+			insertPreparedStatement.executeUpdate();
+			insertPreparedStatement.close();
+
+			connection.commit();
+		} catch (SQLException e) {
+			logger.warning("Exception Message " + e.getLocalizedMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			connection.close();
+		}
+		//check is there the same entry with changed numbers
+		//if yes: make request to true
+		if(areBothRequestHere(id,idfriend)) {
+			updateFriendsRequest(id);
+			updateFriendsRequest(idfriend);
+		} else {
+			logger.info("Noth both Player has requested");
+		}
+	}
+	
 	/*********************************************************************************************
 	 * Prepare Statements
 	 * @author L.Weber
@@ -650,6 +812,34 @@ public class DataBase {
 			e.printStackTrace();
 		} finally {
 			insertPlayer(id,"deleted","deleted","deleted","deleted");
+			connection.close();
+		}
+	}
+	
+	/**
+	 * delete the single Entry in the DB for Friends
+	 * @throws SQLException 
+	 */
+	public static void deleteFriend(int friendId) throws SQLException {
+		Connection connection = getDBConnection();
+		PreparedStatement deletePreparedStatement = null;
+		String deleteDBPlayer = ("DELETE FROM FRIENDSPOINTS WHERE friendId2 = ?");
+		
+		try {
+			connection.setAutoCommit(false);
+			
+			deletePreparedStatement = connection.prepareStatement(deleteDBPlayer);
+			deletePreparedStatement.setInt(1, friendId);
+			logger.info("Delete Friend with Id: " + friendId);
+			deletePreparedStatement.executeUpdate();
+			deletePreparedStatement.close();
+			connection.commit();
+			
+		} catch (SQLException e) {
+			logger.warning("Exception Message " + e.getLocalizedMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
 			connection.close();
 		}
 	}
@@ -759,6 +949,23 @@ public class DataBase {
 			logger.warning(e.getMessage());
 		}
 		return dbConnection;
+	}
+	
+	private static boolean areBothRequestHere(int id, int friendId) {
+		boolean req1 = false;
+		boolean req2 = false;
+		try {
+			req1 = selectFriendsRequest(id, friendId);
+			req2 = selectFriendsRequest(friendId, id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		if(req1 && req2) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }
