@@ -217,7 +217,6 @@ public class Tower extends Button {
 			for(int i = 1; i<=5 ; i++){
 				if (!fields[this.getxPosition()][this.getyPosition()-1].isEmpty() && fields[this.getxPosition()][this.getyPosition()-2].isEmpty()){
 					fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
-					this.setsumoHit(true);
 				}
 				if(this.getyPosition()-i < 0){
 					break;
@@ -261,7 +260,6 @@ public class Tower extends Button {
 			for(int i = 1; i<=5 ; i++){
 				if (!fields[this.getxPosition()][this.getyPosition()+1].isEmpty() && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
 					fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
-					this.setsumoHit(true);
 				}
 				if(this.getyPosition()+i > 7){
 					break;
@@ -313,8 +311,14 @@ public class Tower extends Button {
 	 * @author robin
 	 */
 	public void move(Field[][] fields, GridPane gameBoard, Tower[][] towersP1, Tower[][] towersP2, Field field, Player player1, Player player2) {
-		if (this.sumoTower && this.getsumoHit()){
+		
+		if (!field.isEmpty()){
+			this.setsumoHit(true);
+		}
+		
+		if (this.sumoTower && this.sumoHit){
 		this.sumoMove(fields, gameBoard, player1, player2, field, towersP1, towersP2);
+		
 		}else{
 		int oldX = this.getxPosition();
 		int newX = field.getxPosition();
