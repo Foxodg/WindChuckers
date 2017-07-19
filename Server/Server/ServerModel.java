@@ -3,6 +3,7 @@ package Server;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -21,7 +22,8 @@ public class ServerModel {
 	private static ServerModel serverModel;
 	private static Integer randomStart;
 	private static Hashtable<Integer, String> users = new Hashtable<Integer, String>();
-    
+	private static ArrayList<Hashtable> binomList = new ArrayList<Hashtable>();
+	
 	/**
 	 * Factory method for returning the singleton board
 	 * 
@@ -103,5 +105,48 @@ public class ServerModel {
 	
 	public Hashtable getUsers() {
 		return users;
+	}
+	
+	/**
+	 * For get the HashCode with a name
+	 * @param name
+	 * @return hashCode
+	 * @author L.Weber
+	 */
+	public int getHashCodeWithName(String name) {
+		int hash = 0;
+		Enumeration e = (Enumeration) users.keys();
+		while (e.hasMoreElements()) {
+			int key = (int) e.nextElement();
+			if(name.equalsIgnoreCase(users.get(key))) {
+				hash = key;
+				return hash;
+			}
+			
+		}
+		return hash;
+	}
+	
+	/**
+	 * For generate Binom Sockets with two hashcodes
+	 * @param hash1
+	 * @param hash2
+	 * @return Hashtable Binom
+	 * @author L.Weber
+	 */
+	public Hashtable generateBinomSocket (int hash1, int hash2) {
+		Hashtable<Socket,Socket> binom = new Hashtable<Socket, Socket>();
+		binom = null;
+		
+		for (int i = 0; i < clientSockets.size(); i++) {
+			if(hash1 == clientSockets.get(i).hashCode()) {
+				for(int j = 0; j < clientSockets.size(); j++) {
+					if(hash2 == clientSockets.get(j).hashCode()) {
+						binom.put(clientSockets.get(i), clientSockets.get(j));
+					}
+				}
+			}
+		}
+		return binom;
 	}
 }
