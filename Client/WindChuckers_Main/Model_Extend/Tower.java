@@ -18,6 +18,8 @@ public class Tower extends Button {
 	private int yPosition;
 	private int xPosition;
 	private int gems; 
+	private boolean sumoTower = false;
+	private boolean sumoHit = false;
 	
 	protected Tower (String color){
 		super();
@@ -121,6 +123,10 @@ public class Tower extends Button {
 	 * @author robin
 	 */
 	public void showMoves(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {
+		if (this.sumoTower){
+			showSumoMove(fields, gridPane, towersP1, towersP2);
+		} else{
+		
 		if(this.getPlayerNumber()==1){
 			//disable towers P1
 			this.disableTowers(towersP1);
@@ -201,6 +207,99 @@ public class Tower extends Button {
 						}
 				}
 		}
+	}
+
+	private void showSumoMove(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {
+		if(this.getPlayerNumber()==1 && this.getGems() == 1){
+			this.disableTowers(towersP1);
+			
+			// Down move
+			for(int i = 1; i<=5 ; i++){
+				if (!fields[this.getxPosition()][this.getyPosition()-1].isEmpty() && fields[this.getxPosition()][this.getyPosition()-2].isEmpty()){
+					fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
+					this.setsumoHit(true);
+				}
+				if(this.getyPosition()-i < 0){
+					break;
+				} else if(fields[this.getxPosition()][this.getyPosition()-i].isEmpty()){
+					fields[this.getxPosition()][this.getyPosition()-i].setDisable(false);
+					} if(!fields[this.getxPosition()][this.getyPosition()-i].isEmpty()){
+						break;
+						}
+					
+				}
+			
+			// Diagonal move bottom right
+			outerloop:
+			for(int i = 1; i<=5; i++){
+				if((this.getxPosition()+i>7) || (this.getyPosition()-i < 0)){
+					break outerloop;
+				} else if (fields[this.getxPosition()+i][this.getyPosition()-i].isEmpty()){
+						fields[this.getxPosition()+i][this.getyPosition()-i].setDisable(false);
+						} if(!fields[this.getxPosition()+i][this.getyPosition()-i].isEmpty()){
+							break outerloop;
+						}
+					}
+				
+			// Diagonal move bottom left
+			outerloop:
+				for(int i = 1; i<=5; i++){
+					if((this.getxPosition()-i<0) || (this.getyPosition()-i<0)){
+						break outerloop;
+					} else if (fields[this.getxPosition()-i][this.getyPosition()-i].isEmpty()){
+							fields[this.getxPosition()-i][this.getyPosition()-i].setDisable(false);
+							} if(!fields[this.getxPosition()-i][this.getyPosition()-i].isEmpty()){
+								break outerloop;
+							}	}	}
+		
+		
+		if(this.getPlayerNumber()==2 && this.getGems() == 1){
+			// Disable Towers of Player2
+			this.disableTowers(towersP2);
+
+			// Up move
+			for(int i = 1; i<=5 ; i++){
+				if (!fields[this.getxPosition()][this.getyPosition()+1].isEmpty() && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
+					fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
+					this.setsumoHit(true);
+				}
+				if(this.getyPosition()+i > 7){
+					break;
+				} else if(fields[this.getxPosition()][this.getyPosition()+i].isEmpty()){
+					fields[this.getxPosition()][this.getyPosition()+i].setDisable(false);
+					} if(!fields[this.getxPosition()][this.getyPosition()+i].isEmpty()){
+						break;
+					}
+				}
+			
+			// Diagonal move top right
+			outerloop:
+			for(int i = 1; i<=5; i++){
+				if((this.getxPosition()+i>7) || (this.getyPosition()+i > 7)){
+					break outerloop;
+				} else if (fields[this.getxPosition()+i][this.getyPosition()+i].isEmpty()){
+						fields[this.getxPosition()+i][this.getyPosition()+i].setDisable(false);
+						} if(!fields[this.getxPosition()+i][this.getyPosition()+i].isEmpty()){
+							break outerloop;
+						}
+					}
+				
+			// Diagonal move top left
+			outerloop:
+				for(int i = 1; i<=5; i++){
+					if((this.getxPosition()-i<0) || (this.getyPosition()+i>7)){
+						break outerloop;
+					} else if (fields[this.getxPosition()-i][this.getyPosition()+i].isEmpty()){
+							fields[this.getxPosition()-i][this.getyPosition()+i].setDisable(false);
+							} if(!fields[this.getxPosition()-i][this.getyPosition()+i].isEmpty()){
+								break outerloop;
+							}
+						}
+				}
+		
+		
+	}
+	
 
 	/**
 	 * This method will change the position of the tower on the GridPane
@@ -214,7 +313,9 @@ public class Tower extends Button {
 	 * @author robin
 	 */
 	public void move(Field[][] fields, GridPane gameBoard, Tower[][] towersP1, Tower[][] towersP2, Field field, Player player1, Player player2) {
-
+		if (this.sumoTower && this.getsumoHit()){
+		this.sumoMove(fields, gameBoard, player1, player2, field, towersP1, towersP2);
+		}else{
 		int oldX = this.getxPosition();
 		int newX = field.getxPosition();
 		int oldY = this.getyPosition();
@@ -261,9 +362,118 @@ public class Tower extends Button {
 		this.checkWin(fields, player1, player2, this, towersP1, towersP2);
 
 		// Towers of other player will be enabled
-		this.changeTurn(player1, player2, towersP1, towersP2, field);
+		this.changeTurn(fields, player1, player2, towersP1, towersP2, field);
+	}}
+	
+	private void sumoMove(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Field field, Tower[][] towersP1, Tower[][] towersP2) {
+		
+		int oldX = this.getxPosition();
+		int newX = field.getxPosition();
+		int oldY = this.getyPosition();
+		int newY = field.getyPosition();
+		
+		int newColumnGridPane = GridPane.getColumnIndex(field);
+		int newRowGridPane = GridPane.getRowIndex(field);
+
+		 
+			 if (this.playerNumber == 1){
+
+		// The old field is empty and the new field from hit tower is busy
+				fields[oldX][oldY].setEmpty(true);
+				fields[newX][newY-1].setEmpty(false);
+						
+				// The coordinates of the hit tower will be changed
+				towersP2[newX][newY].setxPosition(newX);
+				towersP2[newX][newY].setyPosition(newY-1);
+				
+				// The coordinates of the sumoTower will be changed
+				this.setxPosition(newX);
+				this.setyPosition(newY);
+
+				// The Towers will be moved on the GridPane
+				GridPane.setColumnIndex(this, newColumnGridPane);
+				GridPane.setRowIndex(this, newRowGridPane);
+				GridPane.setColumnIndex(towersP2[newX][newY], newColumnGridPane);
+				GridPane.setRowIndex(towersP2[newX][newY], newRowGridPane+1);
+				
+				//this.setPlayerSign();
+				
+				// The towers will be set on the right position in the tower array
+					towersP1[newX][newY]=this;
+					towersP1[oldX][oldY]= null;
+					towersP2[newX][newY-1] = towersP2[newX][newY]; 
+					towersP2[newX][newY] = null;
+					
+					
+				} else if (this.playerNumber == 2){
+					
+					
+					// The old field is empty and the new field from hit tower is busy
+					fields[oldX][oldY].setEmpty(true);
+					fields[newX][newY+1].setEmpty(false);
+							
+					// The coordinates of the hit tower will be changed
+					towersP1[newX][newY].setxPosition(newX);
+					towersP1[newX][newY].setyPosition(newY+1);
+					
+					// The coordinates of the sumoTower will be changed
+					this.setxPosition(newX);
+					this.setyPosition(newY);
+
+					// The Towers will be moved on the GridPane
+					GridPane.setColumnIndex(towersP1[newX][newY], newColumnGridPane);
+					GridPane.setRowIndex(towersP1[newX][newY], newRowGridPane-1);
+					GridPane.setColumnIndex(this, newColumnGridPane);
+					GridPane.setRowIndex(this, newRowGridPane);
+					
+					//this.setPlayerSign();
+					
+					// The towers will be set on the right position in the tower array
+						towersP2[newX][newY]=this;
+						towersP2[oldX][oldY]= null;
+						towersP1[newX][newY+1] = towersP1[newX][newY];
+						towersP1[newX][newY] = null;
+						 
+				}
+				
+			 
+				
+				// The turn is finished, disable all fields
+				Field.disableFields(fields);
+				
+				// We check if a tower reached the last row
+				this.checkWin(fields, player1, player2, this, towersP1, towersP2);
+
+				// Towers of other player will be enabled
+				this.notChangeTurnSumo(fields, player1, player2, towersP1, towersP2, field);
+			}
+	
+	/**
+	 * This method will activate the own towers after a sumoHit and NOT change the turn
+	 * @param fields
+	 * @param player1
+	 * @param player2
+	 * @param towersP1
+	 * @param towersP2
+	 * @author lukas
+	 */
+
+	private void notChangeTurnSumo(Field[][] fields, Player player1, Player player2, Tower[][] towersP1, Tower[][] towersP2, Field field) {
+	
+		if(player1.isOnTurn()){;
+			player2.setOnTurn(false);
+			player1.setOnTurn(true);
+			this.disableTowers(towersP2);
+			this.enableTowers(fields, towersP1, field);
+		} else{
+			player2.setOnTurn(true);
+			player1.setOnTurn(false);
+			this.enableTowers(fields, towersP2, field);
+			this.disableTowers(towersP1);
+		}
 	}
 	
+
 	/**
 	 * This method will activate the opponents towers and change the turn
 	 * @param player1
@@ -272,16 +482,16 @@ public class Tower extends Button {
 	 * @param towersP2
 	 * @author robin
 	 */
-	public void changeTurn(Player player1, Player player2, Tower[][] towersP1, Tower[][] towersP2, Field field){
+	public void changeTurn(Field[][] fields, Player player1, Player player2, Tower[][] towersP1, Tower[][] towersP2, Field field){
 		if(player1.isOnTurn()){
 			player2.setOnTurn(true);
 			player1.setOnTurn(false);
 			this.disableTowers(towersP1);
-			this.enableTowers(towersP2, field);
+			this.enableTowers(fields, towersP2, field);
 		} else{
 			player1.setOnTurn(true);
 			player2.setOnTurn(false);
-			this.enableTowers(towersP1, field);
+			this.enableTowers(fields, towersP1, field);
 			this.disableTowers(towersP2);
 		}
 	}
@@ -304,18 +514,37 @@ public class Tower extends Button {
 	 * @param towers
 	 * @author robin
 	 */
-	public void enableTowers(Tower[][] towers, Field field){
+	public void enableTowers(Field[][] fields, Tower[][] towers, Field field){
 		if (model.gameStart){
+			
 		for(int y = 0; y < 8; y++){
 			for(int x = 0; x < 8; x++){
 				if(towers[x][y]!=null){
 					towers[x][y].setDisable(false);
+					
 					}}}} else if(!model.gameStart){
-						for(int y = 0; y < 8; y++){
-							for(int x = 0; x < 8; x++){
-								if(towers[x][y]!=null && towers[x][y].getColor().equals(field.getColor())){
-									towers[x][y].setDisable(false);
-								}}}
+	
+							if(this.getsumoHit() && this.playerNumber == 1){
+									for(int y = 0; y < 8; y++){
+									for(int x = 0; x < 8; x++){
+										if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()-1].getColor())){
+											towers[x][y].setDisable(false);
+											this.setsumoHit(false);
+										
+						}}}}else if (this.getsumoHit() && this.playerNumber == 2){
+									for(int x = 0; x < 8; x++){
+									for(int y = 0; y < 8; y++){
+										System.out.println(fields[field.getxPosition()][field.getyPosition()+1].getColor());
+										if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()+1].getColor())){
+											towers[x][y].setDisable(false);
+											this.setsumoHit(false);
+									
+						}}}} else {
+									for(int x = 0; x < 8; x++){
+									for(int y = 0; y < 8; y++){
+										if(towers[x][y]!=null && towers[x][y].getColor().equals(field.getColor())){
+											towers[x][y].setDisable(false);
+						}}}}
 		}
 	}
 
@@ -358,68 +587,65 @@ public class Tower extends Button {
 				towersP2[oldX][oldY]= null;
 			}
 			
-			changeTurn(player1, player2, towersP1, towersP2, fields[newX][newY]);
+			changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY]);
 			
 		}
 	}
-
-	public void upgradeTower(Field[][] fields, Tower tower, int xCoordinateUpgrade, int yCoordinateUpgrade, int gems, Tower[][] towersP1, Tower[][] towersP2) {
-//		int column = GridPane.getColumnIndex(fields[xCoordinateUpgrade][yCoordinateUpgrade]);
-//		int row = GridPane.getRowIndex(fields[xCoordinateUpgrade][yCoordinateUpgrade]);
-//		
-//		SumoTower sumoTower = new SumoTower(this.getColor());
-//		sumoTower.setxPosition(this.getxPosition());
-//		sumoTower.setyPosition(this.getyPosition());
-//		sumoTower.setPlayerNumber(this.getPlayerNumber());
-//		sumoTower.setStyle(" -fx-background-color: #FF8C00;");
-//		
-//		
-//		
-//		
-//		if(this.getPlayerNumber()==1){
-//			for(int y = 0; y < 8; y++){
-//				for(int x = 0; x < 8; x++){
-//					if(fields[x][y].isEmpty() == false){
-//						for(int x1 = 0; x1 < 8; x1++)
-//							if (this.getxPosition() == towersP1[x1][7].getxPosition() && this.getyPosition() == towersP1[x1][7].getyPosition()){
-////								towersP1[x1][7] = null;
-//								towersP1[x1][7] = sumoTower;
-//								towersP1[x1][7].setText("\u2163");
-//								
-//			
-//		}}}}} else{
-//			for(int y = 0; y < 8; y++){
-//				for(int x = 0; x < 8; x++){
-//					if(fields[x][y].isEmpty() == false){
-//						for(int x1 = 0; x1 < 8; x1++)
-//							if (this.getxPosition() == towersP2[x1][0].getxPosition() && this.getyPosition() == towersP2[x1][0].getyPosition()){
-////								towersP2[x1][0] = null;
-//								towersP2[x1][0] = sumoTower;
-//								towersP2[x1][0].setText("\u2163");
-//			
-//		}}}}}
-		
-
 	
+	
+	/**
+	 * This method will upgrade a tower to different Sumo Towers
+	 * @param fields
+	 * @param tower
+	 * @param xCoordinateUpgrade
+	 * @param yCoordinateUpgrade
+	 * @param gems
+	 * @param towersP1
+	 * @param towersP2
+	 */
+	public void upgradeTower(Field[][] fields, Tower tower, int xCoordinateUpgrade, int yCoordinateUpgrade, int gems, Tower[][] towersP1, Tower[][] towersP2) {
+		int column = GridPane.getColumnIndex(fields[xCoordinateUpgrade][yCoordinateUpgrade]);
+		int row = GridPane.getRowIndex(fields[xCoordinateUpgrade][yCoordinateUpgrade]);
+		
+		
+		if(this.gems == 0){
+			this.sumoTower = true;
+			this.setText("\u2163");
+			this.gems++;
+		
+		}else if (this.gems == 1){
+			this.setText("\u2164");
+			this.gems++;
+		}else if (this.gems == 2){
+			this.setText("\u2165");
+			this.gems++;
+		}else if (this.gems == 3){
+			this.setText("\u2168");
+			this.gems++;
+		}else if (this.gems == 4){
+			this.setText("\u2169");
+			this.gems++;
+		}else if (this.gems == 5){
+				this.setText("\u216A");
+				
+		}
 	}
 
-	// Anmerkung LKu (Ich muss falsche Koordinaten prüfen)
+	/**
+	 * This method checks if the tower reach a winning position and upgrade the tower if yes
+	 * @param 
+	 * @author lukas.k
+	 */
 	private void checkWin(Field[][] fields, Player player1, Player player2, Tower tower, Tower[][] towersP1, Tower[][] towersP2) {
 			if (player1.isOnTurn()&& yPosition == 0){
 			this.upgradeTower(fields, tower, this.getxPosition(), this.getyPosition(), this.getGems(), towersP1, towersP2);
 			GameMenu_Model.Winner.set(true);
-			System.out.println("We have a Winner: 1");
 			} else if(player2.isOnTurn()&& yPosition == 7){
 			this.upgradeTower(fields, tower, this.xPosition, this.yPosition, gems, towersP1, towersP2);
 			GameMenu_Model.Winner.set(true);
-			System.out.println("We have a Winner: 2");
 			}
 		}
-	
-	public static void moveRight() {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 	// Getters and Setters
 	public int getPlayerNumber(){
@@ -458,6 +684,13 @@ public class Tower extends Button {
 		this.gems = gems;
 	}
 
+	public boolean getsumoHit(){
+		return sumoHit;
+	}
+	
+	public void setsumoHit(boolean sumoHit){
+		this.sumoHit = sumoHit;	
+	}
 	
 	public void setPlayerSign(){
 		if (this.getPlayerNumber() == 1){

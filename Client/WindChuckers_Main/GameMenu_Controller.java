@@ -445,7 +445,6 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		}
 	}
 
-
 	/**
 	 * Clean all up
 	 * 
