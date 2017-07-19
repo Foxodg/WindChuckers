@@ -623,33 +623,29 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 				if (model.Winner.get()){
 					model.Winner.set(false);
 					
+				}
+					
 			if (newRoundLeftRight){
 				
 			// Player 1 Towers will be added in a Temp Array
 				int i = 0;
 				for(int y = 0; y < 8; y++){
 					for(int x = 0; x < 8; x++){
-						if(view.fields[x][y].isEmpty() == false){
-							for(int x1 = 0; x1 < 8; x1++)
-								if (view.fields[x][y].getxPosition() == view.towersP1[x1][7].getxPosition() && view.fields[x][y].getyPosition() == view.towersP1[x1][7].getyPosition()){
-						towersP1Temp[i][7] = view.towersP1[x1][7];
+						if(view.fields[x][y].isEmpty() == false && view.towersP1[x][y] != null){
+						towersP1Temp[i][7] = view.towersP1[x][y];
 						i++;
-								}}
-						}}
+						}}}
 				
 			// Player 2 Towers will be added in a Temp Array
 				int k = 0;
 				for(int y = 0; y < 8; y++){
 					for(int x = 0; x < 8; x++){
-						if(view.fields[x][y].isEmpty() == false){
-							for(int x1 = 7; x1 >= 0; x1--)
-								if (view.fields[x][y].getxPosition() == view.towersP2[x1][0].getxPosition() && view.fields[x][y].getyPosition() == view.towersP2[x1][0].getyPosition()){
-									towersP2Temp[7-k][0] = view.towersP2[x1][0];
+						if(view.fields[x][y].isEmpty() == false && view.towersP2[x][y] != null){
+									towersP2Temp[7-k][0] = view.towersP2[x][y];
 									k++;
 						}
 							view.fields[x][y].setEmpty(true);
-							}
-				}}}
+							}}
 				
 					} else if(!newRoundLeftRight){
 						
@@ -658,27 +654,23 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 						int i = 0;
 						for(int y = 0; y < 8; y++){
 							for(int x = 0; x < 8; x++){
-								if(view.fields[x][y].isEmpty() == false){
-									for(int x1 = 0; x1 < 8; x1++)
-										if (view.fields[x][y].getxPosition() == view.towersP1[x1][7].getxPosition() && view.fields[x][y].getyPosition() == view.towersP1[x1][7].getyPosition()){
-								towersP1Temp[7-i][7] = view.towersP1[x1][7];
+								if(view.fields[x][y].isEmpty() == false && view.towersP1[x][y] != null){
+								towersP1Temp[7-i][7] = view.towersP1[x][y];
 								i++;
-										}}
+										}
 								}}
 						
 					// Player 2 Towers will be added in a Temp Array
 						int k = 0;
 						for(int y = 0; y < 8; y++){
 							for(int x = 0; x < 8; x++){
-								if(view.fields[x][y].isEmpty() == false){
-									for(int x1 = 7; x1 >= 0; x1--)
-										if (view.fields[x][y].getxPosition() == view.towersP2[x1][0].getxPosition() && view.fields[x][y].getyPosition() == view.towersP2[x1][0].getyPosition()){
-											towersP2Temp[k][0] = view.towersP2[x1][0];
+								if(view.fields[x][y].isEmpty() == false && view.towersP2[x][y] != null){
+											towersP2Temp[k][0] = view.towersP2[x][y];
 											k++;
 								}
 									view.fields[x][y].setEmpty(true);
 									}
-						}}
+						}
 					
 					}
 				
@@ -709,8 +701,6 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	 */
 	private void win(int win){
 		//Win Procedure
-		if (model.Winner.get()){
-			model.Winner.set(false);
 		
 		windChuckers = WindChuckers.getWindChuckers();
 		windChuckers.startNewRound();
@@ -729,7 +719,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		int winsBevore = LoginModel.getWins();
 		win = win + winsBevore;
 		model.messageConstructorForWin(win);
-	}}
+	}
 	
 	public void setView(GameMenu_View view){
 		this.view = view;
