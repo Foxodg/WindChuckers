@@ -435,8 +435,12 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		 */
 		model.Winner.addListener(
 				(observable, oldValue, newValue) -> {
-					if(newValue=true){
-						this.win(1);
+					if(newValue.intValue()==1){
+						this.win(model.getPlayer1().getWins());
+					}
+					
+					if(newValue.intValue()==2){
+						this.win(model.getPlayer2().getWins());
 					}
 				});
 		
@@ -622,10 +626,10 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 				Tower[][] towersP2Temp = new Tower[model.DIMENSION][model.DIMENSION];
 				// Player 1
 				
-				if (model.Winner.get()){
-					model.Winner.set(false);
-					
-				}
+//				if (model.Winner.intValue()==1 || model.Winner.intValue()==2){
+//					model.Winner.set(0);
+//					
+//				}
 					
 			if (newRoundLeftRight){
 				
@@ -698,30 +702,37 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 				}
 	
 	/**
-	 * Do all when someone win the game
+	 * Show a popup window as soon as someone reaches the back line. 
 	 * @param win
+	 * @author robin
 	 */
 	private void win(int win){
 		//Win Procedure
-		
 		windChuckers = WindChuckers.getWindChuckers();
 		windChuckers.startNewRound();
-				
+	
 		// a new Round with left order will be created
 		newRoundView.leftPlay.setOnAction(e -> {
 			this.buildNewRound(true);
+			model.Winner.set(0);
+			((Stage)(((Button)e.getSource()).getScene().getWindow())).close();
 		});
 		
 		// a new Round with right order will be created
 		newRoundView.rightPlay.setOnAction(e -> {
 			this.buildNewRound(false);
+			model.Winner.set(0);
+			Stage stage = (Stage) newRoundView.leftPlay.getScene().getWindow();
+			((Stage)(((Button)e.getSource()).getScene().getWindow())).close();
 		});
 
 		//update the DB
-		int winsBevore = LoginModel.getWins();
-		win = win + winsBevore;
+		int winsBefore = LoginModel.getWins();
+		win = win + winsBefore;
 		model.messageConstructorForWin(win);
 	}
+	
+	//}
 	
 	public void setView(GameMenu_View view){
 		this.view = view;

@@ -8,6 +8,7 @@ public class Player extends Model {
 	private int playerNumber; 
 	private boolean onTurn = false;
 	private boolean lastWinner = false;
+	private int wins = 0;
 
 	
 	public Player(int playerNumber){
@@ -36,6 +37,16 @@ public class Player extends Model {
 
 	public void setLastWinner(boolean lastWinner) {
 		this.lastWinner = lastWinner;
+	}
+
+
+	public int getWins() {
+		return this.wins;
+	}
+
+
+	public void setWins() {
+		this.wins++;
 	}
 		
 

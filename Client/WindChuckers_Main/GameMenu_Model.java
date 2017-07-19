@@ -17,6 +17,7 @@ import WindChuckers_Main.Model_Extend.Player;
 import abstractClasses.Model;
 import commonClasses.ServiceLocator;
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -43,7 +44,7 @@ public class GameMenu_Model extends Model {
 	public final static String GREEN = "#008000";
 	public final static String BROWN = "#8B4513";
 	
-	public static SimpleBooleanProperty Winner = new SimpleBooleanProperty(false);
+	public static IntegerProperty Winner = new SimpleIntegerProperty(0);
 
 	private Player player1 = new Player(1);
 	private Player player2 = new Player(2);
