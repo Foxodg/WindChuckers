@@ -209,6 +209,14 @@ public class Tower extends Button {
 		}
 	}
 
+	/**
+	 * This method will show the possible Sumo Moves and enable all possible fields
+	 * @param fields
+	 * @param gridPane
+	 * @param towersP1
+	 * @param towersP2
+	 * @author lukas.k
+	 */
 	private void showSumoMove(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {
 		if(this.getPlayerNumber()==1 && this.getGems() == 1){
 			this.disableTowers(towersP1);
@@ -298,7 +306,6 @@ public class Tower extends Button {
 		
 	}
 	
-
 	/**
 	 * This method will change the position of the tower on the GridPane
 	 * @param fields
@@ -315,7 +322,6 @@ public class Tower extends Button {
 		if (!field.isEmpty()){
 			this.setsumoHit(true);
 		}
-		
 		if (this.sumoTower && this.sumoHit){
 		this.sumoMove(fields, gameBoard, player1, player2, field, towersP1, towersP2);
 		
@@ -369,6 +375,17 @@ public class Tower extends Button {
 		this.changeTurn(fields, player1, player2, towersP1, towersP2, field);
 	}}
 	
+	/**
+	 * This method will change the position of the Sumo and Hit Tower on the GridPane
+	 * @param fields
+	 * @param gameBoard
+	 * @param towersP1
+	 * @param towersP2
+	 * @param field
+	 * @param player1
+	 * @param player2
+	 * @author lukas.k
+	 */
 	private void sumoMove(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Field field, Tower[][] towersP1, Tower[][] towersP2) {
 		
 		int oldX = this.getxPosition();
@@ -461,7 +478,6 @@ public class Tower extends Button {
 	 * @param towersP2
 	 * @author lukas
 	 */
-
 	private void notChangeTurnSumo(Field[][] fields, Player player1, Player player2, Tower[][] towersP1, Tower[][] towersP2, Field field) {
 	
 		if(player1.isOnTurn()){;
@@ -477,7 +493,6 @@ public class Tower extends Button {
 		}
 	}
 	
-
 	/**
 	 * This method will activate the opponents towers and change the turn
 	 * @param player1
@@ -595,8 +610,7 @@ public class Tower extends Button {
 			
 		}
 	}
-	
-	
+
 	/**
 	 * This method will upgrade a tower to different Sumo Towers
 	 * @param fields
