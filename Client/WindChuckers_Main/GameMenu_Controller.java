@@ -87,7 +87,10 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 														// events
 		model.getPlayer1().setOnTurn(true); // Je nach dem wer anfängt, müssen
 											// wir noch implementieren
+		// get the friendsList
 		model.setFriends(clientServer.getFriendsList());
+		//send the hash-code and the name to the server for key / value
+		model.messageConstructorForName(Integer.parseInt(view.tfHashCode.getText()), LoginModel.getUserName());
 
 		/**
 		 * For End the Application

@@ -234,6 +234,12 @@ public class ServerThreadForClient extends Thread {
 			board.newRound(newRound);
 			sendMessageBackToClient(message);
 		}
+		//For send the name
+		else if(message.getMessageType() == MessageType.Name) {
+			ServerModel model = ServerModel.getServerModel();
+			model.setUsers(message.getId(), message.getUserName());
+			logger.info("User added - id: " + message.getId() + " UserName: " + message.getUserName());
+		}
 		else {
 			logger.info("Server" + "Error-Message: ");
 			//Else must be an Error-Message

@@ -3,6 +3,7 @@ package Server;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -19,6 +20,7 @@ public class ServerModel {
 	private static ArrayList<Integer> hashPlayers = new ArrayList<Integer>();
 	private static ServerModel serverModel;
 	private static Integer randomStart;
+	private static Hashtable<Integer, String> users = new Hashtable<Integer, String>();
     
 	/**
 	 * Factory method for returning the singleton board
@@ -93,5 +95,13 @@ public class ServerModel {
 	
 	public static ArrayList<Integer> getHashList(){
 		return hashPlayers;
+	}
+	
+	public void setUsers(int id, String userName) {
+		users.put(id, userName);
+	}
+	
+	public Hashtable getUsers() {
+		return users;
 	}
 }

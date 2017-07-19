@@ -297,6 +297,14 @@ public class GameMenu_Model extends Model {
 		sendMessage(message);
 	}
 	
+	/**
+	 * Message Constructor for send the name
+	 * @param message
+	 */
+	public void messageConstructorForName(int id, String username) {
+		Message message = new Message(MessageType.Name, id, username);
+		sendMessage(message);		
+	}	
 
 	/**
 	 * Create the userList

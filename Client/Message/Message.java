@@ -26,7 +26,7 @@ import Message.Message.MessageType;
 @Root
 public class Message {
 	public enum MessageType {
-		Coordinate, WinMessage, ChatMessage, DBMessage, DBMessageFull, Error, Update, AISingle, AIDouble, Hash, Time, NewRound
+		Coordinate, WinMessage, ChatMessage, DBMessage, DBMessageFull, Error, Update, AISingle, AIDouble, Hash, Time, NewRound, Name
 	};
 	
 	public enum Value {
@@ -364,6 +364,18 @@ public class Message {
 		this.DB = db;
 		this.Id = id;
 		this.friendId = friendId;
+	}
+	
+	/**
+	 * For send the name of the client
+	 * @param messageType
+	 * @param id
+	 * @param username
+	 */
+	public Message(MessageType messageType, int id, String username) {
+		createStandardMessage(messageType);
+		this.Id = id;
+		this.userName = username;
 	}
 
 
