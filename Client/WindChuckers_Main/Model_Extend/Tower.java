@@ -218,14 +218,20 @@ public class Tower extends Button {
 	 * @author lukas.k
 	 */
 	private void showSumoMove(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {
+		
 		if(this.getPlayerNumber()==1 && this.getGems() == 1){
 			this.disableTowers(towersP1);
 			
+			System.out.println(+this.getxPosition()+ " " +this.yPosition);
+			if (!fields[this.getxPosition()][this.getyPosition()-1].isEmpty() && this.getyPosition()-2 > 0 && fields[this.getxPosition()][this.getyPosition()-2].isEmpty()){
+//				&& fields[this.getxPosition()][this.getyPosition()-1] != fields[this.getxPosition()][0]
+//				&& towersP2[this.getxPosition()][this.getyPosition()+1].getPlayerNumber() == 2
+				fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
+			}
+			
+			
 			// Down move
 			for(int i = 1; i<=5 ; i++){
-				if (!fields[this.getxPosition()][this.getyPosition()-1].isEmpty() && fields[this.getxPosition()][this.getyPosition()-2].isEmpty()){
-					fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
-				}
 				if(this.getyPosition()-i < 0){
 					break;
 				} else if(fields[this.getxPosition()][this.getyPosition()-i].isEmpty()){
@@ -263,12 +269,16 @@ public class Tower extends Button {
 		if(this.getPlayerNumber()==2 && this.getGems() == 1){
 			// Disable Towers of Player2
 			this.disableTowers(towersP2);
-
+			System.out.println(+this.getxPosition()+ " " +this.yPosition);
+			System.out.println(fields.length);
+			System.out.println(this.getyPosition()+2);
+			
+			if (!fields[this.getxPosition()][this.getyPosition()+1].isEmpty() && this.getyPosition()+2 < fields.length && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
+//				&& fields[this.getxPosition()][this.getyPosition()+1] != fields[this.getxPosition()][7]
+				fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
+			}
 			// Up move
 			for(int i = 1; i<=5 ; i++){
-				if (!fields[this.getxPosition()][this.getyPosition()+1].isEmpty() && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
-					fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
-				}
 				if(this.getyPosition()+i > 7){
 					break;
 				} else if(fields[this.getxPosition()][this.getyPosition()+i].isEmpty()){
