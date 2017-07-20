@@ -31,8 +31,8 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class GameMenu_Model extends Model {
 
-	protected static final int DIMENSION = 8;
-	protected static final int MAX_FIELDS = DIMENSION * DIMENSION;
+	public static final int DIMENSION = 8;
+	public static final int MAX_FIELDS = DIMENSION * DIMENSION;
 	public static boolean gameStart = true;
 
 	public final static String ORANGE = "#FF8C00";
@@ -43,6 +43,8 @@ public class GameMenu_Model extends Model {
 	public final static String RED = "#B22222";
 	public final static String GREEN = "#008000";
 	public final static String BROWN = "#8B4513";
+	
+	public static int playerCausedPat = 0;
 	
 	public static IntegerProperty Winner = new SimpleIntegerProperty(0);
 

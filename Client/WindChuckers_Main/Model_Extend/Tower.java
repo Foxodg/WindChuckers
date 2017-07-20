@@ -8,6 +8,8 @@ import WindChuckers_Main.GameMenu_Model;
 import abstractClasses.Model;
 import commonClasses.ServiceLocator;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
@@ -126,9 +128,9 @@ public class Tower extends Button {
 			showSumoMove(fields, gridPane, towersP1, towersP2);
 		} else{
 		
-		if(this.getPlayerNumber()==1){
+		if(model.getPlayer1().isOnTurn()){
 			//disable towers P1
-			this.disableTowers(towersP1);
+			Tower.disableTowers(towersP1);
 				
 				// Down move
 				for(int i = 1; i<=7 ; i++){
@@ -163,12 +165,12 @@ public class Tower extends Button {
 								} if(!fields[this.getxPosition()-i][this.getyPosition()-i].isEmpty()){
 									break outerloop;
 								}
-							}
+							}	
 				}
 
-		if(this.getPlayerNumber()==2){
+		if(model.getPlayer2().isOnTurn()){
 			// Disable Towers of Player2
-			this.disableTowers(towersP2);
+			Tower.disableTowers(towersP2);
 
 			// Up move
 			for(int i = 1; i<=7 ; i++){
@@ -204,9 +206,62 @@ public class Tower extends Button {
 								break outerloop;
 							}
 						}
+				
 				}
 		}
+		this.checkPat(fields, towersP1, towersP2);
 	}
+
+	/**
+	 * This method checks if a pat situation is existing. If there are two pat situations in a row, the player who caused the first pat looses the round
+	 * @param fields
+	 * @param towersP1
+	 * @param towersP2
+	 * @author robin
+	 */
+	private void checkPat(Field[][] fields, Tower[][] towersP1, Tower[][] towersP2) {
+		int possibleMoves = 0;
+		Alert firstAlert = new Alert(AlertType.INFORMATION);
+		firstAlert.setTitle("Information");
+		firstAlert.setHeaderText("Pat Situation!");
+		Alert secondAlert = new Alert(AlertType.INFORMATION);
+		secondAlert.setTitle("Information");
+
+		for(int x = 0; x < GameMenu_Model.DIMENSION; x++){
+			for(int y = 0; y < GameMenu_Model.DIMENSION; y++){
+				if(!fields[x][y].isDisabled()){
+					possibleMoves++;
+					model.getPlayer1().setCausedPat(false);
+					model.getPlayer2().setCausedPat(false);
+				}
+			}
+		}
+	
+		if(possibleMoves==0 && (model.getPlayer1().causedPat()||model.getPlayer2().causedPat())){
+			if(model.getPlayer1().causedPat()){
+				secondAlert.setHeaderText("Pat Situation! Player 2 wins!");
+				secondAlert.showAndWait();
+				GameMenu_Model.Winner.set(2);
+			} else{
+				secondAlert.setHeaderText("Pat Situation! Player 1 wins!");
+				secondAlert.showAndWait();
+				GameMenu_Model.Winner.set(1);
+			}
+		}	
+	
+		if(possibleMoves==0 && !model.getPlayer1().causedPat() && !model.getPlayer2().causedPat()){
+			if(model.getPlayer1().isOnTurn()){
+				model.getPlayer2().setCausedPat(true);
+				firstAlert.showAndWait();
+				this.changeTurn(fields, model.getPlayer1(), model.getPlayer2(), towersP1, towersP2, fields[this.getxPosition()][this.getyPosition()]);
+			} else {
+				model.getPlayer1().setCausedPat(true);
+				firstAlert.showAndWait();
+				this.changeTurn(fields, model.getPlayer1(), model.getPlayer2(), towersP1, towersP2, fields[this.getxPosition()][this.getyPosition()]);
+			}
+	}
+}
+
 
 	/**
 	 * This method will show the possible Sumo Moves and enable all possible fields
@@ -524,15 +579,15 @@ public class Tower extends Button {
 	 */
 	public void changeTurn(Field[][] fields, Player player1, Player player2, Tower[][] towersP1, Tower[][] towersP2, Field field){
 		if(player1.isOnTurn()){
-			player2.setOnTurn(true);
 			player1.setOnTurn(false);
-			this.disableTowers(towersP1);
+			player2.setOnTurn(true);
+			Tower.disableTowers(towersP1);
 			this.enableTowers(fields, towersP2, field);
 		} else{
 			player1.setOnTurn(true);
 			player2.setOnTurn(false);
+			Tower.disableTowers(towersP2);
 			this.enableTowers(fields, towersP1, field);
-			this.disableTowers(towersP2);
 		}
 	}
 	
@@ -649,11 +704,9 @@ public class Tower extends Button {
 			if (player1.isOnTurn()&& yPosition == 0){
 			this.upgradeTower(fields, tower, this.getxPosition(), this.getyPosition(), this.getGems(), towersP1, towersP2);
 			GameMenu_Model.Winner.set(1);
-			player1.setWins();
 			} else if(player2.isOnTurn()&& yPosition == 7){
 			this.upgradeTower(fields, tower, this.xPosition, this.yPosition, gems, towersP1, towersP2);
 			GameMenu_Model.Winner.set(2);
-			player2.setWins();
 			}
 		}
 
@@ -703,5 +756,9 @@ public class Tower extends Button {
 		return this.sumoTower;
 		
 }
+	@Override
+	public String toString(){
+		return this.getxPosition()+"  "+this.getyPosition()+"  "+this.getColor();
+	}
 
 }

@@ -8,6 +8,7 @@ public class Player extends Model {
 	private int playerNumber; 
 	private boolean onTurn = false;
 	private boolean lastWinner = false;
+	private boolean causedPat = false;
 	private int wins = 0;
 
 	
@@ -47,6 +48,16 @@ public class Player extends Model {
 
 	public void setWins() {
 		this.wins++;
+	}
+
+
+	public boolean causedPat() {
+		return causedPat;
+	}
+
+
+	public void setCausedPat(boolean causedPat) {
+		this.causedPat = causedPat;
 	}
 		
 

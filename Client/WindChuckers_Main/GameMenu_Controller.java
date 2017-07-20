@@ -436,10 +436,12 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		model.Winner.addListener(
 				(observable, oldValue, newValue) -> {
 					if(newValue.intValue()==1){
+						model.getPlayer1().setWins();
 						this.win(model.getPlayer1().getWins());
 					}
 					
 					if(newValue.intValue()==2){
+						model.getPlayer2().setWins();
 						this.win(model.getPlayer2().getWins());
 					}
 				});
@@ -578,8 +580,6 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		public void handle(ActionEvent event) {
 			Tower tower = (Tower) event.getSource();
 
-			if (model.getPlayer1().isOnTurn()) {
-
 				// Activate possible fields where the tower can be moved to
 				tower.showMoves(view.getFields(), view.getGameBoard(), view.getTowersP1(), view.getTowersP2());
 
@@ -592,28 +592,8 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 							tower.move(view.getFields(), view.getGameBoard(), view.getTowersP1(), view.getTowersP2(),
 									field, model.getPlayer1(), model.getPlayer2());
 						});
-					}
 				}
 			}
-
-			if (model.getPlayer2().isOnTurn()) {
-
-				// Activate possible fields where the tower can be moved to
-				tower.showMoves(view.getFields(), view.getGameBoard(), view.getTowersP1(), view.getTowersP2());
-
-				// Handler for the fields. The Player chooses a field and the
-				// tower will move
-				for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
-					for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
-						view.getFields()[x][y].setOnAction((FieldHandler) -> {
-							Field field = (Field) FieldHandler.getSource();
-							tower.move(view.getFields(), view.getGameBoard(), view.getTowersP1(), view.getTowersP2(),
-									field, model.getPlayer1(), model.getPlayer2());
-						});
-					}
-				}
-			}
-
 		}
 	}
 	
@@ -722,7 +702,6 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		newRoundView.rightPlay.setOnAction(e -> {
 			this.buildNewRound(false);
 			model.Winner.set(0);
-			Stage stage = (Stage) newRoundView.leftPlay.getScene().getWindow();
 			((Stage)(((Button)e.getSource()).getScene().getWindow())).close();
 		});
 
