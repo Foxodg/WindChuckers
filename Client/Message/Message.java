@@ -26,7 +26,7 @@ import Message.Message.MessageType;
 @Root
 public class Message {
 	public enum MessageType {
-		Coordinate, WinMessage, ChatMessage, DBMessage, DBMessageFull, Error, Update, AISingle, AIDouble, Hash, Time, NewRound, Name
+		Coordinate, WinMessage, ChatMessage, DBMessage, DBMessageFull, Error, Update, AISingle, AIDouble, Hash, Time, NewRound, Name, Binom
 	};
 	
 	public enum Value {
@@ -141,6 +141,12 @@ public class Message {
 	
 	@Element(required = false)
 	private int friendId;
+	
+	@Element(required = false)
+	private long hash;
+	
+	@Element(required = false)
+	private String friendName;
 	
 
 	// Generator for a unique message ID
@@ -261,6 +267,18 @@ public class Message {
 	}
 	
 	/**
+	 * For give the username and friendname
+	 * @param messageType
+	 * @param username
+	 * @param friendName
+	 */
+	public Message(MessageType messageType, String username, String friendName) {
+		createStandardMessage(messageType);
+		this.userName = username;
+		this.friendName = friendName;
+	}
+	
+	/**
 	 * For DB
 	 * @param messageType
 	 * @param db
@@ -372,9 +390,9 @@ public class Message {
 	 * @param id
 	 * @param username
 	 */
-	public Message(MessageType messageType, int id, String username) {
+	public Message(MessageType messageType, long hash, String username) {
 		createStandardMessage(messageType);
-		this.Id = id;
+		this.hash = hash;
 		this.userName = username;
 	}
 
@@ -566,6 +584,14 @@ public class Message {
 	
 	public int getFriendId() {
 		return this.friendId;
+	}
+	
+	public String getFriendName() {
+		return this.friendName;
+	}
+	
+	public long getHash() {
+		return this.hash;
 	}
 
 }

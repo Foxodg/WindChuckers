@@ -84,7 +84,11 @@ public class FriendsController extends Controller<GameMenu_Model, FriendsView> {
 				for (int j = 0; j < view.btnPlayAgainstFriend.length; j++) {
 					if (btnSource == view.btnPlayAgainstFriend[j]) {
 						model.playAgainstFriend(view.lblFriendsAndRequests[j].getText());
-						rebuildFriendView();
+						view.stop();
+						String friendname[] = view.lblFriendsAndRequests[j].getText().split(" ");
+						model.messageConstructorForBuildBinom(LoginModel.getUserName(), friendname[0]);
+						WindChuckers windChuckers = WindChuckers.getWindChuckers();
+						windChuckers.startLobby();
 					}
 				}
 			});

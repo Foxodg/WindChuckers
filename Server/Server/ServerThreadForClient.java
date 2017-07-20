@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.logging.Logger;
 
 
@@ -237,8 +238,18 @@ public class ServerThreadForClient extends Thread {
 		//For send the name
 		else if(message.getMessageType() == MessageType.Name) {
 			ServerModel model = ServerModel.getServerModel();
-			model.setUsers(message.getId(), message.getUserName());
-			logger.info("User added - id: " + message.getId() + " UserName: " + message.getUserName());
+			model.setUsers(message.getHash(), message.getUserName());
+			logger.info("User added - id: " + message.getHash() + " UserName: " + message.getUserName());
+		}
+		//For build binom
+		else if(message.getMessageType() == MessageType.Binom) {
+			ServerModel model = ServerModel.getServerModel();
+			long hash1 = model.getHashCodeWithName(message.getUserName());
+			long hash2 = model.getHashCodeWithName(message.getFriendName());
+			
+			if(!model.addToBinomList(hash1, hash2)) {
+				model.generateBinomSocket(hash1, hash2);
+			}
 		}
 		else {
 			logger.info("Server" + "Error-Message: ");

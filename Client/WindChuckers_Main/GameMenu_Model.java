@@ -302,9 +302,18 @@ public class GameMenu_Model extends Model {
 	 * Message Constructor for send the name
 	 * @param message
 	 */
-	public void messageConstructorForName(int id, String username) {
-		Message message = new Message(MessageType.Name, id, username);
+	public void messageConstructorForName(long hash, String username) {
+		Message message = new Message(MessageType.Name, hash, username);
 		sendMessage(message);		
+	}
+	
+	/**
+	 * Message Constructor for send the binom
+	 * @param username
+	 */
+	public void messageConstructorForBuildBinom(String username, String friendname) {
+		Message message = new Message(MessageType.Binom, username, friendname);
+		sendMessage(message);
 	}	
 
 	/**
