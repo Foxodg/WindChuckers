@@ -244,7 +244,6 @@ public class GameMenu_View extends View<GameMenu_Model> {
 			fields[x][y].setxPosition(x);
 			fields[x][y].setyPosition(y);
 			fields[x][y].setDisable(true);
-			fields[x][y].setText(+x+ " " +y);
 			pane.add(fields[x][y],x,(fields.length-1)-y);
 			}
 		}
@@ -253,13 +252,9 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		for(int x = 0; x < GameMenu_Model.DIMENSION;x++){
 			towersP1[x][towersP1.length-1].setxPosition(x);
 			towersP1[x][towersP1.length-1].setyPosition(towersP1.length-1);
-			//towersP1[x][towersP1.length-1].setPlayerSign();
-			//towersP1[x][towersP1.length-1].setText("\u2160");
 			
 			towersP2[x][towersP2.length-towersP2.length].setxPosition(x);
-			towersP2[x][towersP2.length-towersP2.length].setyPosition(towersP2.length-towersP2.length);
-			//towersP2[x][towersP2.length-towersP2.length].setText("\u2161");
-			//towersP2[x][towersP2.length-towersP2.length].setPlayerSign();			
+			towersP2[x][towersP2.length-towersP2.length].setyPosition(towersP2.length-towersP2.length);	
 			
 			pane.add(towersP1[x][towersP1.length-1],x,towersP1.length-towersP1.length);
 			pane.add(towersP2[x][towersP2.length-towersP2.length],x,towersP2.length-1);

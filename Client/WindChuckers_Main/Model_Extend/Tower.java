@@ -19,7 +19,6 @@ public class Tower extends Button {
 	private int xPosition;
 	private int gems; 
 	private boolean sumoTower = false;
-	private boolean sumoHit = false;
 	
 	protected Tower (String color){
 		super();
@@ -223,7 +222,7 @@ public class Tower extends Button {
 			this.disableTowers(towersP1);
 			
 			// Down move
-			if (towersP2[this.getxPosition()][this.getyPosition()-1] != null && this.getyPosition()-2 > 0 && fields[this.getxPosition()][this.getyPosition()-2].isEmpty()) {
+			if (towersP2[this.getxPosition()][this.getyPosition()-1] != null && !towersP2[this.getxPosition()][this.getyPosition()-1].getSumoTower() && this.getyPosition()-2 > 0 && fields[this.getxPosition()][this.getyPosition()-2].isEmpty()) {
 				fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
 			}
 			
@@ -267,7 +266,7 @@ public class Tower extends Button {
 			this.disableTowers(towersP2);
 			
 			// Up move
-			if (towersP1[this.getxPosition()][this.getyPosition()+1] != null && this.getyPosition()+2 < fields.length && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
+			if (towersP1[this.getxPosition()][this.getyPosition()+1] != null && !towersP1[this.getxPosition()][this.getyPosition()+1].getSumoTower() && this.getyPosition()+2 < fields.length && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
 				fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
 			}
 			for(int i = 1; i<=5 ; i++){
@@ -322,7 +321,6 @@ public class Tower extends Button {
 	public void move(Field[][] fields, GridPane gameBoard, Tower[][] towersP1, Tower[][] towersP2, Field field, Player player1, Player player2) {
 		
 		if (!field.isEmpty()&&this.sumoTower){
-			this.setsumoHit(true);
 			this.sumoMove(fields, gameBoard, player1, player2, field, towersP1, towersP2);
 		}
 		
@@ -501,15 +499,13 @@ public class Tower extends Button {
 				for(int x = 0; x < 8; x++){
 					if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()-1].getColor())){
 						towers[x][y].setDisable(false);
-						this.setsumoHit(false);
 											
-			}}}}else if (this.getsumoHit() && this.playerNumber == 2){
+			}}}}else if (this.playerNumber == 2){
 						for(int x = 0; x < 8; x++){
 						for(int y = 0; y < 8; y++){
 							System.out.println(fields[field.getxPosition()][field.getyPosition()+1].getColor());
 							if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()+1].getColor())){
-								towers[x][y].setDisable(false);
-								this.setsumoHit(false);		
+								towers[x][y].setDisable(false);	
 				}}}} else {
 							for(int x = 0; x < 8; x++){
 							for(int y = 0; y < 8; y++){
@@ -634,26 +630,15 @@ public class Tower extends Button {
 		
 		if(this.gems == 0){
 			this.sumoTower = true;
-			this.setText("\u2163");
+			this.setText("\u2160");
 			this.gems++;
-		
 		}else if (this.gems == 1){
-			this.setText("\u2164");
+			this.setText("\u2161");
 			this.gems++;
 		}else if (this.gems == 2){
-			this.setText("\u2165");
+			this.setText("\u2162");
 			this.gems++;
-		}else if (this.gems == 3){
-			this.setText("\u2168");
-			this.gems++;
-		}else if (this.gems == 4){
-			this.setText("\u2169");
-			this.gems++;
-		}else if (this.gems == 5){
-				this.setText("\u216A");
-				
-		}
-	}
+	}}
 
 	/**
 	 * This method checks if the tower reach a winning position and upgrade the tower if yes
@@ -709,24 +694,14 @@ public class Tower extends Button {
 	public void setGems(int gems) {
 		this.gems = gems;
 	}
-
-	public boolean getsumoHit(){
-		return sumoHit;
+	
+	public void setSumoTower(boolean SumoTower){
+		this.sumoTower = SumoTower;
 	}
 	
-	public void setsumoHit(boolean sumoHit){
-		this.sumoHit = sumoHit;	
-	}
-	
-	public void setPlayerSign(){
-		if (this.getPlayerNumber() == 1){
-			this.setText("\u2160");
-	} else if(this.getPlayerNumber() == 2){
-		this.setText("\u2161");
-	}}
+	public boolean getSumoTower(){
+		return this.sumoTower;
 		
-	public String toString(){
-		String s = "X: "+this.getxPosition()+"\nY: "+this.getyPosition();
-		return "Tower Koordinaten:\n"+s; 
-	}
+}
+
 }
