@@ -222,15 +222,11 @@ public class Tower extends Button {
 		if(this.getPlayerNumber()==1 && this.getGems() == 1){
 			this.disableTowers(towersP1);
 			
-			System.out.println(+this.getxPosition()+ " " +this.yPosition);
-			if (!fields[this.getxPosition()][this.getyPosition()-1].isEmpty() && this.getyPosition()-2 > 0 && fields[this.getxPosition()][this.getyPosition()-2].isEmpty()){
-//				&& fields[this.getxPosition()][this.getyPosition()-1] != fields[this.getxPosition()][0]
-//				&& towersP2[this.getxPosition()][this.getyPosition()+1].getPlayerNumber() == 2
+			// Down move
+			if (towersP2[this.getxPosition()][this.getyPosition()-1] != null && this.getyPosition()-2 > 0 && fields[this.getxPosition()][this.getyPosition()-2].isEmpty()) {
 				fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
 			}
 			
-			
-			// Down move
 			for(int i = 1; i<=5 ; i++){
 				if(this.getyPosition()-i < 0){
 					break;
@@ -269,15 +265,11 @@ public class Tower extends Button {
 		if(this.getPlayerNumber()==2 && this.getGems() == 1){
 			// Disable Towers of Player2
 			this.disableTowers(towersP2);
-			System.out.println(+this.getxPosition()+ " " +this.yPosition);
-			System.out.println(fields.length);
-			System.out.println(this.getyPosition()+2);
 			
-			if (!fields[this.getxPosition()][this.getyPosition()+1].isEmpty() && this.getyPosition()+2 < fields.length && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
-//				&& fields[this.getxPosition()][this.getyPosition()+1] != fields[this.getxPosition()][7]
+			// Up move
+			if (towersP1[this.getxPosition()][this.getyPosition()+1] != null && this.getyPosition()+2 < fields.length && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
 				fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
 			}
-			// Up move
 			for(int i = 1; i<=5 ; i++){
 				if(this.getyPosition()+i > 7){
 					break;
