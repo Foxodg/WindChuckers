@@ -21,6 +21,7 @@ public class Tower extends Button {
 	private int xPosition;
 	private int gems; 
 	private boolean sumoTower = false;
+	private int saveSumoMove = 0;
 	
 	protected Tower (String color){
 		super();
@@ -579,7 +580,7 @@ public class Tower extends Button {
 	}
 
 	/**
-	 * This method will change the position of the tower on the GridPane
+	 * This method will change the position of the nomal towers on the GridPane
 	 * @param fields
 	 * @param gameBoard
 	 * @param towersP1
@@ -594,15 +595,12 @@ public class Tower extends Button {
 		int x = field.getxPosition();
 		int y = field.getyPosition();
 		
-		if(this.getGems() >= 3 && (!fields[x][y+2].isEmpty() || !fields[x][y-2].isEmpty())){
-			this.sumo3Move(fields, gameBoard, player1, player2, field, towersP1, towersP2);
-		}
-		
-		else if(this.getGems() >= 2 && (!fields[x][y+1].isEmpty() || !fields[x][y-2].isEmpty())){
+		 if (!field.isEmpty() && this.getGems() >= 2){
+			this.saveSumoMove = 2;
 			this.sumo2Move(fields, gameBoard, player1, player2, field, towersP1, towersP2);
 		}
-	
 		else if (!field.isEmpty() && this.getGems() >= 1){
+			this.saveSumoMove = 1;
 			this.sumo1Move(fields, gameBoard, player1, player2, field, towersP1, towersP2);
 			}
 		
@@ -661,18 +659,129 @@ public class Tower extends Button {
 
 		
 	}}
-	
+	/**
+	 * This method will change the position of the Sumo3 and the three hit tower on the GridPane
+	 * @param fields
+	 * @param gameBoard
+	 * @param towersP1
+	 * @param towersP2
+	 * @param field
+	 * @param player1
+	 * @param player2
+	 * @author lukas.k
+	 */
 	private void sumo3Move(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Field field,
 			Tower[][] towersP1, Tower[][] towersP2) {
 		// TODO Auto-generated method stub
 		
 	}
+	/**
+	 * This method will change the position of the Sumo2 and the two hit towers on the GridPane
+	 * @param fields
+	 * @param gameBoard
+	 * @param towersP1
+	 * @param towersP2
+	 * @param field
+	 * @param player1
+	 * @param player2
+	 * @author lukas.k
+	 */
+	private void sumo2Move(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Field field,Tower[][] towersP1, Tower[][] towersP2) {
+		System.out.println("bin 4");
+			int oldX = this.getxPosition();
+			int newX = field.getxPosition();
+			int oldY = this.getyPosition();
+			int newY = field.getyPosition();
+			
+			int newColumnGridPane = GridPane.getColumnIndex(field);
+			int newRowGridPane = GridPane.getRowIndex(field);
 
-	private void sumo2Move(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Field field,
-			Tower[][] towersP1, Tower[][] towersP2) {
-		// TODO Auto-generated method stub
-		
-	}
+			 
+				 if (this.playerNumber == 1){
+
+					 // The old field from the sumoTower is empty and the new field from the rearmost hit-tower is busy
+					fields[oldX][oldY].setEmpty(true);
+					fields[newX][newY-2].setEmpty(false);
+							
+					// The coordinates from the hit towers will be changed
+					towersP2[newX][newY].setxPosition(newX);
+					towersP2[newX][newY].setyPosition(newY-1);
+					
+					towersP2[newX][newY-1].setxPosition(newX);
+					towersP2[newX][newY-1].setyPosition(newY-2);
+					
+					// The coordinates of the sumoTower will be changed
+					this.setxPosition(newX);
+					this.setyPosition(newY);
+
+					// The Towers will be moved on the GridPane
+					GridPane.setColumnIndex(this, newColumnGridPane);
+					GridPane.setRowIndex(this, newRowGridPane);
+					GridPane.setColumnIndex(towersP2[newX][newY], newColumnGridPane);
+					GridPane.setRowIndex(towersP2[newX][newY], newRowGridPane+1);
+					GridPane.setColumnIndex(towersP2[newX][newY-1], newColumnGridPane);
+					GridPane.setRowIndex(towersP2[newX][newY-1], newRowGridPane+2);
+					
+					
+					// The towers will be set on the right position in the tower array
+					towersP1[newX][newY]=this;
+					towersP1[oldX][oldY]= null;
+					towersP2[newX][newY-2] = towersP2[newX][newY-1]; 
+					towersP2[newX][newY-1] = null;
+					towersP2[newX][newY-1] = towersP2[newX][newY]; 
+					towersP2[newX][newY] = null;
+					
+						
+						
+					} else if (this.playerNumber == 2){
+						
+						
+						// The old field from the sumoTower is empty and the new field from the rearmost hit-tower is busy
+						fields[oldX][oldY].setEmpty(true);
+						fields[newX][newY+2].setEmpty(false);
+								
+						// The coordinates from the hit towers will be changed
+						towersP1[newX][newY].setxPosition(newX);
+						towersP1[newX][newY].setyPosition(newY+1);
+						
+						towersP1[newX][newY+1].setxPosition(newX);
+						towersP1[newX][newY+1].setyPosition(newY+2);
+						
+						// The coordinates of the sumoTower will be changed
+						this.setxPosition(newX);
+						this.setyPosition(newY);
+
+						// The Towers will be moved on the GridPane
+						GridPane.setColumnIndex(towersP1[newX][newY], newColumnGridPane);
+						GridPane.setRowIndex(towersP1[newX][newY], newRowGridPane-1);
+						GridPane.setColumnIndex(towersP1[newX][newY+1], newColumnGridPane);
+						GridPane.setRowIndex(towersP1[newX][newY+1], newRowGridPane-2);
+						GridPane.setColumnIndex(this, newColumnGridPane);
+						GridPane.setRowIndex(this, newRowGridPane);
+						
+						
+						// The towers will be set on the right position in the tower array
+						towersP2[newX][newY]=this;
+						towersP2[oldX][oldY]= null;
+						towersP1[newX][newY+2] = towersP1[newX][newY+1];
+						towersP1[newX][newY+1] = null;
+						towersP1[newX][newY+1] = towersP1[newX][newY];
+						towersP1[newX][newY] = null;
+							 
+					}
+					
+					
+					// The turn is finished, disable all fields
+					Field.disableFields(fields);
+					
+					// We check if a tower reached the last row
+					this.checkWin(fields, player1, player2, this, towersP1, towersP2);
+					
+					// Towers of other player will be enabled
+					if(model.Winner.get() == 0){
+					this.notChangeTurnSumo(fields, player1, player2, towersP1, towersP2, field);
+				}}
+
 	/**
 	 * This method will change the position of the Sumo and Hit Tower on the GridPane
 	 * @param fields
@@ -769,7 +878,6 @@ public class Tower extends Button {
 			}}
 
 
-
 	
 	/**
 	 * This method will activate the own towers after a sumoHit and NOT change the turn
@@ -781,22 +889,85 @@ public class Tower extends Button {
 	 * @author lukas
 	 */
 	private void notChangeTurnSumo(Field[][] fields, Player player1, Player player2, Tower[][] towersP1, Tower[][] towersP2, Field field) {
-	
-		if(player1.isOnTurn()){;
+
+		
+		if (this.saveSumoMove == 1){
+		if(player1.isOnTurn()){
 			player2.setOnTurn(false);
 			player1.setOnTurn(true);
 			this.disableTowers(towersP2);
-			this.enableTowersAfterSumoMove(fields, towersP1, field);
+			this.enableTowersAfterSumo1Move(fields, towersP1, field);
 		} else{
 			player2.setOnTurn(true);
 			player1.setOnTurn(false);
-			this.enableTowersAfterSumoMove(fields, towersP2, field);
+			this.enableTowersAfterSumo1Move(fields, towersP2, field);
 			this.disableTowers(towersP1);
+		}}
+		
+		else if (this.saveSumoMove ==2) {
+			if(player1.isOnTurn()){
+			player2.setOnTurn(false);
+			player1.setOnTurn(true);
+			this.disableTowers(towersP2);
+			this.enableTowersAfterSumo2Move(fields, towersP1, field);
+		} else{
+			player2.setOnTurn(true);
+			player1.setOnTurn(false);
+			this.enableTowersAfterSumo2Move(fields, towersP2, field);
+			this.disableTowers(towersP1);
+		}}
+		
+		else if (this.saveSumoMove == 3) {
+			if(player1.isOnTurn()){
+			player2.setOnTurn(false);
+			player1.setOnTurn(true);
+			this.disableTowers(towersP2);
+			this.enableTowersAfterSumo3Move(fields, towersP1, field);
+		}else{
+			player2.setOnTurn(true);
+			player1.setOnTurn(false);
+			this.enableTowersAfterSumo3Move(fields, towersP2, field);
+			this.disableTowers(towersP1);
+		}		
 		}
+		this.saveSumoMove = 0;
 	}
 	
-	private void enableTowersAfterSumoMove(Field[][] fields, Tower[][] towers, Field field) {
-			if(this.playerNumber == 1){
+	private void enableTowersAfterSumo3Move(Field[][] fields, Tower[][] towers, Field field) {
+		
+		if(this.playerNumber == 1){
+			for(int y = 0; y < 8; y++){
+			for(int x = 0; x < 8; x++){
+				if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()-3].getColor())){
+					towers[x][y].setDisable(false);
+										
+		}}}}else if (this.playerNumber == 2){
+					for(int x = 0; x < 8; x++){
+					for(int y = 0; y < 8; y++){
+						System.out.println(fields[field.getxPosition()][field.getyPosition()+1].getColor());
+						if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()+3].getColor())){
+							towers[x][y].setDisable(false);	
+			}}}}
+		}
+	private void enableTowersAfterSumo2Move(Field[][] fields, Tower[][] towers, Field field) {
+		if(this.playerNumber == 1){
+			for(int y = 0; y < 8; y++){
+			for(int x = 0; x < 8; x++){
+				if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()-2].getColor())){
+					towers[x][y].setDisable(false);
+										
+		}}}}else if (this.playerNumber == 2){
+					for(int x = 0; x < 8; x++){
+					for(int y = 0; y < 8; y++){
+						System.out.println(fields[field.getxPosition()][field.getyPosition()+1].getColor());
+						if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()+2].getColor())){
+							towers[x][y].setDisable(false);	
+			}}}}
+		}
+
+	private void enableTowersAfterSumo1Move(Field[][] fields, Tower[][] towers, Field field) {
+			System.out.println("bin hier");
+		if(this.playerNumber == 1){
 				for(int y = 0; y < 8; y++){
 				for(int x = 0; x < 8; x++){
 					if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()-1].getColor())){
@@ -808,11 +979,6 @@ public class Tower extends Button {
 							System.out.println(fields[field.getxPosition()][field.getyPosition()+1].getColor());
 							if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()+1].getColor())){
 								towers[x][y].setDisable(false);	
-				}}}} else {
-							for(int x = 0; x < 8; x++){
-							for(int y = 0; y < 8; y++){
-								if(towers[x][y]!=null && towers[x][y].getColor().equals(field.getColor())){
-									towers[x][y].setDisable(false);
 				}}}}
 			}
 	
