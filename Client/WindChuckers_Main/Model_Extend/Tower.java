@@ -272,7 +272,22 @@ public class Tower extends Button {
 	 */
 	private void showSumoMove(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {
 		
-		if(this.getPlayerNumber()==1 && this.getGems() == 1){
+		if (gems == 1){
+		showSumo1Move(fields, gridPane, towersP1, towersP2);
+		} 
+		
+		if (gems == 2){
+			showSumo2Move(fields, gridPane, towersP1, towersP2);	
+		}
+	
+		if (gems == 3){
+			showSumo3Move(fields, gridPane, towersP1, towersP2);
+	}}
+	
+	private void showSumo1Move(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {
+		
+		if(this.getPlayerNumber()==1){
+			
 			this.disableTowers(towersP1);
 			
 			// Down move
@@ -315,7 +330,7 @@ public class Tower extends Button {
 							}	}	}
 		
 		
-		if(this.getPlayerNumber()==2 && this.getGems() == 1){
+		if(this.getPlayerNumber()==2){
 			// Disable Towers of Player2
 			this.disableTowers(towersP2);
 			
@@ -358,9 +373,185 @@ public class Tower extends Button {
 						}
 				}
 		
-		
 	}
-	
+	private void showSumo2Move(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {
+		
+		if(this.getPlayerNumber()==1){
+			
+			this.disableTowers(towersP1);
+			
+			// Down move
+			if (towersP2[this.getxPosition()][this.getyPosition()-1] != null && !towersP2[this.getxPosition()][this.getyPosition()-1].getSumoTower() && this.getyPosition()-2 > 0 && fields[this.getxPosition()][this.getyPosition()-2].isEmpty()) {
+				fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
+			}
+			
+			for(int i = 1; i<=3 ; i++){
+				if(this.getyPosition()-i < 0){
+					break;
+				} else if(fields[this.getxPosition()][this.getyPosition()-i].isEmpty()){
+					fields[this.getxPosition()][this.getyPosition()-i].setDisable(false);
+					} if(!fields[this.getxPosition()][this.getyPosition()-i].isEmpty()){
+						break;
+						}
+					
+				}
+			
+			// Diagonal move bottom right
+			outerloop:
+			for(int i = 1; i<=3; i++){
+				if((this.getxPosition()+i>7) || (this.getyPosition()-i < 0)){
+					break outerloop;
+				} else if (fields[this.getxPosition()+i][this.getyPosition()-i].isEmpty()){
+						fields[this.getxPosition()+i][this.getyPosition()-i].setDisable(false);
+						} if(!fields[this.getxPosition()+i][this.getyPosition()-i].isEmpty()){
+							break outerloop;
+						}
+					}
+				
+			// Diagonal move bottom left
+			outerloop:
+				for(int i = 1; i<=3; i++){
+					if((this.getxPosition()-i<0) || (this.getyPosition()-i<0)){
+						break outerloop;
+					} else if (fields[this.getxPosition()-i][this.getyPosition()-i].isEmpty()){
+							fields[this.getxPosition()-i][this.getyPosition()-i].setDisable(false);
+							} if(!fields[this.getxPosition()-i][this.getyPosition()-i].isEmpty()){
+								break outerloop;
+							}	}	}
+		
+		
+		if(this.getPlayerNumber()==2){
+			// Disable Towers of Player2
+			this.disableTowers(towersP2);
+			
+			// Up move
+			if (towersP1[this.getxPosition()][this.getyPosition()+1] != null && !towersP1[this.getxPosition()][this.getyPosition()+1].getSumoTower() && this.getyPosition()+2 < fields.length && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
+				fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
+			}
+			for(int i = 1; i<=3 ; i++){
+				if(this.getyPosition()+i > 7){
+					break;
+				} else if(fields[this.getxPosition()][this.getyPosition()+i].isEmpty()){
+					fields[this.getxPosition()][this.getyPosition()+i].setDisable(false);
+					} if(!fields[this.getxPosition()][this.getyPosition()+i].isEmpty()){
+						break;
+					}
+				}
+			
+			// Diagonal move top right
+			outerloop:
+			for(int i = 1; i<=3; i++){
+				if((this.getxPosition()+i>7) || (this.getyPosition()+i > 7)){
+					break outerloop;
+				} else if (fields[this.getxPosition()+i][this.getyPosition()+i].isEmpty()){
+						fields[this.getxPosition()+i][this.getyPosition()+i].setDisable(false);
+						} if(!fields[this.getxPosition()+i][this.getyPosition()+i].isEmpty()){
+							break outerloop;
+						}
+					}
+				
+			// Diagonal move top left
+			outerloop:
+				for(int i = 1; i<=3; i++){
+					if((this.getxPosition()-i<0) || (this.getyPosition()+i>7)){
+						break outerloop;
+					} else if (fields[this.getxPosition()-i][this.getyPosition()+i].isEmpty()){
+							fields[this.getxPosition()-i][this.getyPosition()+i].setDisable(false);
+							} if(!fields[this.getxPosition()-i][this.getyPosition()+i].isEmpty()){
+								break outerloop;
+							}
+						}
+				}
+	}
+	private void showSumo3Move(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {	
+		if(this.getPlayerNumber()==1){
+			
+			this.disableTowers(towersP1);
+			
+			// Down move
+			if (towersP2[this.getxPosition()][this.getyPosition()-1] != null && !towersP2[this.getxPosition()][this.getyPosition()-1].getSumoTower() && this.getyPosition()-2 > 0 && fields[this.getxPosition()][this.getyPosition()-2].isEmpty()) {
+				fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
+			}
+			
+			for(int i = 1; i<=1 ; i++){
+				if(this.getyPosition()-i < 0){
+					break;
+				} else if(fields[this.getxPosition()][this.getyPosition()-i].isEmpty()){
+					fields[this.getxPosition()][this.getyPosition()-i].setDisable(false);
+					} if(!fields[this.getxPosition()][this.getyPosition()-i].isEmpty()){
+						break;
+						}
+					
+				}
+			
+			// Diagonal move bottom right
+			outerloop:
+			for(int i = 1; i<=1; i++){
+				if((this.getxPosition()+i>7) || (this.getyPosition()-i < 0)){
+					break outerloop;
+				} else if (fields[this.getxPosition()+i][this.getyPosition()-i].isEmpty()){
+						fields[this.getxPosition()+i][this.getyPosition()-i].setDisable(false);
+						} if(!fields[this.getxPosition()+i][this.getyPosition()-i].isEmpty()){
+							break outerloop;
+						}
+					}
+				
+			// Diagonal move bottom left
+			outerloop:
+				for(int i = 1; i<=1; i++){
+					if((this.getxPosition()-i<0) || (this.getyPosition()-i<0)){
+						break outerloop;
+					} else if (fields[this.getxPosition()-i][this.getyPosition()-i].isEmpty()){
+							fields[this.getxPosition()-i][this.getyPosition()-i].setDisable(false);
+							} if(!fields[this.getxPosition()-i][this.getyPosition()-i].isEmpty()){
+								break outerloop;
+							}	}	}
+		
+		
+		if(this.getPlayerNumber()==2){
+			// Disable Towers of Player2
+			this.disableTowers(towersP2);
+			
+			// Up move
+			if (towersP1[this.getxPosition()][this.getyPosition()+1] != null && !towersP1[this.getxPosition()][this.getyPosition()+1].getSumoTower() && this.getyPosition()+2 < fields.length && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
+				fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
+			}
+			for(int i = 1; i<=1 ; i++){
+				if(this.getyPosition()+i > 7){
+					break;
+				} else if(fields[this.getxPosition()][this.getyPosition()+i].isEmpty()){
+					fields[this.getxPosition()][this.getyPosition()+i].setDisable(false);
+					} if(!fields[this.getxPosition()][this.getyPosition()+i].isEmpty()){
+						break;
+					}
+				}
+			
+			// Diagonal move top right
+			outerloop:
+			for(int i = 1; i<=1; i++){
+				if((this.getxPosition()+i>7) || (this.getyPosition()+i > 7)){
+					break outerloop;
+				} else if (fields[this.getxPosition()+i][this.getyPosition()+i].isEmpty()){
+						fields[this.getxPosition()+i][this.getyPosition()+i].setDisable(false);
+						} if(!fields[this.getxPosition()+i][this.getyPosition()+i].isEmpty()){
+							break outerloop;
+						}
+					}
+				
+			// Diagonal move top left
+			outerloop:
+				for(int i = 1; i<=1; i++){
+					if((this.getxPosition()-i<0) || (this.getyPosition()+i>7)){
+						break outerloop;
+					} else if (fields[this.getxPosition()-i][this.getyPosition()+i].isEmpty()){
+							fields[this.getxPosition()-i][this.getyPosition()+i].setDisable(false);
+							} if(!fields[this.getxPosition()-i][this.getyPosition()+i].isEmpty()){
+								break outerloop;
+							}
+						}
+				}
+	}
+
 	/**
 	 * This method will change the position of the tower on the GridPane
 	 * @param fields
