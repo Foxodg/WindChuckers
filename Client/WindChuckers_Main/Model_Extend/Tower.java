@@ -262,7 +262,6 @@ public class Tower extends Button {
 	}
 }
 
-
 	/**
 	 * This method will show the possible Sumo Moves and enable all possible fields
 	 * @param fields
@@ -425,9 +424,13 @@ public class Tower extends Button {
 		
 		// We check if a tower reached the last row
 		this.checkWin(fields, player1, player2, this, towersP1, towersP2);
-
+		
 		// Towers of other player will be enabled
+		if(model.Winner.get() == 0){
 		this.changeTurn(fields, player1, player2, towersP1, towersP2, field);
+		}
+
+		
 	}}
 	
 	/**
@@ -519,10 +522,11 @@ public class Tower extends Button {
 				
 				// We check if a tower reached the last row
 				this.checkWin(fields, player1, player2, this, towersP1, towersP2);
-
+				
 				// Towers of other player will be enabled
+				if(model.Winner.get() == 0){
 				this.notChangeTurnSumo(fields, player1, player2, towersP1, towersP2, field);
-			}
+			}}
 	
 	/**
 	 * This method will activate the own towers after a sumoHit and NOT change the turn
@@ -703,10 +707,13 @@ public class Tower extends Button {
 	private void checkWin(Field[][] fields, Player player1, Player player2, Tower tower, Tower[][] towersP1, Tower[][] towersP2) {
 			if (player1.isOnTurn()&& yPosition == 0){
 			this.upgradeTower(fields, tower, this.getxPosition(), this.getyPosition(), this.getGems(), towersP1, towersP2);
+			this.setDisable(false);
 			GameMenu_Model.Winner.set(1);
 			} else if(player2.isOnTurn()&& yPosition == 7){
 			this.upgradeTower(fields, tower, this.xPosition, this.yPosition, gems, towersP1, towersP2);
+			this.setDisable(false);
 			GameMenu_Model.Winner.set(2);
+			
 			}
 		}
 

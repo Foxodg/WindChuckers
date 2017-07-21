@@ -657,10 +657,9 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 									view.fields[x][y].setEmpty(true);
 									}
 						}
-					
 					}
 				
-				
+
 				// Towers will be reset on a startposition (right or left)
 				for(int x = 0; x < GameMenu_Model.DIMENSION;x++){
 					towersP1Temp[x][7].setxPosition(x);
