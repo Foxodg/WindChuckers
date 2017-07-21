@@ -282,8 +282,7 @@ public class Tower extends Button {
 	
 		if (gems == 3){
 			showSumo3Move(fields, gridPane, towersP1, towersP2);
-	}}
-	
+	}}	
 	private void showSumo1Move(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {
 		
 		if(this.getPlayerNumber()==1){
@@ -380,11 +379,24 @@ public class Tower extends Button {
 			
 			this.disableTowers(towersP1);
 			
-			// Down move
-			if (towersP2[this.getxPosition()][this.getyPosition()-1] != null && !towersP2[this.getxPosition()][this.getyPosition()-1].getSumoTower() && this.getyPosition()-2 > 0 && fields[this.getxPosition()][this.getyPosition()-2].isEmpty()) {
+			// Check if the sumo hit is possible
+			if (towersP2[this.getxPosition()][this.getyPosition()-1] != null && towersP2[this.getxPosition()][this.getyPosition()-1].getGems() < 1 && this.getyPosition()-2 > 0 && fields[this.getxPosition()][this.getyPosition()-2].isEmpty()) {
 				fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
-			}
+				}
 			
+			
+			// check if the double sumo hit is possible
+			// check if fields have towers from P2 and movement isn't out of range
+			if (this.getyPosition()-3 > 0 && towersP2[this.getxPosition()][this.getyPosition()-1] !=null && towersP2[this.getxPosition()][this.getyPosition()-2] !=null){
+				// check if there is no double sumo in the way
+				if (towersP2[this.getxPosition()][this.getyPosition()-1].getGems() < 2 && towersP2[this.getxPosition()][this.getyPosition()-2].getGems() < 2){
+					// checks if the 3 field is empty
+					if(fields[this.getxPosition()][this.getyPosition()-3].isEmpty()){
+				fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
+			}}}
+			
+			
+			// Normal down Move
 			for(int i = 1; i<=3 ; i++){
 				if(this.getyPosition()-i < 0){
 					break;
@@ -420,14 +432,28 @@ public class Tower extends Button {
 							}	}	}
 		
 		
+		
 		if(this.getPlayerNumber()==2){
 			// Disable Towers of Player2
 			this.disableTowers(towersP2);
 			
 			// Up move
-			if (towersP1[this.getxPosition()][this.getyPosition()+1] != null && !towersP1[this.getxPosition()][this.getyPosition()+1].getSumoTower() && this.getyPosition()+2 < fields.length && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
+			if (towersP1[this.getxPosition()][this.getyPosition()+1] != null && towersP1[this.getxPosition()][this.getyPosition()+1].getGems() < 1 && this.getyPosition()+2 < fields.length && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
 				fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
 			}
+			
+			// check if the double sumo hit is possible
+			// check if fields have towers from P1 and movement isn't out of range
+			if (this.getyPosition()+3 > 0 && towersP1[this.getxPosition()][this.getyPosition()+1] !=null && towersP1[this.getxPosition()][this.getyPosition()+2] !=null){
+				// check if there is no double sumo in the way
+				if (towersP1[this.getxPosition()][this.getyPosition()+1].getGems() < 2 && towersP1[this.getxPosition()][this.getyPosition()+2].getGems() < 2){
+					// checks if the 3 field is empty
+					if(fields[this.getxPosition()][this.getyPosition()+3].isEmpty()){
+				fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
+			}}}
+			
+			
+			// Normal up move
 			for(int i = 1; i<=3 ; i++){
 				if(this.getyPosition()+i > 7){
 					break;
@@ -565,9 +591,21 @@ public class Tower extends Button {
 	 */
 	public void move(Field[][] fields, GridPane gameBoard, Tower[][] towersP1, Tower[][] towersP2, Field field, Player player1, Player player2) {
 		
-		if (!field.isEmpty()&&this.sumoTower){
-			this.sumoMove(fields, gameBoard, player1, player2, field, towersP1, towersP2);
+		int x = field.getxPosition();
+		int y = field.getyPosition();
+		
+		if(this.getGems() >= 3 && (!fields[x][y+2].isEmpty() || !fields[x][y-2].isEmpty())){
+			this.sumo3Move(fields, gameBoard, player1, player2, field, towersP1, towersP2);
 		}
+		
+		else if(this.getGems() >= 2 && (!fields[x][y+1].isEmpty() || !fields[x][y-2].isEmpty())){
+			this.sumo2Move(fields, gameBoard, player1, player2, field, towersP1, towersP2);
+		}
+	
+		else if (!field.isEmpty() && this.getGems() >= 1){
+			this.sumo1Move(fields, gameBoard, player1, player2, field, towersP1, towersP2);
+			}
+		
 		
 		else{
 		int oldX = this.getxPosition();
@@ -624,6 +662,17 @@ public class Tower extends Button {
 		
 	}}
 	
+	private void sumo3Move(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Field field,
+			Tower[][] towersP1, Tower[][] towersP2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void sumo2Move(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Field field,
+			Tower[][] towersP1, Tower[][] towersP2) {
+		// TODO Auto-generated method stub
+		
+	}
 	/**
 	 * This method will change the position of the Sumo and Hit Tower on the GridPane
 	 * @param fields
@@ -635,8 +684,8 @@ public class Tower extends Button {
 	 * @param player2
 	 * @author lukas.k
 	 */
-	private void sumoMove(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Field field, Tower[][] towersP1, Tower[][] towersP2) {
-		
+	private void sumo1Move(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Field field,
+		Tower[][] towersP1, Tower[][] towersP2) {
 		int oldX = this.getxPosition();
 		int newX = field.getxPosition();
 		int oldY = this.getyPosition();
@@ -718,6 +767,9 @@ public class Tower extends Button {
 				if(model.Winner.get() == 0){
 				this.notChangeTurnSumo(fields, player1, player2, towersP1, towersP2, field);
 			}}
+
+
+
 	
 	/**
 	 * This method will activate the own towers after a sumoHit and NOT change the turn
