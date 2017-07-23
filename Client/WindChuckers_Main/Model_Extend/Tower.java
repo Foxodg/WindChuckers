@@ -756,92 +756,33 @@ public class Tower extends Button {
 	 */
 	private void notChangeTurnSumo(Field[][] fields, Player player1, Player player2, Tower[][] towersP1, Tower[][] towersP2, Field field) {
 
-		
-		if (this.saveSumoMove == 1){
 		if(player1.isOnTurn()){
 			player2.setOnTurn(false);
 			player1.setOnTurn(true);
 			this.disableTowers(towersP2);
-			this.enableTowersAfterSumo1Move(fields, towersP1, field);
+			this.enableTowersAfterSumoMove(fields, towersP1, field);
 		} else{
 			player2.setOnTurn(true);
 			player1.setOnTurn(false);
-			this.enableTowersAfterSumo1Move(fields, towersP2, field);
+			this.enableTowersAfterSumoMove(fields, towersP2, field);
 			this.disableTowers(towersP1);
-		}}
-		
-		else if (this.saveSumoMove ==2) {
-			if(player1.isOnTurn()){
-			player2.setOnTurn(false);
-			player1.setOnTurn(true);
-			this.disableTowers(towersP2);
-			this.enableTowersAfterSumo2Move(fields, towersP1, field);
-		} else{
-			player2.setOnTurn(true);
-			player1.setOnTurn(false);
-			this.enableTowersAfterSumo2Move(fields, towersP2, field);
-			this.disableTowers(towersP1);
-		}}
-		
-		else if (this.saveSumoMove == 3) {
-			if(player1.isOnTurn()){
-			player2.setOnTurn(false);
-			player1.setOnTurn(true);
-			this.disableTowers(towersP2);
-			this.enableTowersAfterSumo3Move(fields, towersP1, field);
-		}else{
-			player2.setOnTurn(true);
-			player1.setOnTurn(false);
-			this.enableTowersAfterSumo3Move(fields, towersP2, field);
-			this.disableTowers(towersP1);
-		}		
 		}
-		this.saveSumoMove = 0;
 	}
 	
-	private void enableTowersAfterSumo3Move(Field[][] fields, Tower[][] towers, Field field) {
-		
-		if(this.playerNumber == 1){
-			for(int y = 0; y < 8; y++){
-			for(int x = 0; x < 8; x++){
-				if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()-3].getColor())){
-					towers[x][y].setDisable(false);
-										
-		}}}}else if (this.playerNumber == 2){
-					for(int x = 0; x < 8; x++){
-					for(int y = 0; y < 8; y++){
-						if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()+3].getColor())){
-							towers[x][y].setDisable(false);	
-			}}}}
-		}
-	private void enableTowersAfterSumo2Move(Field[][] fields, Tower[][] towers, Field field) {
-		if(this.playerNumber == 1){
-			for(int y = 0; y < 8; y++){
-			for(int x = 0; x < 8; x++){
-				if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()-2].getColor())){
-					towers[x][y].setDisable(false);
-										
-		}}}}else if (this.playerNumber == 2){
-					for(int x = 0; x < 8; x++){
-					for(int y = 0; y < 8; y++){
-						if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()+2].getColor())){
-							towers[x][y].setDisable(false);	
-			}}}}
-		}
-
-	private void enableTowersAfterSumo1Move(Field[][] fields, Tower[][] towers, Field field) {
+	private void enableTowersAfterSumoMove(Field[][] fields, Tower[][] towers, Field field) {
 		if(this.playerNumber == 1){
 				for(int y = 0; y < 8; y++){
 				for(int x = 0; x < 8; x++){
-					if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()-1].getColor())){
+					if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()- this.saveSumoMove].getColor())){
 						towers[x][y].setDisable(false);
 											
 			}}}}else if (this.playerNumber == 2){
 						for(int x = 0; x < 8; x++){
 						for(int y = 0; y < 8; y++){
-							if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()+1].getColor())){
+							if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()+ this.saveSumoMove].getColor())){
 								towers[x][y].setDisable(false);	
 				}}}}
+			this.saveSumoMove = 0;
 			}
 	
 	/**
