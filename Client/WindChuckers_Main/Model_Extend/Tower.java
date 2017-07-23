@@ -760,16 +760,22 @@ public class Tower extends Button {
 			player2.setOnTurn(false);
 			player1.setOnTurn(true);
 			this.disableTowers(towersP2);
-			this.enableTowersAfterSumoMove(fields, towersP1, field);
+			this.enableTowerAfterSumoMove(fields, towersP1, field);
 		} else{
 			player2.setOnTurn(true);
 			player1.setOnTurn(false);
-			this.enableTowersAfterSumoMove(fields, towersP2, field);
+			this.enableTowerAfterSumoMove(fields, towersP2, field);
 			this.disableTowers(towersP1);
 		}
 	}
-	
-	private void enableTowersAfterSumoMove(Field[][] fields, Tower[][] towers, Field field) {
+	/**
+	 *  This method will enable the own tower with the right color after a SumHit 
+	 * @param fields
+	 * @param towers
+	 * @param field
+	 * @author lukas
+	 */
+	private void enableTowerAfterSumoMove(Field[][] fields, Tower[][] towers, Field field) {
 		if(this.playerNumber == 1){
 				for(int y = 0; y < 8; y++){
 				for(int x = 0; x < 8; x++){
