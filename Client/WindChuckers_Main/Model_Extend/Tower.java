@@ -116,102 +116,7 @@ public class Tower extends Button {
 		return brownTower;
 	}
 
-	/**
-	 * This method will show all possible moves and enable all possible fields
-	 * @param fields
-	 * @param gridPane
-	 * @param towersP1
-	 * @param towersP2
-	 * @author robin
-	 */
-	public void showMoves(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {
-		if (this.sumoTower){
-			showSumoMove(fields, gridPane, towersP1, towersP2);
-		} else{
-		
-		if(model.getPlayer1().isOnTurn()){
-			//disable towers P1
-			Tower.disableTowers(towersP1);
-				
-				// Down move
-				for(int i = 1; i<=7 ; i++){
-					if(this.getyPosition()-i < 0){
-						break;
-					} else if(fields[this.getxPosition()][this.getyPosition()-i].isEmpty()){
-						fields[this.getxPosition()][this.getyPosition()-i].setDisable(false);
-						} if(!fields[this.getxPosition()][this.getyPosition()-i].isEmpty()){
-							break;
-							}
-					}
-				
-				// Diagonal move bottom right
-				outerloop:
-				for(int i = 1; i<=7; i++){
-					if((this.getxPosition()+i>7) || (this.getyPosition()-i < 0)){
-						break outerloop;
-					} else if (fields[this.getxPosition()+i][this.getyPosition()-i].isEmpty()){
-							fields[this.getxPosition()+i][this.getyPosition()-i].setDisable(false);
-							} if(!fields[this.getxPosition()+i][this.getyPosition()-i].isEmpty()){
-								break outerloop;
-							}
-						}
-					
-				// Diagonal move bottom left
-				outerloop:
-					for(int i = 1; i<=7; i++){
-						if((this.getxPosition()-i<0) || (this.getyPosition()-i<0)){
-							break outerloop;
-						} else if (fields[this.getxPosition()-i][this.getyPosition()-i].isEmpty()){
-								fields[this.getxPosition()-i][this.getyPosition()-i].setDisable(false);
-								} if(!fields[this.getxPosition()-i][this.getyPosition()-i].isEmpty()){
-									break outerloop;
-								}
-							}	
-				}
 
-		if(model.getPlayer2().isOnTurn()){
-			// Disable Towers of Player2
-			Tower.disableTowers(towersP2);
-
-			// Up move
-			for(int i = 1; i<=7 ; i++){
-				if(this.getyPosition()+i > 7){
-					break;
-				} else if(fields[this.getxPosition()][this.getyPosition()+i].isEmpty()){
-					fields[this.getxPosition()][this.getyPosition()+i].setDisable(false);
-					} if(!fields[this.getxPosition()][this.getyPosition()+i].isEmpty()){
-						break;
-					}
-				}
-			
-			// Diagonal move top right
-			outerloop:
-			for(int i = 1; i<=7; i++){
-				if((this.getxPosition()+i>7) || (this.getyPosition()+i > 7)){
-					break outerloop;
-				} else if (fields[this.getxPosition()+i][this.getyPosition()+i].isEmpty()){
-						fields[this.getxPosition()+i][this.getyPosition()+i].setDisable(false);
-						} if(!fields[this.getxPosition()+i][this.getyPosition()+i].isEmpty()){
-							break outerloop;
-						}
-					}
-				
-			// Diagonal move top left
-			outerloop:
-				for(int i = 1; i<=7; i++){
-					if((this.getxPosition()-i<0) || (this.getyPosition()+i>7)){
-						break outerloop;
-					} else if (fields[this.getxPosition()-i][this.getyPosition()+i].isEmpty()){
-							fields[this.getxPosition()-i][this.getyPosition()+i].setDisable(false);
-							} if(!fields[this.getxPosition()-i][this.getyPosition()+i].isEmpty()){
-								break outerloop;
-							}
-						}
-				
-				}
-		}
-		this.checkPat(fields, towersP1, towersP2);
-	}
 
 	/**
 	 * This method checks if a pat situation is existing. If there are two pat situations in a row, the player who caused the first pat looses the round
@@ -271,237 +176,35 @@ public class Tower extends Button {
 	 * @param towersP2
 	 * @author lukas.k
 	 */
-	private void showSumoMove(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {
+	public void showMoves(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {
 		
+		int anzahlFelder = 7;
+		
+		if(this.sumoTower) {
 		if (gems == 1){
-		showSumo1Move(fields, gridPane, towersP1, towersP2);
+			anzahlFelder = 5;
 		} 
 		
 		if (gems == 2){
-			showSumo2Move(fields, gridPane, towersP1, towersP2);	
+			anzahlFelder = 3;
 		}
 	
 		if (gems == 3){
-			showSumo3Move(fields, gridPane, towersP1, towersP2);
-	}}	
-	private void showSumo1Move(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {
+			anzahlFelder = 1;
+	}}
+		
 		
 		if(this.getPlayerNumber()==1){
 			
 			this.disableTowers(towersP1);
 			
-			// Down move
-			if (towersP2[this.getxPosition()][this.getyPosition()-1] != null && !towersP2[this.getxPosition()][this.getyPosition()-1].getSumoTower() && this.getyPosition()-2 > 0 && fields[this.getxPosition()][this.getyPosition()-2].isEmpty()) {
-				fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
-			}
-			
-			for(int i = 1; i<=5 ; i++){
-				if(this.getyPosition()-i < 0){
-					break;
-				} else if(fields[this.getxPosition()][this.getyPosition()-i].isEmpty()){
-					fields[this.getxPosition()][this.getyPosition()-i].setDisable(false);
-					} if(!fields[this.getxPosition()][this.getyPosition()-i].isEmpty()){
-						break;
-						}
-					
-				}
-			
-			// Diagonal move bottom right
-			outerloop:
-			for(int i = 1; i<=5; i++){
-				if((this.getxPosition()+i>7) || (this.getyPosition()-i < 0)){
-					break outerloop;
-				} else if (fields[this.getxPosition()+i][this.getyPosition()-i].isEmpty()){
-						fields[this.getxPosition()+i][this.getyPosition()-i].setDisable(false);
-						} if(!fields[this.getxPosition()+i][this.getyPosition()-i].isEmpty()){
-							break outerloop;
-						}
-					}
-				
-			// Diagonal move bottom left
-			outerloop:
-				for(int i = 1; i<=5; i++){
-					if((this.getxPosition()-i<0) || (this.getyPosition()-i<0)){
-						break outerloop;
-					} else if (fields[this.getxPosition()-i][this.getyPosition()-i].isEmpty()){
-							fields[this.getxPosition()-i][this.getyPosition()-i].setDisable(false);
-							} if(!fields[this.getxPosition()-i][this.getyPosition()-i].isEmpty()){
-								break outerloop;
-							}	}	}
-		
-		
-		if(this.getPlayerNumber()==2){
-			// Disable Towers of Player2
-			this.disableTowers(towersP2);
-			
-			// Up move
-			if (towersP1[this.getxPosition()][this.getyPosition()+1] != null && !towersP1[this.getxPosition()][this.getyPosition()+1].getSumoTower() && this.getyPosition()+2 < fields.length && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
-				fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
-			}
-			for(int i = 1; i<=5 ; i++){
-				if(this.getyPosition()+i > 7){
-					break;
-				} else if(fields[this.getxPosition()][this.getyPosition()+i].isEmpty()){
-					fields[this.getxPosition()][this.getyPosition()+i].setDisable(false);
-					} if(!fields[this.getxPosition()][this.getyPosition()+i].isEmpty()){
-						break;
-					}
-				}
-			
-			// Diagonal move top right
-			outerloop:
-			for(int i = 1; i<=5; i++){
-				if((this.getxPosition()+i>7) || (this.getyPosition()+i > 7)){
-					break outerloop;
-				} else if (fields[this.getxPosition()+i][this.getyPosition()+i].isEmpty()){
-						fields[this.getxPosition()+i][this.getyPosition()+i].setDisable(false);
-						} if(!fields[this.getxPosition()+i][this.getyPosition()+i].isEmpty()){
-							break outerloop;
-						}
-					}
-				
-			// Diagonal move top left
-			outerloop:
-				for(int i = 1; i<=5; i++){
-					if((this.getxPosition()-i<0) || (this.getyPosition()+i>7)){
-						break outerloop;
-					} else if (fields[this.getxPosition()-i][this.getyPosition()+i].isEmpty()){
-							fields[this.getxPosition()-i][this.getyPosition()+i].setDisable(false);
-							} if(!fields[this.getxPosition()-i][this.getyPosition()+i].isEmpty()){
-								break outerloop;
-							}
-						}
-				}
-		
-	}
-	private void showSumo2Move(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {
-		
-		if(this.getPlayerNumber()==1){
-			
-			this.disableTowers(towersP1);
-			
+			if(gems == 3 || gems == 2 || gems == 1){
 			// Check if the sumo hit is possible
 			if (towersP2[this.getxPosition()][this.getyPosition()-1] != null && towersP2[this.getxPosition()][this.getyPosition()-1].getGems() < 2 && this.getyPosition()-1 >= 0 && fields[this.getxPosition()][this.getyPosition()-2].isEmpty()) {
 				fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
-				}
+				}}
 			
-			
-			// check if the double sumo hit is possible
-			// check if fields have towers from P2 and movement isn't out of range
-			else if (this.getyPosition()-3 >= 0 && towersP2[this.getxPosition()][this.getyPosition()-1] !=null && towersP2[this.getxPosition()][this.getyPosition()-2] !=null){
-				// check if there is no double sumo in the way
-				if (towersP2[this.getxPosition()][this.getyPosition()-1].getGems() < 2 && towersP2[this.getxPosition()][this.getyPosition()-2].getGems() < 2){
-					// checks if the 3 field is empty
-					if(fields[this.getxPosition()][this.getyPosition()-3].isEmpty()){
-				fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
-				this.saveSumoMove = 2;
-			}}}
-			
-			
-			// Normal down Move
-			for(int i = 1; i<=3 ; i++){
-				if(this.getyPosition()-i < 0){
-					break;
-				} else if(fields[this.getxPosition()][this.getyPosition()-i].isEmpty()){
-					fields[this.getxPosition()][this.getyPosition()-i].setDisable(false);
-					} if(!fields[this.getxPosition()][this.getyPosition()-i].isEmpty()){
-						break;
-						}
-					
-				}
-			
-			// Diagonal move bottom right
-			outerloop:
-			for(int i = 1; i<=3; i++){
-				if((this.getxPosition()+i>7) || (this.getyPosition()-i < 0)){
-					break outerloop;
-				} else if (fields[this.getxPosition()+i][this.getyPosition()-i].isEmpty()){
-						fields[this.getxPosition()+i][this.getyPosition()-i].setDisable(false);
-						} if(!fields[this.getxPosition()+i][this.getyPosition()-i].isEmpty()){
-							break outerloop;
-						}
-					}
-				
-			// Diagonal move bottom left
-			outerloop:
-				for(int i = 1; i<=3; i++){
-					if((this.getxPosition()-i<0) || (this.getyPosition()-i<0)){
-						break outerloop;
-					} else if (fields[this.getxPosition()-i][this.getyPosition()-i].isEmpty()){
-							fields[this.getxPosition()-i][this.getyPosition()-i].setDisable(false);
-							} if(!fields[this.getxPosition()-i][this.getyPosition()-i].isEmpty()){
-								break outerloop;
-							}	}	}
-		
-		
-		
-		if(this.getPlayerNumber()==2){
-			// Disable Towers of Player2
-			this.disableTowers(towersP2);
-			
-			// Up move
-			if (towersP1[this.getxPosition()][this.getyPosition()+1] != null && towersP1[this.getxPosition()][this.getyPosition()+1].getGems() < 2 && this.getyPosition()+2 <= fields.length -1 && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
-				fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
-			}
-			
-			// check if the double sumo hit is possible
-			// check if fields have towers from P1 and movement isn't out of range
-			else if (this.getyPosition()+3 <= fields.length -1 && towersP1[this.getxPosition()][this.getyPosition()+1] !=null && towersP1[this.getxPosition()][this.getyPosition()+2] !=null){
-				// check if there is no double sumo in the way
-				if (towersP1[this.getxPosition()][this.getyPosition()+1].getGems() < 2 && towersP1[this.getxPosition()][this.getyPosition()+2].getGems() < 2){
-					// checks if the 3 field is empty
-					if(fields[this.getxPosition()][this.getyPosition()+3].isEmpty()){
-				fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
-				this.saveSumoMove = 2;
-			}}}
-			
-			
-			// Normal up move
-			for(int i = 1; i<=3 ; i++){
-				if(this.getyPosition()+i > 7){
-					break;
-				} else if(fields[this.getxPosition()][this.getyPosition()+i].isEmpty()){
-					fields[this.getxPosition()][this.getyPosition()+i].setDisable(false);
-					} if(!fields[this.getxPosition()][this.getyPosition()+i].isEmpty()){
-						break;
-					}
-				}
-			
-			// Diagonal move top right
-			outerloop:
-			for(int i = 1; i<=3; i++){
-				if((this.getxPosition()+i>7) || (this.getyPosition()+i > 7)){
-					break outerloop;
-				} else if (fields[this.getxPosition()+i][this.getyPosition()+i].isEmpty()){
-						fields[this.getxPosition()+i][this.getyPosition()+i].setDisable(false);
-						} if(!fields[this.getxPosition()+i][this.getyPosition()+i].isEmpty()){
-							break outerloop;
-						}
-					}
-				
-			// Diagonal move top left
-			outerloop:
-				for(int i = 1; i<=3; i++){
-					if((this.getxPosition()-i<0) || (this.getyPosition()+i>7)){
-						break outerloop;
-					} else if (fields[this.getxPosition()-i][this.getyPosition()+i].isEmpty()){
-							fields[this.getxPosition()-i][this.getyPosition()+i].setDisable(false);
-							} if(!fields[this.getxPosition()-i][this.getyPosition()+i].isEmpty()){
-								break outerloop;
-							}
-						}
-				}
-	}
-	private void showSumo3Move(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {	
-		if(this.getPlayerNumber()==1){
-			
-			this.disableTowers(towersP1);
-			
-			// Check if the sumo hit is possible
-			if (towersP2[this.getxPosition()][this.getyPosition()-1] != null && towersP2[this.getxPosition()][this.getyPosition()-1].getGems() < 2 && this.getyPosition()-1 >= 0 && fields[this.getxPosition()][this.getyPosition()-2].isEmpty()) {
-				fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
-				}
-			
+			if(gems == 3 || gems == 2){
 			// check if the double sumo hit is possible
 			// check if fields have towers from P2 and movement isn't out of range
 			if (this.getyPosition()-3 >= 0 && towersP2[this.getxPosition()][this.getyPosition()-1] !=null && towersP2[this.getxPosition()][this.getyPosition()-2] !=null){
@@ -511,9 +214,10 @@ public class Tower extends Button {
 					if(fields[this.getxPosition()][this.getyPosition()-3].isEmpty()){
 				fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
 				this.saveSumoMove = 2;
-			}}}
+			}}}}
 			
 			
+			if(gems == 3){
 			// check if the triple sumo hit is possible
 			// check if fields have towers from P2 and movement isn't out of range
 			if (this.getyPosition()-4 >= 0 && towersP2[this.getxPosition()][this.getyPosition()-1] != null && towersP2[this.getxPosition()][this.getyPosition()-2] !=null && towersP2[this.getxPosition()][this.getyPosition()-3] !=null){
@@ -523,12 +227,12 @@ public class Tower extends Button {
 					if(fields[this.getxPosition()][this.getyPosition()-4].isEmpty()){
 				fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
 				this.saveSumoMove = 3;
-				}}}
+			}}}}
 			
 			
 			
 			// Normal down Move
-			for(int i = 1; i<=1 ; i++){
+			for(int i = 1; i<= anzahlFelder ; i++){
 				if(this.getyPosition()-i < 0){
 					break;
 				} else if(fields[this.getxPosition()][this.getyPosition()-i].isEmpty()){
@@ -541,7 +245,7 @@ public class Tower extends Button {
 			
 			// Diagonal move bottom right
 			outerloop:
-			for(int i = 1; i<=1; i++){
+			for(int i = 1; i<= anzahlFelder; i++){
 				if((this.getxPosition()+i>7) || (this.getyPosition()-i < 0)){
 					break outerloop;
 				} else if (fields[this.getxPosition()+i][this.getyPosition()-i].isEmpty()){
@@ -553,7 +257,7 @@ public class Tower extends Button {
 				
 			// Diagonal move bottom left
 			outerloop:
-				for(int i = 1; i<=1; i++){
+				for(int i = 1; i<= anzahlFelder; i++){
 					if((this.getxPosition()-i<0) || (this.getyPosition()-i<0)){
 						break outerloop;
 					} else if (fields[this.getxPosition()-i][this.getyPosition()-i].isEmpty()){
@@ -570,11 +274,13 @@ public class Tower extends Button {
 			// Disable Towers of Player2
 			this.disableTowers(towersP2);
 			
+			if(gems == 3 || gems == 2 || gems == 1){
 			// Check if the sumo hit is possible
 			if (towersP1[this.getxPosition()][this.getyPosition()+1] != null && towersP1[this.getxPosition()][this.getyPosition()+1].getGems() < 2 && this.getyPosition()+2 <= fields.length - 1 && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
 				fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
-			}
+			}}
 			
+			if(gems == 3 || gems == 2){
 			// check if the double sumo hit is possible
 			// check if fields have towers from P1 and movement isn't out of range
 			if (this.getyPosition()+3 <= fields.length - 1 && towersP1[this.getxPosition()][this.getyPosition()+1] !=null && towersP1[this.getxPosition()][this.getyPosition()+2] !=null){
@@ -584,8 +290,9 @@ public class Tower extends Button {
 					if(fields[this.getxPosition()][this.getyPosition()+3].isEmpty()){
 						fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
 						this.saveSumoMove = 2;
-			}}}
+			}}}}
 			
+			if(gems == 3){
 			// check if the triple sumo hit is possible
 			// check if fields have towers from P2 and movement isn't out of range
 			 if (this.getyPosition()+4 <= fields.length - 1  && towersP1[this.getxPosition()][this.getyPosition()+1] != null && towersP1[this.getxPosition()][this.getyPosition()+2] !=null && towersP1[this.getxPosition()][this.getyPosition()+3] !=null){
@@ -595,11 +302,11 @@ public class Tower extends Button {
 					if(fields[this.getxPosition()][this.getyPosition()+4].isEmpty()){
 						fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
 						this.saveSumoMove = 3;
-			}}}
+			}}}}
 			
 			 
 			// Normal up move
-			for(int i = 1; i<=1 ; i++){
+			for(int i = 1; i<= anzahlFelder ; i++){
 				if(this.getyPosition()+i > 7){
 					break;
 				} else if(fields[this.getxPosition()][this.getyPosition()+i].isEmpty()){
@@ -611,7 +318,7 @@ public class Tower extends Button {
 			
 			// Diagonal move top right
 			outerloop:
-			for(int i = 1; i<=1; i++){
+			for(int i = 1; i<= anzahlFelder; i++){
 				if((this.getxPosition()+i>7) || (this.getyPosition()+i > 7)){
 					break outerloop;
 				} else if (fields[this.getxPosition()+i][this.getyPosition()+i].isEmpty()){
@@ -623,7 +330,7 @@ public class Tower extends Button {
 				
 			// Diagonal move top left
 			outerloop:
-				for(int i = 1; i<=1; i++){
+				for(int i = 1; i<= anzahlFelder; i++){
 					if((this.getxPosition()-i<0) || (this.getyPosition()+i>7)){
 						break outerloop;
 					} else if (fields[this.getxPosition()-i][this.getyPosition()+i].isEmpty()){
@@ -633,7 +340,9 @@ public class Tower extends Button {
 							}
 						}
 				}
+		this.checkPat(fields, towersP1, towersP2);
 	}
+
 	/**
 	 * This method will change the position of the nomal towers on the GridPane
 	 * @param fields
@@ -941,7 +650,6 @@ public class Tower extends Button {
 					if(model.Winner.get() == 0){
 					this.notChangeTurnSumo(fields, player1, player2, towersP1, towersP2, field);
 				}}
-
 	/**
 	 * This method will change the position of the Sumo and Hit Tower on the GridPane
 	 * @param fields
@@ -1036,8 +744,6 @@ public class Tower extends Button {
 				if(model.Winner.get() == 0){
 				this.notChangeTurnSumo(fields, player1, player2, towersP1, towersP2, field);
 			}}
-
-
 	
 	/**
 	 * This method will activate the own towers after a sumoHit and NOT change the turn
@@ -1328,9 +1034,6 @@ public class Tower extends Button {
 		return this.sumoTower;
 		
 }
-	@Override
-	public String toString(){
-		return this.getxPosition()+"  "+this.getyPosition()+"  "+this.getColor();
-	}
+
 
 }
