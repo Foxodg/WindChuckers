@@ -47,6 +47,8 @@ public class GameMenu_Model extends Model {
 	public static int playerCausedPat = 0;
 	
 	public static IntegerProperty Winner = new SimpleIntegerProperty(0);
+	
+	private static int gameMode = 2;
 
 	private Player player1 = new Player(1);
 	private Player player2 = new Player(2);
@@ -638,6 +640,15 @@ public class GameMenu_Model extends Model {
 	public int getRandomStart() {
 		return this.randomStart;
 	}
+	
+	public static int getGameMode() {
+		return gameMode;
+	}
+	
+	public void setGameMode(int gameMode) {
+		GameMenu_Model.gameMode=gameMode;
+	}
+
 	
 	public void setFriends(ArrayList<String> friendsList) {
 		int id = 0;

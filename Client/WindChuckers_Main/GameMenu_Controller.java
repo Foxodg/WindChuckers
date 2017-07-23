@@ -354,35 +354,32 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			windChuckers.startTutorial();
 		});
 
-		/**
-		 * Set Towers on action
-		 * 
-		 * @author robin
-		 */
+		
 //		Anmerkung LKu Hier müssen wir noch die Fälle nach einer neuen Runde implementieren.
 //		Immer der Verlierer beginnt
 
 		if (model.getRandomStart() == 2){
-			model.getPlayer1().setOnTurn(true);
-			model.getPlayer2().setOnTurn(false);
-		for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
-			for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
-				if (view.getTowersP1()[x][y] != null) {
-					view.getTowersP1()[x][y].setOnAction(towerHandler);
+				model.getPlayer1().setOnTurn(true);
+				model.getPlayer2().setOnTurn(false);
+			for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+				for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+					if (view.getTowersP1()[x][y] != null) {
+						view.getTowersP1()[x][y].setOnAction(towerHandler);
+					}
 				}
 			}
-		}
-
-		for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
-			for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
-				if (view.getTowersP2()[x][y] != null) {
-					view.getTowersP2()[x][y].setOnAction(towerHandler);
-					view.getTowersP2()[x][y].setDisable(true);
+	
+			for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+				for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+					if (view.getTowersP2()[x][y] != null) {
+						view.getTowersP2()[x][y].setOnAction(towerHandler);
+						view.getTowersP2()[x][y].setDisable(true);
+					}
 				}
 			}
-		}
-		
-		}else if (model.getRandomStart() == 1){
+			
+			}
+		else if (model.getRandomStart() == 1){
 			model.getPlayer1().setOnTurn(false);
 			model.getPlayer2().setOnTurn(true);
 		for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
@@ -681,28 +678,49 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 				}
 	
 	/**
-	 * Show a popup window as soon as someone reaches the back line. 
+	 * The whole win procedure as soon as someone reaches the back line
 	 * @param win
 	 * @author robin
 	 */
 	private void win(int win){
 		//Win Procedure
 		windChuckers = WindChuckers.getWindChuckers();
-		windChuckers.startNewRound();
-	
-		// a new Round with left order will be created
-		newRoundView.leftPlay.setOnAction(e -> {
-			this.buildNewRound(true);
-			model.Winner.set(0);
-			((Stage)(((Button)e.getSource()).getScene().getWindow())).close();
-		});
+		Alert winMessage = new Alert(AlertType.INFORMATION);
+		winMessage.setTitle("Gratulation!");
+
+		if(model.getPlayer1().win()){
+			winMessage.setHeaderText("Player 1 wins!");
+			winMessage.showAndWait();
+			view.resetGameBoard();
+			view.getStage().close();
+			windChuckers.startMainMenu();
+		}
 		
-		// a new Round with right order will be created
-		newRoundView.rightPlay.setOnAction(e -> {
-			this.buildNewRound(false);
-			model.Winner.set(0);
-			((Stage)(((Button)e.getSource()).getScene().getWindow())).close();
-		});
+		else if(model.getPlayer2().win()){
+			winMessage.setHeaderText("Player 2 wins!");
+			winMessage.showAndWait();
+			view.resetGameBoard();
+			view.getStage().close();
+			windChuckers.startMainMenu();
+		}	
+		
+		if(!model.getPlayer1().win()&&!model.getPlayer2().win()){
+			windChuckers.startNewRound();
+			
+			// a new Round with left order will be created
+			newRoundView.leftPlay.setOnAction(e -> {
+				this.buildNewRound(true);
+				model.Winner.set(0);
+				((Stage)(((Button)e.getSource()).getScene().getWindow())).close();
+			});
+			
+			// a new Round with right order will be created
+			newRoundView.rightPlay.setOnAction(e -> {
+				this.buildNewRound(false);
+				model.Winner.set(0);
+				((Stage)(((Button)e.getSource()).getScene().getWindow())).close();
+			});
+}
 
 		//update the DB
 		int winsBefore = LoginModel.getWins();

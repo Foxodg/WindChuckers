@@ -405,6 +405,41 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		return fields;
 	}
 	
+	/**
+	 	* Will reset the complete game Board after a match is finished
+	 * @author robin
+	 */
+	protected void resetGameBoard(){
+		this.towersP1=this.getTowersP1Array();
+		this.towersP2=this.getTowersP2Array();
+		this.fields=this.getFieldArray();
+		this.GameBoard.getChildren().clear();
+
+		for(int y = 0; y < GameMenu_Model.DIMENSION; y++){
+			for(int x = 0; x < GameMenu_Model.DIMENSION; x++){
+			fields[x][y].setxPosition(x);
+			fields[x][y].setyPosition(y);
+			fields[x][y].setDisable(true);
+			GameBoard.add(fields[x][y],x,(fields.length-1)-y);
+			}
+		}
+	
+		// Towers will be added
+		for(int x = 0; x < GameMenu_Model.DIMENSION;x++){
+			towersP1[x][7].setxPosition(x);
+			towersP1[x][7].setyPosition(7);
+			
+			towersP2[x][0].setxPosition(x);
+			towersP2[x][0].setyPosition(0);	
+			
+			GameBoard.add(towersP1[x][7],x,towersP1.length-towersP1.length);
+			GameBoard.add(towersP2[x][0],x,towersP2.length-1);
+			
+			fields[x][7].setEmpty(false);
+			fields[x][0].setEmpty(false);
+		}	
+}
+	
 	protected void updateTexts() {
 		Translator t = ServiceLocator.getServiceLocator().getTranslator();
 

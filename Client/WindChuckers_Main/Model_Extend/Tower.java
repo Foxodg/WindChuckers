@@ -116,8 +116,6 @@ public class Tower extends Button {
 		return brownTower;
 	}
 
-
-
 	/**
 	 * This method checks if a pat situation is existing. If there are two pat situations in a row, the player who caused the first pat looses the round
 	 * @param fields

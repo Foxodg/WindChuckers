@@ -1,5 +1,6 @@
 package WindChuckers_Main.Model_Extend;
 
+import WindChuckers_Main.GameMenu_Model;
 import abstractClasses.Model;
 
 public class Player extends Model {
@@ -59,6 +60,15 @@ public class Player extends Model {
 	public void setCausedPat(boolean causedPat) {
 		this.causedPat = causedPat;
 	}
+	
+	public boolean win(){
+		boolean win=false;
+		if(this.wins==GameMenu_Model.getGameMode()){
+			win=true;
+		}
+		return win;
+	}
+
 		
 
 }
