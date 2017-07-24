@@ -166,67 +166,125 @@ public class Tower extends Button {
 	}
 }
 
+	public void showSumoMoves(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2){
+		
+		if(this.getPlayerNumber()==1){
+			this.disableTowers(towersP1);
+			
+			if(gems == 3 || gems == 2 || gems == 1){
+				// Check if the sumo hit is possible
+				if (towersP2[this.getxPosition()][this.getyPosition()-1] != null && towersP2[this.getxPosition()][this.getyPosition()-1].getGems() < 2 && this.getyPosition()-1 >= 0 && fields[this.getxPosition()][this.getyPosition()-2].isEmpty()) {
+				fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
+				}
+			}
+						
+			if(gems == 3 || gems == 2){
+				// check if the double sumo hit is possible
+				// check if fields have towers from P2 and movement isn't out of range
+				if (this.getyPosition()-3 >= 0 && towersP2[this.getxPosition()][this.getyPosition()-1] !=null && towersP2[this.getxPosition()][this.getyPosition()-2] !=null){
+					// check if there is no double sumo in the way
+					if (towersP2[this.getxPosition()][this.getyPosition()-1].getGems() < 2 && towersP2[this.getxPosition()][this.getyPosition()-2].getGems() < 2){
+						// checks if the 3 field is empty
+						if(fields[this.getxPosition()][this.getyPosition()-3].isEmpty()){
+							fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
+							this.saveSumoMove = 2;
+						}
+					}		
+				}
+			}
+			
+			if(gems == 3){
+				// check if the triple sumo hit is possible
+				// check if fields have towers from P2 and movement isn't out of range
+				if (this.getyPosition()-4 >= 0 && towersP2[this.getxPosition()][this.getyPosition()-1] != null && towersP2[this.getxPosition()][this.getyPosition()-2] !=null && towersP2[this.getxPosition()][this.getyPosition()-3] !=null){
+					// check if there is no triple sumo in the way
+					if (towersP2[this.getxPosition()][this.getyPosition()-1].getGems() < 3 && towersP2[this.getxPosition()][this.getyPosition()-2].getGems() < 3 && towersP2[this.getxPosition()][this.getyPosition()-3].getGems() < 3){
+						// checks if the 4 field is empty
+						if(fields[this.getxPosition()][this.getyPosition()-4].isEmpty()){
+							fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
+							this.saveSumoMove = 3;
+						}
+					}
+				}
+			}
+		}
+		
+		
+		if(this.getPlayerNumber()==2){
+			// Disable Towers of Player2
+			this.disableTowers(towersP2);
+				
+			if(gems == 3 || gems == 2 || gems == 1){
+				// Check if the sumo hit is possible
+				if (towersP1[this.getxPosition()][this.getyPosition()+1] != null && towersP1[this.getxPosition()][this.getyPosition()+1].getGems() < 2 && this.getyPosition()+2 <= fields.length - 1 && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
+					fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
+				}
+			}
+				
+			if(gems == 3 || gems == 2){
+				// check if the double sumo hit is possible
+				// check if fields have towers from P1 and movement isn't out of range
+				if (this.getyPosition()+3 <= fields.length - 1 && towersP1[this.getxPosition()][this.getyPosition()+1] !=null && towersP1[this.getxPosition()][this.getyPosition()+2] !=null){
+					// check if there is no double sumo in the way
+					if (towersP1[this.getxPosition()][this.getyPosition()+1].getGems() < 2 && towersP1[this.getxPosition()][this.getyPosition()+2].getGems() < 2){
+						// checks if the 3 field is empty
+						if(fields[this.getxPosition()][this.getyPosition()+3].isEmpty()){
+							fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
+							this.saveSumoMove = 2;
+						}
+					}
+				}
+			}
+				
+			if(gems == 3){
+				// check if the triple sumo hit is possible
+				// check if fields have towers from P2 and movement isn't out of range
+				if (this.getyPosition()+4 <= fields.length - 1  && towersP1[this.getxPosition()][this.getyPosition()+1] != null && towersP1[this.getxPosition()][this.getyPosition()+2] !=null && towersP1[this.getxPosition()][this.getyPosition()+3] !=null){
+					// check if there is no triple sumo in the way
+					if (towersP1[this.getxPosition()][this.getyPosition()+1].getGems() < 3 && towersP1[this.getxPosition()][this.getyPosition()+2].getGems() < 3 && towersP1[this.getxPosition()][this.getyPosition()+3].getGems() < 3){
+						// checks if the 4 field is empty
+						if(fields[this.getxPosition()][this.getyPosition()+4].isEmpty()){
+							fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
+							this.saveSumoMove = 3;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	
 	/**
-	 * This method will show the possible Sumo Moves and enable all possible fields
+	 * This method will show the possible Tower moves and enable all possible fields
 	 * @param fields
 	 * @param gridPane
 	 * @param towersP1
 	 * @param towersP2
-	 * @author lukas.k
+	 * @author robin
 	 */
 	public void showMoves(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2) {
 		
 		int anzahlFelder = 7;
 		
 		if(this.sumoTower) {
-		if (gems == 1){
-			anzahlFelder = 5;
-		} 
+			if (gems == 1){
+				anzahlFelder = 5;
+			} 
 		
-		if (gems == 2){
-			anzahlFelder = 3;
-		}
+			if (gems == 2){
+				anzahlFelder = 3;
+			}
 	
-		if (gems == 3){
-			anzahlFelder = 1;
-	}}
+			if (gems == 3){
+				anzahlFelder = 1;
+			}
+		this.showSumoMoves(fields, gridPane, towersP1, towersP2);
+		}
 		
 		
 		if(this.getPlayerNumber()==1){
 			
 			this.disableTowers(towersP1);
-			
-			if(gems == 3 || gems == 2 || gems == 1){
-			// Check if the sumo hit is possible
-			if (towersP2[this.getxPosition()][this.getyPosition()-1] != null && towersP2[this.getxPosition()][this.getyPosition()-1].getGems() < 2 && this.getyPosition()-1 >= 0 && fields[this.getxPosition()][this.getyPosition()-2].isEmpty()) {
-				fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
-				}}
-			
-			if(gems == 3 || gems == 2){
-			// check if the double sumo hit is possible
-			// check if fields have towers from P2 and movement isn't out of range
-			if (this.getyPosition()-3 >= 0 && towersP2[this.getxPosition()][this.getyPosition()-1] !=null && towersP2[this.getxPosition()][this.getyPosition()-2] !=null){
-				// check if there is no double sumo in the way
-				if (towersP2[this.getxPosition()][this.getyPosition()-1].getGems() < 2 && towersP2[this.getxPosition()][this.getyPosition()-2].getGems() < 2){
-					// checks if the 3 field is empty
-					if(fields[this.getxPosition()][this.getyPosition()-3].isEmpty()){
-				fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
-				this.saveSumoMove = 2;
-			}}}}
-			
-			
-			if(gems == 3){
-			// check if the triple sumo hit is possible
-			// check if fields have towers from P2 and movement isn't out of range
-			if (this.getyPosition()-4 >= 0 && towersP2[this.getxPosition()][this.getyPosition()-1] != null && towersP2[this.getxPosition()][this.getyPosition()-2] !=null && towersP2[this.getxPosition()][this.getyPosition()-3] !=null){
-				// check if there is no triple sumo in the way
-				if (towersP2[this.getxPosition()][this.getyPosition()-1].getGems() < 3 && towersP2[this.getxPosition()][this.getyPosition()-2].getGems() < 3 && towersP2[this.getxPosition()][this.getyPosition()-3].getGems() < 3){
-					// checks if the 4 field is empty
-					if(fields[this.getxPosition()][this.getyPosition()-4].isEmpty()){
-				fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
-				this.saveSumoMove = 3;
-			}}}}
-			
 			
 			
 			// Normal down Move
@@ -271,36 +329,6 @@ public class Tower extends Button {
 		if(this.getPlayerNumber()==2){
 			// Disable Towers of Player2
 			this.disableTowers(towersP2);
-			
-			if(gems == 3 || gems == 2 || gems == 1){
-			// Check if the sumo hit is possible
-			if (towersP1[this.getxPosition()][this.getyPosition()+1] != null && towersP1[this.getxPosition()][this.getyPosition()+1].getGems() < 2 && this.getyPosition()+2 <= fields.length - 1 && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
-				fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
-			}}
-			
-			if(gems == 3 || gems == 2){
-			// check if the double sumo hit is possible
-			// check if fields have towers from P1 and movement isn't out of range
-			if (this.getyPosition()+3 <= fields.length - 1 && towersP1[this.getxPosition()][this.getyPosition()+1] !=null && towersP1[this.getxPosition()][this.getyPosition()+2] !=null){
-				// check if there is no double sumo in the way
-				if (towersP1[this.getxPosition()][this.getyPosition()+1].getGems() < 2 && towersP1[this.getxPosition()][this.getyPosition()+2].getGems() < 2){
-					// checks if the 3 field is empty
-					if(fields[this.getxPosition()][this.getyPosition()+3].isEmpty()){
-						fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
-						this.saveSumoMove = 2;
-			}}}}
-			
-			if(gems == 3){
-			// check if the triple sumo hit is possible
-			// check if fields have towers from P2 and movement isn't out of range
-			 if (this.getyPosition()+4 <= fields.length - 1  && towersP1[this.getxPosition()][this.getyPosition()+1] != null && towersP1[this.getxPosition()][this.getyPosition()+2] !=null && towersP1[this.getxPosition()][this.getyPosition()+3] !=null){
-				// check if there is no triple sumo in the way
-				if (towersP1[this.getxPosition()][this.getyPosition()+1].getGems() < 3 && towersP1[this.getxPosition()][this.getyPosition()+2].getGems() < 3 && towersP1[this.getxPosition()][this.getyPosition()+3].getGems() < 3){
-					// checks if the 4 field is empty
-					if(fields[this.getxPosition()][this.getyPosition()+4].isEmpty()){
-						fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
-						this.saveSumoMove = 3;
-			}}}}
 			
 			 
 			// Normal up move
