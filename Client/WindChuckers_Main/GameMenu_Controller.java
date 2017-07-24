@@ -90,7 +90,8 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		// get the friendsList
 		model.setFriends(clientServer.getFriendsList());
 		//send the hash-code and the name to the server for key / value
-		model.messageConstructorForName(Integer.parseInt(view.tfHashCode.getText()), LoginModel.getUserName());
+		long hash = GameMenu_View.getHashCode();
+		model.messageConstructorForName(hash, LoginModel.getUserName());
 
 		/**
 		 * For End the Application
@@ -298,6 +299,17 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		clientServer.getRound().addListener((observable, oldValue, newValue) -> {
 			view.tfRoundMax.setText(Integer.toString(clientServer.getRoundInt()));
 			view.tfRoundMax.setEditable(false);
+		});
+		
+		//ready To Play
+		clientServer.getReadyToPlay().addListener((observable, oldValue, newValue) -> {
+			windChuckers.startApp();
+		});
+		
+		//start a Game with Friendsd
+		clientServer.getStartGame().addListener((observable, oldValue, newValue) -> {
+			//TODO start the application
+			serviceLocator.getLogger().info("Boolean for start the game is here, start now");	
 		});
 		
 		// check the rounds when change it - is the round equals to the maxround then stop the game

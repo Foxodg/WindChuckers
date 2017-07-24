@@ -426,7 +426,7 @@ public class DataBase {
 	public static int selectLastIdFriends() throws SQLException {
 		Connection connection = getDBConnection();
 		PreparedStatement selectPreparedStatement = null;
-		String SelectQuery = ("SELECT id FROM FRIENDSPOINTS ORDER BY id DESC");
+		String SelectQuery = ("SELECT id FROM FRIENDSPOINTS ORDER BY id DESC LIMIT 1");
 		int answer = 0;
 
 		try {
@@ -782,6 +782,11 @@ public class DataBase {
 			insertPlayer(1,"admin","admin","admin","admin");
 			insertPlayer(2,"testy","prename", "surname", "test");
 			insertPlayer(3,"noname", "sowhat", "nonsens", "none");
+			
+			insertFriend(1,2);
+			insertFriend(2,1);
+			insertFriend(3,1);
+			insertFriend(3,2);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

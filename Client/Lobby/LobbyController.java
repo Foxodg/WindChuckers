@@ -2,6 +2,7 @@ package Lobby;
 
 import Client.ClientThreadForServer;
 import WindChuckers_Main.GameMenu_Model;
+import WindChuckers_Main.GameMenu_View;
 import WindChuckers_Main.WindChuckers;
 import abstractClasses.Controller;
 import commonClasses.ServiceLocator;
@@ -11,6 +12,7 @@ import javafx.scene.input.KeyCode;
 public class LobbyController extends Controller<GameMenu_Model, LobbyView> {
 	private GameMenu_Model model;
 	private LobbyView view;
+	private volatile boolean pressed = false;
 	
 	ClientThreadForServer clientServer = ClientThreadForServer.getClientServer();
 	
@@ -29,7 +31,7 @@ public class LobbyController extends Controller<GameMenu_Model, LobbyView> {
 		view.btnSend.setOnAction(e -> {
 			String input = model.getUserNameString();
 			input += ": " + view.txtChat.getText();
-			model.messageContructorForChat(input);
+			model.messageConstructorForBuildCapsule(GameMenu_View.getHashCode(), input);
 			view.txtChat.clear();
 		});
 		
@@ -38,7 +40,7 @@ public class LobbyController extends Controller<GameMenu_Model, LobbyView> {
 			if (e.getCode().equals(KeyCode.ENTER)) {
 				String input = model.getUserNameString();
 				input += ": " + view.txtChat.getText();
-				model.messageContructorForChat(input);
+				model.messageConstructorForBuildCapsule(GameMenu_View.getHashCode(), input);
 				view.txtChat.clear();
 			}
 		});
@@ -47,6 +49,23 @@ public class LobbyController extends Controller<GameMenu_Model, LobbyView> {
 		clientServer.getChatMessageProperty().addListener((obervable, oldValue, newValue) -> {
 			ServiceLocator.getServiceLocator().getLogger().info("Message from Chat is arrived");
 			view.txtMessages.appendText("\n" + clientServer.getChatMessageInString());
+		});
+		
+		view.btnGo.setOnAction(e -> {
+			if(pressed) {
+				pressed = false;
+				view.btnGo.setStyle("-fx-background-color: #000000");
+			} else {
+				pressed = true;
+				view.btnGo.setStyle("-fx-background-color: #8fbc8f");
+			}
+			if(pressed) {
+				//send ready to server
+				model.messageConstructorForWaiter(GameMenu_View.getHashCode());
+			} else {
+				//send not ready to server
+				model.messageConstructorForWaiter(GameMenu_View.getHashCode());
+			}
 		});
 		
 	}

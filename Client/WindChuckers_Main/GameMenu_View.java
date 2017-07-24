@@ -64,7 +64,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
     
     //user
     protected VBox userBox;
-    protected TextField tfHashCode;
+    protected static TextField tfHashCode;
     protected Label lblUser1;
     protected Label lblUser2;
     private Label lblPointsUser1;
@@ -161,7 +161,7 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		chatPanel.setContent(chatBox);
 		
 		userBox = new VBox();
-		tfHashCode = new TextField(Integer.toString(ClientThreadForServer.hashCodeStatic));
+		tfHashCode = new TextField(Long.toString(ClientThreadForServer.hashCodeStatic));
 		tfHashCode.setEditable(false);
 		lblTimer = new Label();
 		lblRound = new Label();
@@ -500,5 +500,9 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	
 	public void setModel (GameMenu_Model model){
 		this.model = model;
+	}
+	
+	public static long getHashCode() {
+		return Long.parseLong(tfHashCode.getText());
 	}
 }

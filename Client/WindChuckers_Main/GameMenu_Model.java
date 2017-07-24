@@ -20,6 +20,7 @@ import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
@@ -106,7 +107,7 @@ public class GameMenu_Model extends Model {
 	public SimpleStringProperty thisUserNameProperty = new SimpleStringProperty();	
 	
 	// SimpleIntegerProperty for HashCode
-	public SimpleIntegerProperty HashCode = new SimpleIntegerProperty();
+	public SimpleLongProperty HashCode = new SimpleLongProperty();
 
 	public boolean connect(String ipAddress, Integer port) {
 		boolean success = false;
@@ -319,6 +320,24 @@ public class GameMenu_Model extends Model {
 		Message message = new Message(MessageType.Binom, username, friendname);
 		sendMessage(message);
 	}	
+	
+	/**
+	 * Message Constructor for send Message capsuled
+	 * 
+	 * @param hash
+	 * @param chat
+	 *            To get the chat message is getUserName();
+	 */
+	public void messageConstructorForBuildCapsule(long hash, String chat) {
+		Message message = new Message(MessageType.Capsule, hash, chat);
+		sendMessage(message);
+	}
+	
+	public void messageConstructorForWaiter(long hash) {
+		Message message = new Message(MessageType.Waiter, hash);
+		sendMessage(message);
+	}
+
 
 	/**
 	 * Create the userList
@@ -463,25 +482,16 @@ public class GameMenu_Model extends Model {
 	 */
 	public void refuseFriendsRequest(String friend) {
 		int friendId = 0;
-		
+
 		for (int i = 1; i <= users.size(); i++) {
 			String[] name = friend.split(" ");
 			if (name[0].equalsIgnoreCase(users.get(i))) {
 				friendId = i;
 			}
 		}
-		
+
 		this.messageConstructorForDBUpdate(6, friendId);
 		System.out.println("FriendsRequest refused: " + friend);
-	}
-
-	/**
-	 * 
-	 * @param friend
-	 * @author T.Bosshard
-	 */
-	public void playAgainstFriend(String friend) {
-		System.out.println("Play against: " + friend);
 	}
 
 	/**
@@ -564,12 +574,12 @@ public class GameMenu_Model extends Model {
 		this.HashCode.setValue(newValue);
 	}
 	
-	public SimpleIntegerProperty getHashCode(){
-		return this.HashCode;
+	public void setHashCode(long newValue) {
+		this.HashCode.setValue(newValue);
 	}
-	
-	public int getHashCodeInt(){
-		return this.HashCode.get();
+
+	public SimpleLongProperty getHashCode() {
+		return this.HashCode;
 	}
 
 	// Getter and setter
@@ -650,35 +660,75 @@ public class GameMenu_Model extends Model {
 	}
 
 	
+	/**
+	 * Split to effective Friends and Request
+	 * @param friendsList
+	 * @author L.Weber
+	 */
 	public void setFriends(ArrayList<String> friendsList) {
-		int id = 0;
+		int requestedId = 0;
+		int requestId = 0;
 		String username = null;
 		boolean request = false;
 
-		if(!(friendsList == null)) {
+		if (!(friendsList == null)) {
 			while (!friendsList.isEmpty()) {
-				id = Integer.parseInt(friendsList.get(2));
-				if(friendsList.get(3).equals("TRUE")) {
+				
+				//the user who is requested
+				requestedId = Integer.parseInt(friendsList.get(2));
+				
+				//the user who made the request
+				requestId = Integer.parseInt(friendsList.get(1));
+				
+				if (friendsList.get(3).equals("TRUE")) {
 					request = true;
 				} else {
 					request = false;
 				}
 
+				//Safe this users Name
+				String thisUserName = LoginModel.getUserName();
+				int thisUserId = 0;
+				
 				Enumeration e = users.keys();
 				while (e.hasMoreElements()) {
 					int key = (int) e.nextElement();
-					if (key == id) {
+					
+					//Need the Id for this User
+					if(thisUserName.equalsIgnoreCase(users.get(key))) {
+						thisUserId = key;
+					}
+					
+					//if the id has the same number like the key then add this name to username
+					if (key == requestedId) {
 						username = users.get(key);
 					}
 				}
+
 				// add the found to the list
-				if(request) {
-					friends.put(id, username);
+				if (request) {
+					//only add this to the friends when this is not the same user
+					if(requestedId != thisUserId) {
+						friends.put(requestedId, username);
+					}
 				} else {
 					serviceLocator.getLogger().info("Not both player will this");
 				}
-				friendsRequest.put(id, request);
-
+				if(requestedId == thisUserId) {
+					// the request has to be for this user
+					if(requestId != thisUserId) {
+						//all Requests that this user started i will not see
+						
+						Enumeration e1 = friends.keys();
+						while (e1.hasMoreElements()) {
+							int key = (int) e1.nextElement();
+							if(key != requestId) {
+								// this person not allowed when it in friends
+								friendsRequest.put(requestId, request);
+							}
+						}
+					}
+				}
 				// remove this because the while loop
 				friendsList.remove(0);
 				friendsList.remove(0);

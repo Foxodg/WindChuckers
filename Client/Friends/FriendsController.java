@@ -5,6 +5,7 @@ import java.util.Random;
 
 import Login.LoginModel;
 import WindChuckers_Main.GameMenu_Model;
+import WindChuckers_Main.GameMenu_View;
 import WindChuckers_Main.WindChuckers;
 import abstractClasses.Controller;
 import abstractClasses.View;
@@ -24,6 +25,10 @@ public class FriendsController extends Controller<GameMenu_Model, FriendsView> {
 	public FriendsController(GameMenu_Model model, FriendsView view, AddFriendsView addview) {
 		super(model, view);
 		this.addview = addview;
+		
+		//send the hash-code and the name to the server for key / value
+		long hash = GameMenu_View.getHashCode();
+		model.messageConstructorForName(hash, LoginModel.getUserName());
 
 		/**
 		 * Close the Friend Menu
@@ -83,7 +88,6 @@ public class FriendsController extends Controller<GameMenu_Model, FriendsView> {
 				Button btnSource = (Button) event.getSource();
 				for (int j = 0; j < view.btnPlayAgainstFriend.length; j++) {
 					if (btnSource == view.btnPlayAgainstFriend[j]) {
-						model.playAgainstFriend(view.lblFriendsAndRequests[j].getText());
 						view.stop();
 						String friendname[] = view.lblFriendsAndRequests[j].getText().split(" ");
 						model.messageConstructorForBuildBinom(LoginModel.getUserName(), friendname[0]);
@@ -133,7 +137,7 @@ public class FriendsController extends Controller<GameMenu_Model, FriendsView> {
 		}
 
 		for (int i = friendsList.size(); i < (requestsList.size() + friendsList.size()); i++) {
-			view.lblFriendsAndRequests[i].setText(requestsList.get(i - 1) + " (Request)");
+			view.lblFriendsAndRequests[i].setText(requestsList.get(i - friendsList.size()) + " (Request)");
 			view.btnAcceptFriendsRequest[i].setVisible(true);
 			view.btnRefuseFriendsRequest[i].setVisible(true);
 		}

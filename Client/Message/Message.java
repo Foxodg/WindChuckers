@@ -26,7 +26,7 @@ import Message.Message.MessageType;
 @Root
 public class Message {
 	public enum MessageType {
-		Coordinate, WinMessage, ChatMessage, DBMessage, DBMessageFull, Error, Update, AISingle, AIDouble, Hash, Time, NewRound, Name, Binom
+		Coordinate, WinMessage, ChatMessage, DBMessage, DBMessageFull, Error, Update, AISingle, AIDouble, Hash, Time, NewRound, Name, Binom, Capsule, Waiter
 	};
 	
 	public enum Value {

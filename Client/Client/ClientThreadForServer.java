@@ -7,7 +7,10 @@ import java.util.logging.Logger;
 import Message.Message;
 import Message.Message.MessageType;
 import Message.Message.Value;
+import WindChuckers_Main.GameMenu_View;
+import WindChuckers_Main.WindChuckers;
 import commonClasses.ServiceLocator;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
@@ -31,8 +34,8 @@ public class ClientThreadForServer extends Thread {
 	private int userID;
 	private boolean newRoundLeftRight; //left is true, right is false
 	private ArrayList<String> userList;
-	public static int hashCodeStatic;
-	private ArrayList<String> friendsList = new ArrayList<String>();
+	public static long hashCodeStatic;
+	private static ArrayList<String> friendsList = new ArrayList<String>();
 	
 	// SimpleStringProperty for overwatching the chat
 	private SimpleStringProperty chatMessage = new SimpleStringProperty();
@@ -44,7 +47,7 @@ public class ClientThreadForServer extends Thread {
 	private SimpleBooleanProperty dbRequest = new SimpleBooleanProperty();
 	
 	// SimpleIntegerProperty for HashCode
-	public SimpleIntegerProperty HashCode = new SimpleIntegerProperty();
+	public SimpleLongProperty HashCode = new SimpleLongProperty();
 	
 	//SimpleLongProperty for TimeCap
 	public SimpleLongProperty timeCap = new SimpleLongProperty();
@@ -63,6 +66,12 @@ public class ClientThreadForServer extends Thread {
 	
 	//SimpleBooleanProperty for Friendsincoming
 	public SimpleBooleanProperty friends = new SimpleBooleanProperty();
+	
+	//For start the Main Game
+	public SimpleBooleanProperty readyToPlay = new SimpleBooleanProperty();
+	
+	//SimplyBooleanProperty for start a Game with the friend
+	public SimpleBooleanProperty startGame = new SimpleBooleanProperty();
 	
 	public void setSocket(Socket serverSocket) {
 		this.serverSocket = serverSocket;
@@ -164,9 +173,10 @@ public class ClientThreadForServer extends Thread {
 			}
 		}
 		else if(message.getMessageType() == Message.MessageType.Hash){
-			logger.info("Hash-Code comes back: " + message.getDB());
-			this.setHashCode(message.getDB());
-			hashCodeStatic = message.getDB();
+			logger.info("Hash-Code comes back: " + message.getTime());
+			long hash = message.getTime();
+			this.setHashCode(hash);
+			hashCodeStatic = hash;
 			
 		}
 		else if(message.getMessageType() == Message.MessageType.Time){
@@ -178,6 +188,11 @@ public class ClientThreadForServer extends Thread {
 			this.setNewRound(false);
 			this.newRoundLeftRight = message.getWin();
 			this.setNewRound(true);
+		}
+		else if(message.getMessageType() == Message.MessageType.Waiter) {
+			this.setStartGame(true);
+			logger.info("Start now the game");
+			this.setStartGame(false);
 		}
 	}
 	
@@ -239,15 +254,15 @@ public class ClientThreadForServer extends Thread {
 		return this.moveProperty;
 	}
 	
-	public void setHashCode(int newValue){
+	public void setHashCode(long newValue){
 		this.HashCode.setValue(newValue);
 	}
 	
-	public SimpleIntegerProperty getHashCode(){
+	public SimpleLongProperty getHashCode(){
 		return this.HashCode;
 	}
 	
-	public int getHashCodeInt(){
+	public long getHashCodeInt(){
 		return this.HashCode.get();
 	}
 	
@@ -291,6 +306,14 @@ public class ClientThreadForServer extends Thread {
 		this.roundCap.set(roundCap);
 	}
 	
+	public SimpleBooleanProperty getReadyToPlay() {
+		return this.readyToPlay;
+	}
+	
+	public void setReadyToPlay(boolean ready) {
+		this.readyToPlay.set(ready);
+	}
+	
 	public SimpleIntegerProperty getRandomStart() {
 		return this.randomStart;
 	}
@@ -301,6 +324,14 @@ public class ClientThreadForServer extends Thread {
 	
 	public void setRandomStart(int randomStart) {
 		this.randomStart.set(randomStart);
+	}
+	
+	public void setStartGame(boolean start) {
+		this.startGame.set(start);
+	}
+	
+	public SimpleBooleanProperty getStartGame() {
+		return this.startGame;
 	}
 	
 	public int getStartColumn(){
@@ -363,8 +394,8 @@ public class ClientThreadForServer extends Thread {
 		this.newRoundLeftRight = newRound;
 	}
 	
-	public ArrayList<String> getFriendsList(){
-		return this.friendsList;
+	public static ArrayList<String> getFriendsList(){
+		return friendsList;
 	}
 
 }
