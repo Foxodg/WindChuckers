@@ -116,144 +116,7 @@ public class Tower extends Button {
 		return brownTower;
 	}
 
-	/**
-	 * This method checks if a pat situation is existing. If there are two pat situations in a row, the player who caused the first pat looses the round
-	 * @param fields
-	 * @param towersP1
-	 * @param towersP2
-	 * @author robin
-	 */
-	private void checkPat(Field[][] fields, Tower[][] towersP1, Tower[][] towersP2) {
-		int possibleMoves = 0;
-		Alert firstAlert = new Alert(AlertType.INFORMATION);
-		firstAlert.setTitle("Information");
-		firstAlert.setHeaderText("Pat Situation!");
-		Alert secondAlert = new Alert(AlertType.INFORMATION);
-		secondAlert.setTitle("Information");
 
-		for(int x = 0; x < GameMenu_Model.DIMENSION; x++){
-			for(int y = 0; y < GameMenu_Model.DIMENSION; y++){
-				if(!fields[x][y].isDisabled()){
-					possibleMoves++;
-					model.getPlayer1().setCausedPat(false);
-					model.getPlayer2().setCausedPat(false);
-				}
-			}
-		}
-	
-		if(possibleMoves==0 && (model.getPlayer1().causedPat()||model.getPlayer2().causedPat())){
-			if(model.getPlayer1().causedPat()){
-				secondAlert.setHeaderText("Pat Situation! Player 2 wins!");
-				secondAlert.showAndWait();
-				GameMenu_Model.Winner.set(2);
-			} else{
-				secondAlert.setHeaderText("Pat Situation! Player 1 wins!");
-				secondAlert.showAndWait();
-				GameMenu_Model.Winner.set(1);
-			}
-		}	
-	
-		if(possibleMoves==0 && !model.getPlayer1().causedPat() && !model.getPlayer2().causedPat()){
-			if(model.getPlayer1().isOnTurn()){
-				model.getPlayer2().setCausedPat(true);
-				firstAlert.showAndWait();
-				this.changeTurn(fields, model.getPlayer1(), model.getPlayer2(), towersP1, towersP2, fields[this.getxPosition()][this.getyPosition()]);
-			} else {
-				model.getPlayer1().setCausedPat(true);
-				firstAlert.showAndWait();
-				this.changeTurn(fields, model.getPlayer1(), model.getPlayer2(), towersP1, towersP2, fields[this.getxPosition()][this.getyPosition()]);
-			}
-	}
-}
-
-	public void showSumoMoves(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2){
-		
-		if(this.getPlayerNumber()==1){
-			this.disableTowers(towersP1);
-			
-			if(gems == 3 || gems == 2 || gems == 1){
-				// Check if the sumo hit is possible
-				if (towersP2[this.getxPosition()][this.getyPosition()-1] != null && towersP2[this.getxPosition()][this.getyPosition()-1].getGems() < 2 && this.getyPosition()-1 >= 0 && fields[this.getxPosition()][this.getyPosition()-2].isEmpty()) {
-				fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
-				}
-			}
-						
-			if(gems == 3 || gems == 2){
-				// check if the double sumo hit is possible
-				// check if fields have towers from P2 and movement isn't out of range
-				if (this.getyPosition()-3 >= 0 && towersP2[this.getxPosition()][this.getyPosition()-1] !=null && towersP2[this.getxPosition()][this.getyPosition()-2] !=null){
-					// check if there is no double sumo in the way
-					if (towersP2[this.getxPosition()][this.getyPosition()-1].getGems() < 2 && towersP2[this.getxPosition()][this.getyPosition()-2].getGems() < 2){
-						// checks if the 3 field is empty
-						if(fields[this.getxPosition()][this.getyPosition()-3].isEmpty()){
-							fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
-							this.saveSumoMove = 2;
-						}
-					}		
-				}
-			}
-			
-			if(gems == 3){
-				// check if the triple sumo hit is possible
-				// check if fields have towers from P2 and movement isn't out of range
-				if (this.getyPosition()-4 >= 0 && towersP2[this.getxPosition()][this.getyPosition()-1] != null && towersP2[this.getxPosition()][this.getyPosition()-2] !=null && towersP2[this.getxPosition()][this.getyPosition()-3] !=null){
-					// check if there is no triple sumo in the way
-					if (towersP2[this.getxPosition()][this.getyPosition()-1].getGems() < 3 && towersP2[this.getxPosition()][this.getyPosition()-2].getGems() < 3 && towersP2[this.getxPosition()][this.getyPosition()-3].getGems() < 3){
-						// checks if the 4 field is empty
-						if(fields[this.getxPosition()][this.getyPosition()-4].isEmpty()){
-							fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
-							this.saveSumoMove = 3;
-						}
-					}
-				}
-			}
-		}
-		
-		
-		if(this.getPlayerNumber()==2){
-			// Disable Towers of Player2
-			this.disableTowers(towersP2);
-				
-			if(gems == 3 || gems == 2 || gems == 1){
-				// Check if the sumo hit is possible
-				if (towersP1[this.getxPosition()][this.getyPosition()+1] != null && towersP1[this.getxPosition()][this.getyPosition()+1].getGems() < 2 && this.getyPosition()+2 <= fields.length - 1 && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
-					fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
-				}
-			}
-				
-			if(gems == 3 || gems == 2){
-				// check if the double sumo hit is possible
-				// check if fields have towers from P1 and movement isn't out of range
-				if (this.getyPosition()+3 <= fields.length - 1 && towersP1[this.getxPosition()][this.getyPosition()+1] !=null && towersP1[this.getxPosition()][this.getyPosition()+2] !=null){
-					// check if there is no double sumo in the way
-					if (towersP1[this.getxPosition()][this.getyPosition()+1].getGems() < 2 && towersP1[this.getxPosition()][this.getyPosition()+2].getGems() < 2){
-						// checks if the 3 field is empty
-						if(fields[this.getxPosition()][this.getyPosition()+3].isEmpty()){
-							fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
-							this.saveSumoMove = 2;
-						}
-					}
-				}
-			}
-				
-			if(gems == 3){
-				// check if the triple sumo hit is possible
-				// check if fields have towers from P2 and movement isn't out of range
-				if (this.getyPosition()+4 <= fields.length - 1  && towersP1[this.getxPosition()][this.getyPosition()+1] != null && towersP1[this.getxPosition()][this.getyPosition()+2] !=null && towersP1[this.getxPosition()][this.getyPosition()+3] !=null){
-					// check if there is no triple sumo in the way
-					if (towersP1[this.getxPosition()][this.getyPosition()+1].getGems() < 3 && towersP1[this.getxPosition()][this.getyPosition()+2].getGems() < 3 && towersP1[this.getxPosition()][this.getyPosition()+3].getGems() < 3){
-						// checks if the 4 field is empty
-						if(fields[this.getxPosition()][this.getyPosition()+4].isEmpty()){
-							fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
-							this.saveSumoMove = 3;
-						}
-					}
-				}
-			}
-		}
-	}
-	
-	
 	/**
 	 * This method will show the possible Tower moves and enable all possible fields
 	 * @param fields
@@ -368,9 +231,154 @@ public class Tower extends Button {
 				}
 		this.checkPat(fields, towersP1, towersP2);
 	}
+	
+	/**
+	 * This method will show the possible Sumo Hit move and enable the possible field
+	 * @param fields
+	 * @param gridPane
+	 * @param towersP1
+	 * @param towersP2
+	 * @author l.kunz
+	 */
+	public void showSumoMoves(Field[][] fields, GridPane gridPane, Tower[][] towersP1, Tower[][] towersP2){
+		
+		if(this.getPlayerNumber()==1){
+			this.disableTowers(towersP1);
+			
+			if(gems == 3 || gems == 2 || gems == 1){
+				// Check if the sumo hit is possible
+				if (towersP2[this.getxPosition()][this.getyPosition()-1] != null && towersP2[this.getxPosition()][this.getyPosition()-1].getGems() < 2 && this.getyPosition()-1 >= 0 && fields[this.getxPosition()][this.getyPosition()-2].isEmpty()) {
+				fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
+				}
+			}
+						
+			if(gems == 3 || gems == 2){
+				// check if the double sumo hit is possible
+				// check if fields have towers from P2 and movement isn't out of range
+				if (this.getyPosition()-3 >= 0 && towersP2[this.getxPosition()][this.getyPosition()-1] !=null && towersP2[this.getxPosition()][this.getyPosition()-2] !=null){
+					// check if there is no double sumo in the way
+					if (towersP2[this.getxPosition()][this.getyPosition()-1].getGems() < 2 && towersP2[this.getxPosition()][this.getyPosition()-2].getGems() < 2){
+						// checks if the 3 field is empty
+						if(fields[this.getxPosition()][this.getyPosition()-3].isEmpty()){
+							fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
+							this.saveSumoMove = 2;
+						}
+					}		
+				}
+			}
+			
+			if(gems == 3){
+				// check if the triple sumo hit is possible
+				// check if fields have towers from P2 and movement isn't out of range
+				if (this.getyPosition()-4 >= 0 && towersP2[this.getxPosition()][this.getyPosition()-1] != null && towersP2[this.getxPosition()][this.getyPosition()-2] !=null && towersP2[this.getxPosition()][this.getyPosition()-3] !=null){
+					// check if there is no triple sumo in the way
+					if (towersP2[this.getxPosition()][this.getyPosition()-1].getGems() < 3 && towersP2[this.getxPosition()][this.getyPosition()-2].getGems() < 3 && towersP2[this.getxPosition()][this.getyPosition()-3].getGems() < 3){
+						// checks if the 4 field is empty
+						if(fields[this.getxPosition()][this.getyPosition()-4].isEmpty()){
+							fields[this.getxPosition()][this.getyPosition()-1].setDisable(false);
+							this.saveSumoMove = 3;
+						}
+					}
+				}
+			}
+		}
+		
+		
+		if(this.getPlayerNumber()==2){
+			// Disable Towers of Player2
+			this.disableTowers(towersP2);
+				
+			if(gems == 3 || gems == 2 || gems == 1){
+				// Check if the sumo hit is possible
+				if (towersP1[this.getxPosition()][this.getyPosition()+1] != null && towersP1[this.getxPosition()][this.getyPosition()+1].getGems() < 2 && this.getyPosition()+2 <= fields.length - 1 && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
+					fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
+				}
+			}
+				
+			if(gems == 3 || gems == 2){
+				// check if the double sumo hit is possible
+				// check if fields have towers from P1 and movement isn't out of range
+				if (this.getyPosition()+3 <= fields.length - 1 && towersP1[this.getxPosition()][this.getyPosition()+1] !=null && towersP1[this.getxPosition()][this.getyPosition()+2] !=null){
+					// check if there is no double sumo in the way
+					if (towersP1[this.getxPosition()][this.getyPosition()+1].getGems() < 2 && towersP1[this.getxPosition()][this.getyPosition()+2].getGems() < 2){
+						// checks if the 3 field is empty
+						if(fields[this.getxPosition()][this.getyPosition()+3].isEmpty()){
+							fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
+							this.saveSumoMove = 2;
+						}
+					}
+				}
+			}
+				
+			if(gems == 3){
+				// check if the triple sumo hit is possible
+				// check if fields have towers from P2 and movement isn't out of range
+				if (this.getyPosition()+4 <= fields.length - 1  && towersP1[this.getxPosition()][this.getyPosition()+1] != null && towersP1[this.getxPosition()][this.getyPosition()+2] !=null && towersP1[this.getxPosition()][this.getyPosition()+3] !=null){
+					// check if there is no triple sumo in the way
+					if (towersP1[this.getxPosition()][this.getyPosition()+1].getGems() < 3 && towersP1[this.getxPosition()][this.getyPosition()+2].getGems() < 3 && towersP1[this.getxPosition()][this.getyPosition()+3].getGems() < 3){
+						// checks if the 4 field is empty
+						if(fields[this.getxPosition()][this.getyPosition()+4].isEmpty()){
+							fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
+							this.saveSumoMove = 3;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * This method checks if a pat situation is existing. If there are two pat situations in a row, the player who caused the first pat looses the round
+	 * @param fields
+	 * @param towersP1
+	 * @param towersP2
+	 * @author robin
+	 */
+	private void checkPat(Field[][] fields, Tower[][] towersP1, Tower[][] towersP2) {
+		int possibleMoves = 0;
+		Alert firstAlert = new Alert(AlertType.INFORMATION);
+		firstAlert.setTitle("Information");
+		firstAlert.setHeaderText("Pat Situation!");
+		Alert secondAlert = new Alert(AlertType.INFORMATION);
+		secondAlert.setTitle("Information");
+
+		for(int x = 0; x < GameMenu_Model.DIMENSION; x++){
+			for(int y = 0; y < GameMenu_Model.DIMENSION; y++){
+				if(!fields[x][y].isDisabled()){
+					possibleMoves++;
+					model.getPlayer1().setCausedPat(false);
+					model.getPlayer2().setCausedPat(false);
+				}
+			}
+		}
+	
+		if(possibleMoves==0 && (model.getPlayer1().causedPat()||model.getPlayer2().causedPat())){
+			if(model.getPlayer1().causedPat()){
+				secondAlert.setHeaderText("Pat Situation! Player 2 wins!");
+				secondAlert.showAndWait();
+				GameMenu_Model.Winner.set(2);
+			} else{
+				secondAlert.setHeaderText("Pat Situation! Player 1 wins!");
+				secondAlert.showAndWait();
+				GameMenu_Model.Winner.set(1);
+			}
+		}	
+	
+		if(possibleMoves==0 && !model.getPlayer1().causedPat() && !model.getPlayer2().causedPat()){
+			if(model.getPlayer1().isOnTurn()){
+				model.getPlayer2().setCausedPat(true);
+				firstAlert.showAndWait();
+				this.changeTurn(fields, model.getPlayer1(), model.getPlayer2(), towersP1, towersP2, fields[this.getxPosition()][this.getyPosition()]);
+			} else {
+				model.getPlayer1().setCausedPat(true);
+				firstAlert.showAndWait();
+				this.changeTurn(fields, model.getPlayer1(), model.getPlayer2(), towersP1, towersP2, fields[this.getxPosition()][this.getyPosition()]);
+			}
+	}
+}
 
 	/**
-	 * This method will change the position of the nomal towers on the GridPane
+	 * This method will change the position of the normal towers on the GridPane
 	 * @param fields
 	 * @param gameBoard
 	 * @param towersP1
@@ -382,22 +390,21 @@ public class Tower extends Button {
 	 */
 	public void move(Field[][] fields, GridPane gameBoard, Tower[][] towersP1, Tower[][] towersP2, Field field, Player player1, Player player2) {
 		
-		int x = field.getxPosition();
-		int y = field.getyPosition();
-		
-		if (!field.isEmpty() && this.getGems() >= 2 && this.saveSumoMove == 3){
+			if (!field.isEmpty() && this.getGems() >= 2 && this.saveSumoMove == 3){
 				this.sumo3Move(fields, gameBoard, player1, player2, field, towersP1, towersP2);
 			}
-		else if (!field.isEmpty() && this.getGems() >= 2 && this.saveSumoMove == 2){
-			this.sumo2Move(fields, gameBoard, player1, player2, field, towersP1, towersP2);
-		}
-		else if (!field.isEmpty() && this.getGems() >= 1){
-			this.saveSumoMove = 1;
-			this.sumo1Move(fields, gameBoard, player1, player2, field, towersP1, towersP2);
+			
+			else if (!field.isEmpty() && this.getGems() >= 2 && this.saveSumoMove == 2){
+				this.sumo2Move(fields, gameBoard, player1, player2, field, towersP1, towersP2);
+			}
+			
+			else if (!field.isEmpty() && this.getGems() >= 1){
+				this.saveSumoMove = 1;
+				this.sumo1Move(fields, gameBoard, player1, player2, field, towersP1, towersP2);
 			}
 		
 		
-		else{
+		else {
 		int oldX = this.getxPosition();
 		int newX = field.getxPosition();
 		int oldY = this.getyPosition();
@@ -451,6 +458,205 @@ public class Tower extends Button {
 
 		
 	}}
+	
+	/**
+	 * This method will change the position of the Sumo and Hit Tower on the GridPane
+	 * @param fields
+	 * @param gameBoard
+	 * @param towersP1
+	 * @param towersP2
+	 * @param field
+	 * @param player1
+	 * @param player2
+	 * @author lukas.k
+	 */
+	private void sumo1Move(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Field field, Tower[][] towersP1, Tower[][] towersP2) {
+		
+		int oldX = this.getxPosition();
+		int newX = field.getxPosition();
+		int oldY = this.getyPosition();
+		int newY = field.getyPosition();
+		
+		int newColumnGridPane = GridPane.getColumnIndex(field);
+		int newRowGridPane = GridPane.getRowIndex(field);
+
+		 
+			if (this.playerNumber == 1){
+
+				// The old field is empty and the new field from hit tower is busy
+				fields[oldX][oldY].setEmpty(true);
+				fields[newX][newY-1].setEmpty(false);
+						
+				// The coordinates of the hit tower will be changed
+				towersP2[newX][newY].setxPosition(newX);
+				towersP2[newX][newY].setyPosition(newY-1);
+				
+				// The coordinates of the sumoTower will be changed
+				this.setxPosition(newX);
+				this.setyPosition(newY);
+
+				// The Towers will be moved on the GridPane
+				GridPane.setColumnIndex(this, newColumnGridPane);
+				GridPane.setRowIndex(this, newRowGridPane);
+				GridPane.setColumnIndex(towersP2[newX][newY], newColumnGridPane);
+				GridPane.setRowIndex(towersP2[newX][newY], newRowGridPane+1);
+				
+				// The towers will be set on the right position in the tower array
+				towersP1[newX][newY]=this;
+				towersP1[oldX][oldY]= null;
+				towersP2[newX][newY-1] = towersP2[newX][newY]; 
+				towersP2[newX][newY] = null;
+					
+				
+			} else if (this.playerNumber == 2){
+				
+				
+				// The old field is empty and the new field from hit tower is busy
+				fields[oldX][oldY].setEmpty(true);
+				fields[newX][newY+1].setEmpty(false);
+							
+				// The coordinates of the hit tower will be changed
+				towersP1[newX][newY].setxPosition(newX);
+				towersP1[newX][newY].setyPosition(newY+1);
+					
+				// The coordinates of the sumoTower will be changed
+				this.setxPosition(newX);
+				this.setyPosition(newY);
+
+				// The Towers will be moved on the GridPane
+				GridPane.setColumnIndex(towersP1[newX][newY], newColumnGridPane);
+				GridPane.setRowIndex(towersP1[newX][newY], newRowGridPane-1);
+				GridPane.setColumnIndex(this, newColumnGridPane);
+				GridPane.setRowIndex(this, newRowGridPane);
+					
+				// The towers will be set on the right position in the tower array
+				towersP2[newX][newY]=this;
+				towersP2[oldX][oldY]= null;
+				towersP1[newX][newY+1] = towersP1[newX][newY];
+				towersP1[newX][newY] = null;		 
+			}
+			
+			
+		// The turn is finished, disable all fields
+		Field.disableFields(fields);
+				
+		// We check if a tower reached the last row
+		this.checkWin(fields, player1, player2, this, towersP1, towersP2);
+				
+		// Towers of other player will be enabled
+			if(model.Winner.get() == 0){
+				this.notChangeTurnSumo(fields, player1, player2, towersP1, towersP2, field);
+			}		
+	}
+	
+	/**
+	 * This method will change the position of the Sumo2 and the two hit towers on the GridPane
+	 * @param fields
+	 * @param gameBoard
+	 * @param towersP1
+	 * @param towersP2
+	 * @param field
+	 * @param player1
+	 * @param player2
+	 * @author lukas.k
+	 */
+	private void sumo2Move(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Field field,Tower[][] towersP1, Tower[][] towersP2) {
+
+			int oldX = this.getxPosition();
+			int newX = field.getxPosition();
+			int oldY = this.getyPosition();
+			int newY = field.getyPosition();
+			
+			int newColumnGridPane = GridPane.getColumnIndex(field);
+			int newRowGridPane = GridPane.getRowIndex(field);
+
+			 
+				if (this.playerNumber == 1){
+
+					// The old field from the sumoTower is empty and the new field from the rearmost hit-tower is busy
+					fields[oldX][oldY].setEmpty(true);
+					fields[newX][newY-2].setEmpty(false);
+							
+					// The coordinates from the hit towers will be changed
+					towersP2[newX][newY].setxPosition(newX);
+					towersP2[newX][newY].setyPosition(newY-1);
+					
+					towersP2[newX][newY-1].setxPosition(newX);
+					towersP2[newX][newY-1].setyPosition(newY-2);
+					
+					// The coordinates of the sumoTower will be changed
+					this.setxPosition(newX);
+					this.setyPosition(newY);
+
+					// The Towers will be moved on the GridPane
+					GridPane.setColumnIndex(this, newColumnGridPane);
+					GridPane.setRowIndex(this, newRowGridPane);
+					GridPane.setColumnIndex(towersP2[newX][newY], newColumnGridPane);
+					GridPane.setRowIndex(towersP2[newX][newY], newRowGridPane+1);
+					GridPane.setColumnIndex(towersP2[newX][newY-1], newColumnGridPane);
+					GridPane.setRowIndex(towersP2[newX][newY-1], newRowGridPane+2);
+					
+					
+					// The towers will be set on the right position in the tower array
+					towersP1[newX][newY]=this;
+					towersP1[oldX][oldY]= null;
+					towersP2[newX][newY-2] = towersP2[newX][newY-1]; 
+					towersP2[newX][newY-1] = null;
+					towersP2[newX][newY-1] = towersP2[newX][newY]; 
+					towersP2[newX][newY] = null;
+					
+						
+						
+				} else if (this.playerNumber == 2){
+						
+						
+					// The old field from the sumoTower is empty and the new field from the rearmost hit-tower is busy
+					fields[oldX][oldY].setEmpty(true);
+					fields[newX][newY+2].setEmpty(false);
+								
+					// The coordinates from the hit towers will be changed
+					towersP1[newX][newY].setxPosition(newX);
+					towersP1[newX][newY].setyPosition(newY+1);
+						
+					towersP1[newX][newY+1].setxPosition(newX);
+					towersP1[newX][newY+1].setyPosition(newY+2);
+						
+					// The coordinates of the sumoTower will be changed
+					this.setxPosition(newX);
+					this.setyPosition(newY);
+
+					// The Towers will be moved on the GridPane
+					GridPane.setColumnIndex(towersP1[newX][newY], newColumnGridPane);
+					GridPane.setRowIndex(towersP1[newX][newY], newRowGridPane-1);
+					GridPane.setColumnIndex(towersP1[newX][newY+1], newColumnGridPane);
+					GridPane.setRowIndex(towersP1[newX][newY+1], newRowGridPane-2);
+					GridPane.setColumnIndex(this, newColumnGridPane);
+					GridPane.setRowIndex(this, newRowGridPane);
+						
+						
+					// The towers will be set on the right position in the tower array
+					towersP2[newX][newY]=this;
+					towersP2[oldX][oldY]= null;
+					towersP1[newX][newY+2] = towersP1[newX][newY+1];
+					towersP1[newX][newY+1] = null;
+					towersP1[newX][newY+1] = towersP1[newX][newY];
+					towersP1[newX][newY] = null;
+							 
+				}
+					
+					
+			// The turn is finished, disable all fields
+			Field.disableFields(fields);
+					
+			// We check if a tower reached the last row
+			this.checkWin(fields, player1, player2, this, towersP1, towersP2);
+					
+			// Towers of other player will be enabled
+				if(model.Winner.get() == 0){
+					this.notChangeTurnSumo(fields, player1, player2, towersP1, towersP2, field);
+				}
+	}
+	
 	/**
 	 * This method will change the position of the Sumo3 and the three hit tower on the GridPane
 	 * @param fields
@@ -515,308 +721,62 @@ public class Tower extends Button {
 				
 					
 					
-				} else if (this.playerNumber == 2){
+			} else if (this.playerNumber == 2){
 					
 					
-					// The old field from the sumoTower is empty and the new field from the rearmost hit-tower is busy
-					fields[oldX][oldY].setEmpty(true);
-					fields[newX][newY+3].setEmpty(false);
-							
-					// The coordinates from the hit towers will be changed
-					towersP1[newX][newY].setxPosition(newX);
-					towersP1[newX][newY].setyPosition(newY+1);
-					
-					towersP1[newX][newY+1].setxPosition(newX);
-					towersP1[newX][newY+1].setyPosition(newY+2);
-					
-					towersP1[newX][newY+2].setxPosition(newX);
-					towersP1[newX][newY+2].setyPosition(newY+3);
-					
-					// The coordinates of the sumoTower will be changed
-					this.setxPosition(newX);
-					this.setyPosition(newY);
-
-					// The Towers will be moved on the GridPane
-					GridPane.setColumnIndex(towersP1[newX][newY], newColumnGridPane);
-					GridPane.setRowIndex(towersP1[newX][newY], newRowGridPane-1);
-					GridPane.setColumnIndex(towersP1[newX][newY+2], newColumnGridPane);
-					GridPane.setRowIndex(towersP1[newX][newY+2], newRowGridPane-3);
-					GridPane.setColumnIndex(towersP1[newX][newY+1], newColumnGridPane);
-					GridPane.setRowIndex(towersP1[newX][newY+1], newRowGridPane-2);
-					GridPane.setColumnIndex(this, newColumnGridPane);
-					GridPane.setRowIndex(this, newRowGridPane);
-					
-					
-					// The towers will be set on the right position in the tower array
-					towersP2[newX][newY]=this;
-					towersP2[oldX][oldY]= null;
-					towersP1[newX][newY+3] = towersP1[newX][newY+2];
-					towersP1[newX][newY+2] = null;
-					towersP1[newX][newY+2] = towersP1[newX][newY+1];
-					towersP1[newX][newY+1] = null;
-					towersP1[newX][newY+1] = towersP1[newX][newY];
-					towersP1[newX][newY] = null;
-						 
-				}
-				
-				
-				// The turn is finished, disable all fields
-				Field.disableFields(fields);
-				
-				// We check if a tower reached the last row
-				this.checkWin(fields, player1, player2, this, towersP1, towersP2);
-				
-				// Towers of other player will be enabled
-				if(model.Winner.get() == 0){
-				this.notChangeTurnSumo(fields, player1, player2, towersP1, towersP2, field);
-			}}
-	/**
-	 * This method will change the position of the Sumo2 and the two hit towers on the GridPane
-	 * @param fields
-	 * @param gameBoard
-	 * @param towersP1
-	 * @param towersP2
-	 * @param field
-	 * @param player1
-	 * @param player2
-	 * @author lukas.k
-	 */
-	private void sumo2Move(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Field field,Tower[][] towersP1, Tower[][] towersP2) {
-
-			int oldX = this.getxPosition();
-			int newX = field.getxPosition();
-			int oldY = this.getyPosition();
-			int newY = field.getyPosition();
-			
-			int newColumnGridPane = GridPane.getColumnIndex(field);
-			int newRowGridPane = GridPane.getRowIndex(field);
-
-			 
-				 if (this.playerNumber == 1){
-
-					 // The old field from the sumoTower is empty and the new field from the rearmost hit-tower is busy
-					fields[oldX][oldY].setEmpty(true);
-					fields[newX][newY-2].setEmpty(false);
-							
-					// The coordinates from the hit towers will be changed
-					towersP2[newX][newY].setxPosition(newX);
-					towersP2[newX][newY].setyPosition(newY-1);
-					
-					towersP2[newX][newY-1].setxPosition(newX);
-					towersP2[newX][newY-1].setyPosition(newY-2);
-					
-					// The coordinates of the sumoTower will be changed
-					this.setxPosition(newX);
-					this.setyPosition(newY);
-
-					// The Towers will be moved on the GridPane
-					GridPane.setColumnIndex(this, newColumnGridPane);
-					GridPane.setRowIndex(this, newRowGridPane);
-					GridPane.setColumnIndex(towersP2[newX][newY], newColumnGridPane);
-					GridPane.setRowIndex(towersP2[newX][newY], newRowGridPane+1);
-					GridPane.setColumnIndex(towersP2[newX][newY-1], newColumnGridPane);
-					GridPane.setRowIndex(towersP2[newX][newY-1], newRowGridPane+2);
-					
-					
-					// The towers will be set on the right position in the tower array
-					towersP1[newX][newY]=this;
-					towersP1[oldX][oldY]= null;
-					towersP2[newX][newY-2] = towersP2[newX][newY-1]; 
-					towersP2[newX][newY-1] = null;
-					towersP2[newX][newY-1] = towersP2[newX][newY]; 
-					towersP2[newX][newY] = null;
-					
-						
-						
-					} else if (this.playerNumber == 2){
-						
-						
-						// The old field from the sumoTower is empty and the new field from the rearmost hit-tower is busy
-						fields[oldX][oldY].setEmpty(true);
-						fields[newX][newY+2].setEmpty(false);
-								
-						// The coordinates from the hit towers will be changed
-						towersP1[newX][newY].setxPosition(newX);
-						towersP1[newX][newY].setyPosition(newY+1);
-						
-						towersP1[newX][newY+1].setxPosition(newX);
-						towersP1[newX][newY+1].setyPosition(newY+2);
-						
-						// The coordinates of the sumoTower will be changed
-						this.setxPosition(newX);
-						this.setyPosition(newY);
-
-						// The Towers will be moved on the GridPane
-						GridPane.setColumnIndex(towersP1[newX][newY], newColumnGridPane);
-						GridPane.setRowIndex(towersP1[newX][newY], newRowGridPane-1);
-						GridPane.setColumnIndex(towersP1[newX][newY+1], newColumnGridPane);
-						GridPane.setRowIndex(towersP1[newX][newY+1], newRowGridPane-2);
-						GridPane.setColumnIndex(this, newColumnGridPane);
-						GridPane.setRowIndex(this, newRowGridPane);
-						
-						
-						// The towers will be set on the right position in the tower array
-						towersP2[newX][newY]=this;
-						towersP2[oldX][oldY]= null;
-						towersP1[newX][newY+2] = towersP1[newX][newY+1];
-						towersP1[newX][newY+1] = null;
-						towersP1[newX][newY+1] = towersP1[newX][newY];
-						towersP1[newX][newY] = null;
-							 
-					}
-					
-					
-					// The turn is finished, disable all fields
-					Field.disableFields(fields);
-					
-					// We check if a tower reached the last row
-					this.checkWin(fields, player1, player2, this, towersP1, towersP2);
-					
-					// Towers of other player will be enabled
-					if(model.Winner.get() == 0){
-					this.notChangeTurnSumo(fields, player1, player2, towersP1, towersP2, field);
-				}}
-	/**
-	 * This method will change the position of the Sumo and Hit Tower on the GridPane
-	 * @param fields
-	 * @param gameBoard
-	 * @param towersP1
-	 * @param towersP2
-	 * @param field
-	 * @param player1
-	 * @param player2
-	 * @author lukas.k
-	 */
-	private void sumo1Move(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Field field,
-		Tower[][] towersP1, Tower[][] towersP2) {
-		int oldX = this.getxPosition();
-		int newX = field.getxPosition();
-		int oldY = this.getyPosition();
-		int newY = field.getyPosition();
-		
-		int newColumnGridPane = GridPane.getColumnIndex(field);
-		int newRowGridPane = GridPane.getRowIndex(field);
-
-		 
-			 if (this.playerNumber == 1){
-
-		// The old field is empty and the new field from hit tower is busy
+				// The old field from the sumoTower is empty and the new field from the rearmost hit-tower is busy
 				fields[oldX][oldY].setEmpty(true);
-				fields[newX][newY-1].setEmpty(false);
-						
-				// The coordinates of the hit tower will be changed
-				towersP2[newX][newY].setxPosition(newX);
-				towersP2[newX][newY].setyPosition(newY-1);
-				
-				// The coordinates of the sumoTower will be changed
+				fields[newX][newY+3].setEmpty(false);
+							
+				// The coordinates from the hit towers will be changed
+				towersP1[newX][newY].setxPosition(newX);
+				towersP1[newX][newY].setyPosition(newY+1);
+					
+				towersP1[newX][newY+1].setxPosition(newX);
+				towersP1[newX][newY+1].setyPosition(newY+2);
+					
+				towersP1[newX][newY+2].setxPosition(newX);
+				towersP1[newX][newY+2].setyPosition(newY+3);
+					
+					// The coordinates of the sumoTower will be changed
 				this.setxPosition(newX);
 				this.setyPosition(newY);
 
 				// The Towers will be moved on the GridPane
+				GridPane.setColumnIndex(towersP1[newX][newY], newColumnGridPane);
+				GridPane.setRowIndex(towersP1[newX][newY], newRowGridPane-1);
+				GridPane.setColumnIndex(towersP1[newX][newY+2], newColumnGridPane);
+				GridPane.setRowIndex(towersP1[newX][newY+2], newRowGridPane-3);
+				GridPane.setColumnIndex(towersP1[newX][newY+1], newColumnGridPane);
+				GridPane.setRowIndex(towersP1[newX][newY+1], newRowGridPane-2);
 				GridPane.setColumnIndex(this, newColumnGridPane);
 				GridPane.setRowIndex(this, newRowGridPane);
-				GridPane.setColumnIndex(towersP2[newX][newY], newColumnGridPane);
-				GridPane.setRowIndex(towersP2[newX][newY], newRowGridPane+1);
-				
-				//this.setPlayerSign();
-				
+					
+					
 				// The towers will be set on the right position in the tower array
-					towersP1[newX][newY]=this;
-					towersP1[oldX][oldY]= null;
-					towersP2[newX][newY-1] = towersP2[newX][newY]; 
-					towersP2[newX][newY] = null;
-					
-					
-				} else if (this.playerNumber == 2){
-					
-					
-					// The old field is empty and the new field from hit tower is busy
-					fields[oldX][oldY].setEmpty(true);
-					fields[newX][newY+1].setEmpty(false);
-							
-					// The coordinates of the hit tower will be changed
-					towersP1[newX][newY].setxPosition(newX);
-					towersP1[newX][newY].setyPosition(newY+1);
-					
-					// The coordinates of the sumoTower will be changed
-					this.setxPosition(newX);
-					this.setyPosition(newY);
-
-					// The Towers will be moved on the GridPane
-					GridPane.setColumnIndex(towersP1[newX][newY], newColumnGridPane);
-					GridPane.setRowIndex(towersP1[newX][newY], newRowGridPane-1);
-					GridPane.setColumnIndex(this, newColumnGridPane);
-					GridPane.setRowIndex(this, newRowGridPane);
-					
-					//this.setPlayerSign();
-					
-					// The towers will be set on the right position in the tower array
-						towersP2[newX][newY]=this;
-						towersP2[oldX][oldY]= null;
-						towersP1[newX][newY+1] = towersP1[newX][newY];
-						towersP1[newX][newY] = null;
-						 
-				}
-				
-			 
-				
-				// The turn is finished, disable all fields
-				Field.disableFields(fields);
-				
-				// We check if a tower reached the last row
-				this.checkWin(fields, player1, player2, this, towersP1, towersP2);
-				
-				// Towers of other player will be enabled
-				if(model.Winner.get() == 0){
-				this.notChangeTurnSumo(fields, player1, player2, towersP1, towersP2, field);
-			}}
-	
-	/**
-	 * This method will activate the own towers after a sumoHit and NOT change the turn
-	 * @param fields
-	 * @param player1
-	 * @param player2
-	 * @param towersP1
-	 * @param towersP2
-	 * @author lukas
-	 */
-	private void notChangeTurnSumo(Field[][] fields, Player player1, Player player2, Tower[][] towersP1, Tower[][] towersP2, Field field) {
-
-		if(player1.isOnTurn()){
-			player2.setOnTurn(false);
-			player1.setOnTurn(true);
-			this.disableTowers(towersP2);
-			this.enableTowerAfterSumoMove(fields, towersP1, field);
-		} else{
-			player2.setOnTurn(true);
-			player1.setOnTurn(false);
-			this.enableTowerAfterSumoMove(fields, towersP2, field);
-			this.disableTowers(towersP1);
-		}
-	}
-	/**
-	 *  This method will enable the own tower with the right color after a SumHit 
-	 * @param fields
-	 * @param towers
-	 * @param field
-	 * @author lukas
-	 */
-	private void enableTowerAfterSumoMove(Field[][] fields, Tower[][] towers, Field field) {
-		if(this.playerNumber == 1){
-				for(int y = 0; y < 8; y++){
-				for(int x = 0; x < 8; x++){
-					if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()- this.saveSumoMove].getColor())){
-						towers[x][y].setDisable(false);
-											
-			}}}}else if (this.playerNumber == 2){
-						for(int x = 0; x < 8; x++){
-						for(int y = 0; y < 8; y++){
-							if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()+ this.saveSumoMove].getColor())){
-								towers[x][y].setDisable(false);	
-				}}}}
-			this.saveSumoMove = 0;
+				towersP2[newX][newY]=this;
+				towersP2[oldX][oldY]= null;
+				towersP1[newX][newY+3] = towersP1[newX][newY+2];
+				towersP1[newX][newY+2] = null;
+				towersP1[newX][newY+2] = towersP1[newX][newY+1];
+				towersP1[newX][newY+1] = null;
+				towersP1[newX][newY+1] = towersP1[newX][newY];
+				towersP1[newX][newY] = null;		 
 			}
-	
+				
+				
+		// The turn is finished, disable all fields
+		Field.disableFields(fields);
+				
+		// We check if a tower reached the last row
+		this.checkWin(fields, player1, player2, this, towersP1, towersP2);
+				
+		// Towers of other player will be enabled
+			if(model.Winner.get() == 0){
+				this.notChangeTurnSumo(fields, player1, player2, towersP1, towersP2, field);
+			}		
+	}
+
 	/**
 	 * This method will activate the opponents towers and change the turn
 	 * @param player1
@@ -836,6 +796,30 @@ public class Tower extends Button {
 			player2.setOnTurn(false);
 			Tower.disableTowers(towersP2);
 			this.enableTowers(fields, towersP1, field);
+		}
+	}
+	
+	/**
+	 * This method will activate the own matching tower after a sumoHit and don't change the turn
+	 * @param fields
+	 * @param player1
+	 * @param player2
+	 * @param towersP1
+	 * @param towersP2
+	 * @author l.kunz
+	 */
+	private void notChangeTurnSumo(Field[][] fields, Player player1, Player player2, Tower[][] towersP1, Tower[][] towersP2, Field field) {
+
+		if(player1.isOnTurn()){
+			player2.setOnTurn(false);
+			player1.setOnTurn(true);
+			this.disableTowers(towersP2);
+			this.enableTowerAfterSumoHit(fields, towersP1, field);
+		} else {
+			player2.setOnTurn(true);
+			player1.setOnTurn(false);
+			this.enableTowerAfterSumoHit(fields, towersP2, field);
+			this.disableTowers(towersP1);
 		}
 	}
 	
@@ -870,8 +854,92 @@ public class Tower extends Button {
 						if(towers[x][y]!=null && towers[x][y].getColor().equals(field.getColor())){
 							towers[x][y].setDisable(false);
 		}}}}
+		this.saveSumoMove = 0;
+	}
+	
+	/**
+	 *  This method will enable the own tower with the right color after a SumHit 
+	 * @param fields
+	 * @param towers
+	 * @param field
+	 * @author l.kunz
+	 */
+	private void enableTowerAfterSumoHit(Field[][] fields, Tower[][] towers, Field field) {
+		
+		if(this.playerNumber == 1){
+			for(int y = 0; y < 8; y++){
+				for(int x = 0; x < 8; x++){
+					if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()- this.saveSumoMove].getColor())){
+						towers[x][y].setDisable(false);						
+					}
+				}
+			}
+			
+		} else if (this.playerNumber == 2){
+			for(int x = 0; x < 8; x++){
+				for(int y = 0; y < 8; y++){
+					if(towers[x][y] != null && towers[x][y].getColor().equals(fields[field.getxPosition()][field.getyPosition()+ this.saveSumoMove].getColor())){
+						towers[x][y].setDisable(false);	
+					}
+				}
+			}
+		}
+		
+	this.saveSumoMove = 0;
 	}
 
+	/**
+	 * This method checks if the actual tower reach a winning position.
+	 * @param fields
+	 * @param player1
+	 * @param player2
+	 * @param tower
+	 * @param towersP1
+	 * @param towersP2
+	 * @author l.kunz
+	 */
+	private void checkWin(Field[][] fields, Player player1, Player player2, Tower tower, Tower[][] towersP1, Tower[][] towersP2) {
+			
+		if (player1.isOnTurn() && this.yPosition == 0){
+			this.upgradeTower(fields, tower, this.getxPosition(), this.getyPosition(), this.getGems(), towersP1, towersP2);
+			this.setDisable(false);
+			GameMenu_Model.Winner.set(1);
+			
+		} else if(player2.isOnTurn() && this.yPosition == 7){
+			this.upgradeTower(fields, tower, this.xPosition, this.yPosition, gems, towersP1, towersP2);
+			this.setDisable(false);
+			GameMenu_Model.Winner.set(2);
+		}
+	}
+
+	/**
+	 * This method will upgrade a tower to the different Sumo Towers
+	 * @param fields
+	 * @param tower
+	 * @param xCoordinateUpgrade
+	 * @param yCoordinateUpgrade
+	 * @param gems
+	 * @param towersP1
+	 * @param towersP2
+	 * @author l.kunz
+	 */
+	public void upgradeTower(Field[][] fields, Tower tower, int xCoordinateUpgrade, int yCoordinateUpgrade, int gems, Tower[][] towersP1, Tower[][] towersP2) {
+		int column = GridPane.getColumnIndex(fields[xCoordinateUpgrade][yCoordinateUpgrade]);
+		int row = GridPane.getRowIndex(fields[xCoordinateUpgrade][yCoordinateUpgrade]);
+		
+			if(this.gems == 0){
+				this.sumoTower = true;
+				this.setText("\u2160");
+				this.gems++;
+			} else if (this.gems == 1){
+				this.setText("\u2161");
+				this.gems++;
+			} else if (this.gems == 2){
+				this.setText("\u2162");
+				this.gems++;
+			}
+	}
+	
 	/**
 	 * This method make a move coming from the Server
 	 * @param startColumn
@@ -916,52 +984,10 @@ public class Tower extends Button {
 		}
 	}
 
+	
 	/**
-	 * This method will upgrade a tower to different Sumo Towers
-	 * @param fields
-	 * @param tower
-	 * @param xCoordinateUpgrade
-	 * @param yCoordinateUpgrade
-	 * @param gems
-	 * @param towersP1
-	 * @param towersP2
+	 * Getter and Setter
 	 */
-	public void upgradeTower(Field[][] fields, Tower tower, int xCoordinateUpgrade, int yCoordinateUpgrade, int gems, Tower[][] towersP1, Tower[][] towersP2) {
-		int column = GridPane.getColumnIndex(fields[xCoordinateUpgrade][yCoordinateUpgrade]);
-		int row = GridPane.getRowIndex(fields[xCoordinateUpgrade][yCoordinateUpgrade]);
-		
-		
-		if(this.gems == 0){
-			this.sumoTower = true;
-			this.setText("\u2160");
-			this.gems++;
-		}else if (this.gems == 1){
-			this.setText("\u2161");
-			this.gems++;
-		}else if (this.gems == 2){
-			this.setText("\u2162");
-			this.gems++;
-	}}
-
-	/**
-	 * This method checks if the tower reach a winning position and upgrade the tower if yes
-	 * @param 
-	 * @author lukas.k
-	 */
-	private void checkWin(Field[][] fields, Player player1, Player player2, Tower tower, Tower[][] towersP1, Tower[][] towersP2) {
-			if (player1.isOnTurn()&& yPosition == 0){
-			this.upgradeTower(fields, tower, this.getxPosition(), this.getyPosition(), this.getGems(), towersP1, towersP2);
-			this.setDisable(false);
-			GameMenu_Model.Winner.set(1);
-			} else if(player2.isOnTurn()&& yPosition == 7){
-			this.upgradeTower(fields, tower, this.xPosition, this.yPosition, gems, towersP1, towersP2);
-			this.setDisable(false);
-			GameMenu_Model.Winner.set(2);
-			
-			}
-		}
-
-
 	// Getters and Setters
 	public int getPlayerNumber(){
 		return this.playerNumber;

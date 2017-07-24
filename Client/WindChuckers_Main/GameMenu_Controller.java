@@ -609,85 +609,83 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	/**
 	 * Build the game new
 	 * @param newRoundLeftRight
+	 * @author l.kunz
 	 */
 	private void buildNewRound(boolean newRoundLeftRight) {				
-				Tower[][] towersP1Temp = new Tower[model.DIMENSION][model.DIMENSION];
-				Tower[][] towersP2Temp = new Tower[model.DIMENSION][model.DIMENSION];
-				// Player 1
-				
-//				if (model.Winner.intValue()==1 || model.Winner.intValue()==2){
-//					model.Winner.set(0);
-//					
-//				}
-					
+		Tower[][] towersP1Temp = new Tower[model.DIMENSION][model.DIMENSION];
+		Tower[][] towersP2Temp = new Tower[model.DIMENSION][model.DIMENSION];				
+			
 			if (newRoundLeftRight){
-				
-			// Player 1 Towers will be added in a Temp Array
+				// Player 1 Towers will be added in a Temp Array
 				int i = 0;
-				for(int y = 0; y < 8; y++){
-					for(int x = 0; x < 8; x++){
-						if(view.fields[x][y].isEmpty() == false && view.towersP1[x][y] != null){
-						towersP1Temp[i][7] = view.towersP1[x][y];
-						i++;
-						}}}
-				
-			// Player 2 Towers will be added in a Temp Array
-				int k = 0;
-				for(int y = 0; y < 8; y++){
-					for(int x = 0; x < 8; x++){
-						if(view.fields[x][y].isEmpty() == false && view.towersP2[x][y] != null){
-									towersP2Temp[7-k][0] = view.towersP2[x][y];
-									k++;
+					for(int y = 0; y < 8; y++){
+						for(int x = 0; x < 8; x++){
+							if(view.fields[x][y].isEmpty() == false && view.towersP1[x][y] != null){
+								towersP1Temp[i][7] = view.towersP1[x][y];
+								i++;
+							}
 						}
-							view.fields[x][y].setEmpty(true);
-							}}
+					}
 				
-					} else if(!newRoundLeftRight){
+					// Player 2 Towers will be added in a Temp Array
+					int k = 0;
+					for(int y = 0; y < 8; y++){
+						for(int x = 0; x < 8; x++){
+							if(view.fields[x][y].isEmpty() == false && view.towersP2[x][y] != null){
+								towersP2Temp[7-k][0] = view.towersP2[x][y];
+								k++;
+							}
+							view.fields[x][y].setEmpty(true);
+						}
+					}
+				
+				} else if (!newRoundLeftRight){
 						
-						
-						// Player 1 Towers will be added in a Temp Array
-						int i = 0;
+					// Player 1 Towers will be added in a Temp Array
+					int i = 0;
 						for(int y = 0; y < 8; y++){
 							for(int x = 0; x < 8; x++){
 								if(view.fields[x][y].isEmpty() == false && view.towersP1[x][y] != null){
 								towersP1Temp[7-i][7] = view.towersP1[x][y];
 								i++;
-										}
-								}}
+								}
+							}
+						}
 						
 					// Player 2 Towers will be added in a Temp Array
-						int k = 0;
+					int k = 0;
 						for(int y = 0; y < 8; y++){
 							for(int x = 0; x < 8; x++){
 								if(view.fields[x][y].isEmpty() == false && view.towersP2[x][y] != null){
-											towersP2Temp[k][0] = view.towersP2[x][y];
-											k++;
+									towersP2Temp[k][0] = view.towersP2[x][y];
+									k++;
 								}
-									view.fields[x][y].setEmpty(true);
-									}
+								view.fields[x][y].setEmpty(true);
+							}
 						}
-					}
+				}
 				
 
-				// Towers will be reset on a startposition (right or left)
-				for(int x = 0; x < GameMenu_Model.DIMENSION;x++){
-					towersP1Temp[x][7].setxPosition(x);
-					towersP1Temp[x][7].setyPosition(7);
-					GridPane.setColumnIndex(towersP1Temp[x][7], x);
-					GridPane.setRowIndex(towersP1Temp[x][7], 0);
+			// Towers will be reset on a start position (right or left)
+			for(int x = 0; x < GameMenu_Model.DIMENSION;x++){
+				
+				towersP1Temp[x][7].setxPosition(x);
+				towersP1Temp[x][7].setyPosition(7);
+				GridPane.setColumnIndex(towersP1Temp[x][7], x);
+				GridPane.setRowIndex(towersP1Temp[x][7], 0);
 					
-					towersP2Temp[x][0].setxPosition(x);
-					towersP2Temp[x][0].setyPosition(0);	
-					GridPane.setColumnIndex(towersP2Temp[x][0], x);
-					GridPane.setRowIndex(towersP2Temp[x][0], 7);
+				towersP2Temp[x][0].setxPosition(x);
+				towersP2Temp[x][0].setyPosition(0);	
+				GridPane.setColumnIndex(towersP2Temp[x][0], x);
+				GridPane.setRowIndex(towersP2Temp[x][0], 7);
 					
-					view.towersP1 = towersP1Temp;
-					view.towersP2 = towersP2Temp;
-					view.fields[x][view.towersP1.length-1].setEmpty(false);
-					view.fields[x][view.towersP2.length-view.towersP2.length].setEmpty(false);
+				view.towersP1 = towersP1Temp;
+				view.towersP2 = towersP2Temp;
+				view.fields[x][view.towersP1.length-1].setEmpty(false);
+				view.fields[x][view.towersP2.length-view.towersP2.length].setEmpty(false);
 	
-		}
-				}
+			}
+	}
 	
 	/**
 	 * The whole win procedure as soon as someone reaches the back line
