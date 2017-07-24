@@ -472,7 +472,7 @@ public class GameMenu_Model extends Model {
 
 		this.messageConstructorForFriendsInsert(5, id, friendId);
 
-		System.out.println("Friend added: " + self + " : " + friend);
+		serviceLocator.getLogger().info("Friend added: " + self + " : " + friend);
 	}
 
 	/**
@@ -491,7 +491,7 @@ public class GameMenu_Model extends Model {
 		}
 
 		this.messageConstructorForDBUpdate(6, friendId);
-		System.out.println("FriendsRequest refused: " + friend);
+		serviceLocator.getLogger().info("\"FriendsRequest refused: \" + friend");
 	}
 
 	/**
@@ -500,7 +500,17 @@ public class GameMenu_Model extends Model {
 	 * @author T.Bosshard
 	 */
 	public void removeFriend(String friend) {
-		System.out.println("Friend removed: " + friend);
+		int friendId = 0;
+
+		for (int i = 1; i <= users.size(); i++) {
+			String[] name = friend.split(" ");
+			if (name[0].equalsIgnoreCase(users.get(i))) {
+				friendId = i;
+			}
+		}
+		
+		this.messageConstructorForDBUpdate(6, friendId);
+		serviceLocator.getLogger().info("\"Friend deleted: \" + friend");
 	}
 
 	/**
@@ -522,8 +532,7 @@ public class GameMenu_Model extends Model {
 			}
 		}
 		this.messageConstructorForFriendsInsert(5, id, friendId);
-
-		System.out.println("Friend added: " + self + " : " + friend);
+		serviceLocator.getLogger().info("Friend added: " + self + " : " + friend);
 	}
 
 	// set a new move
