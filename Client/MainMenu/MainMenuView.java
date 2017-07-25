@@ -11,7 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -20,15 +19,23 @@ public class MainMenuView extends View <GameMenu_Model>{
 	private GameMenu_Model model;
     private Stage stage;
 	
+    /**
+     * @author Cyrill Füglister
+     */
+    
 	private Menu menuFileMainMenu;
 	protected MenuItem menuFileExitMainMenu;
 	
-	protected Button btnStartGame;
-    
+	protected Button btnSingleGame;
+	protected Button btnStandardGame;
+	protected Button btnLongGame;
+	protected Button btnMarathonGame;
+	protected Button btnFriends;
+	
 	public MainMenuView (Stage stage, GameMenu_Model model){
 		super(stage,model);
 		
-		stage.setTitle("Lobby");
+		stage.setTitle("Main Menu");
 
 	}
 
@@ -46,16 +53,39 @@ public class MainMenuView extends View <GameMenu_Model>{
 		menuFileMainMenu.getItems().add(menuFileExitMainMenu);
 		
 		VBox menuBox = new VBox();
-		btnStartGame = new  Button();
-		menuBox.getChildren().add(btnStartGame);
+
 		
-		GridPane root = new GridPane();
+		//Button definition and sizing
+		btnSingleGame = new Button();
+		btnStandardGame = new Button();
+		btnLongGame = new Button();
+		btnMarathonGame = new Button();
+		btnFriends = new Button();
+		
+		btnSingleGame.setPrefWidth(175);
+		btnStandardGame.setPrefWidth(175);
+		btnLongGame.setPrefWidth(175);
+		btnMarathonGame.setPrefWidth(175);
+		btnFriends.setPrefWidth(175);
+		
+		
+		//Add buttons to menubox
+		menuBox.getChildren().add(btnSingleGame);
+		menuBox.getChildren().add(btnStandardGame);
+		menuBox.getChildren().add(btnLongGame);
+		menuBox.getChildren().add(btnMarathonGame);
+		menuBox.getChildren().add(btnFriends);
+		
+		
+		//Attach menubar and menubox to gridpane
+		GridPane root  = new GridPane();
 		root.add(menuBar, 0, 0);
 		root.add(menuBox, 0, 1);
+
 		
 		updateTexts();
 		
-        Scene scene = new Scene(root);
+        Scene scene = new Scene (root);
         scene.getStylesheets().add(
                 getClass().getResource("Style.css").toExternalForm());
 		return scene;
@@ -68,8 +98,14 @@ public class MainMenuView extends View <GameMenu_Model>{
 		menuFileMainMenu.setText(t.getString("mainmenu.menu.file"));
 		menuFileExitMainMenu.setText(t.getString("mainmenu.menu.file.exit"));
 		
-		//Buttons
-		btnStartGame.setText(t.getString("btnStartGame"));
+		
+		//Textupdate Button
+		btnSingleGame.setText(t.getString("btnSingleGame"));
+		btnStandardGame.setText(t.getString("btnStandardGame"));
+		btnLongGame.setText(t.getString("btnLongGame"));
+		btnMarathonGame.setText(t.getString("btnMarathonGame"));
+		btnFriends.setText(t.getString("btnFriends"));
+		
 	}
 
 }

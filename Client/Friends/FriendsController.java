@@ -3,6 +3,7 @@ package Friends;
 import java.util.ArrayList;
 import java.util.Random;
 
+import Client.ClientThreadForServer;
 import Login.LoginModel;
 import WindChuckers_Main.GameMenu_Model;
 import WindChuckers_Main.GameMenu_View;
@@ -21,14 +22,19 @@ public class FriendsController extends Controller<GameMenu_Model, FriendsView> {
 	private FriendsView view;
 	private WindChuckers windChuckers;
 	private AddFriendsView addview;
+	ClientThreadForServer clientServer = ClientThreadForServer.getClientServer();
+	
+	private static long hashCode = ClientThreadForServer.hashCodeStatic;
 
 	public FriendsController(GameMenu_Model model, FriendsView view, AddFriendsView addview) {
 		super(model, view);
 		this.addview = addview;
 		
 		//send the hash-code and the name to the server for key / value
-		long hash = GameMenu_View.getHashCode();
-		model.messageConstructorForName(hash, LoginModel.getUserName());
+		long hash = hashCode;
+		model.messageConstructorForName(hash, LoginModel.getUserName());	
+		// get the friendsList
+		model.setFriends(clientServer.getFriendsList());
 
 		/**
 		 * Close the Friend Menu
@@ -204,6 +210,14 @@ public class FriendsController extends Controller<GameMenu_Model, FriendsView> {
 		Platform.runLater(() -> {
 			windChuckers.startFriends();
 		});
+	}
+	
+	public void setHashCode(long hash) {
+		hashCode = hash;
+	}
+	
+	public static long getHashCode() {
+		return hashCode;
 	}
 
 }

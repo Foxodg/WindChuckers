@@ -395,6 +395,14 @@ public class WindChuckers extends Application {
     protected static WindChuckers getMainProgram() {
         return mainProgram;
     }
+    
+    public void startMainMenuView() {
+    	this.mainMenuView.getStage().show();
+    }
+    
+    public void startGameMenuViewe() {
+    	this.view.getStage().show();
+    }
 
 	
 

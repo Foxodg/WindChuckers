@@ -100,7 +100,9 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		 */
 		view.menuFileExit.setOnAction(e -> {
 			serviceLocator.getLogger().info("Close the Application");
-			cleanUp();
+			view.stop();
+			windChuckers = WindChuckers.getWindChuckers();
+			windChuckers.startMainMenuView();
 		});
 		
 		/**
