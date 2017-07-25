@@ -409,6 +409,9 @@ public class WindChuckers extends Application {
     	return this.view;
     }
 
+    public LoginView getLoginView() {
+    	return this.loginView;
+    }
 	
 
 

@@ -21,6 +21,7 @@ public class MainMenuController extends Controller<GameMenu_Model, MainMenuView>
 		 */
 		view.menuFileExitMainMenu.setOnAction(e -> {
 			view.getStage().hide();
+			main.getLoginView().getStage().show();
 		});
 		
 		
