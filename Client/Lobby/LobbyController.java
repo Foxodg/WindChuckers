@@ -1,6 +1,8 @@
 package Lobby;
 
 import Client.ClientThreadForServer;
+import Friends.FriendsController;
+import Friends.FriendsView;
 import WindChuckers_Main.GameMenu_Model;
 import WindChuckers_Main.GameMenu_View;
 import WindChuckers_Main.WindChuckers;
@@ -31,7 +33,7 @@ public class LobbyController extends Controller<GameMenu_Model, LobbyView> {
 		view.btnSend.setOnAction(e -> {
 			String input = model.getUserNameString();
 			input += ": " + view.txtChat.getText();
-			model.messageConstructorForBuildCapsule(GameMenu_View.getHashCode(), input);
+			model.messageConstructorForBuildCapsule(FriendsController.getHashCode(), input);
 			view.txtChat.clear();
 		});
 		
@@ -40,7 +42,7 @@ public class LobbyController extends Controller<GameMenu_Model, LobbyView> {
 			if (e.getCode().equals(KeyCode.ENTER)) {
 				String input = model.getUserNameString();
 				input += ": " + view.txtChat.getText();
-				model.messageConstructorForBuildCapsule(GameMenu_View.getHashCode(), input);
+				model.messageConstructorForBuildCapsule(FriendsController.getHashCode(), input);
 				view.txtChat.clear();
 			}
 		});
@@ -61,10 +63,10 @@ public class LobbyController extends Controller<GameMenu_Model, LobbyView> {
 			}
 			if(pressed) {
 				//send ready to server
-				model.messageConstructorForWaiter(GameMenu_View.getHashCode());
+				model.messageConstructorForWaiter(FriendsController.getHashCode());
 			} else {
 				//send not ready to server
-				model.messageConstructorForWaiter(GameMenu_View.getHashCode());
+				model.messageConstructorForWaiter(FriendsController.getHashCode());
 			}
 		});
 		

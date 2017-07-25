@@ -85,8 +85,6 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	public MenuItem menuFileRestart;
 	public MenuItem menuFileExit;
 	public MenuItem menuClientGUI;
-	public MenuItem menuFileLobby;
-	public MenuItem menuFileLogin;
 	public MenuItem menuFileFriends;
 	public MenuItem menuMainMenu;
 	public MenuItem menuFileAI;
@@ -123,12 +121,10 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		menuFileLanguage = new Menu();
 		menuFileRestart = new MenuItem();
 		menuFileExit = new MenuItem();
-		menuFileLobby = new MenuItem();
-		menuFileLogin = new MenuItem();
 		menuFileFriends = new MenuItem();
 		menuMainMenu = new MenuItem();
 		menuTutorial = new MenuItem();
-		menuFile.getItems().addAll(menuFileRestart,menuFileLanguage,menuFileLobby, menuFileLogin, menuFileFriends, menuMainMenu,menuFileExit);
+		menuFile.getItems().addAll(menuFileRestart,menuFileLanguage,menuFileFriends, menuMainMenu,menuFileExit);
 
 		for (Locale locale : sl.getLocales()) {
 			MenuItem language = new MenuItem(locale.getLanguage());
@@ -452,8 +448,6 @@ public class GameMenu_View extends View<GameMenu_Model> {
 		menuHelpAbout.setText(t.getString("program.menu.help.helpabout"));
 		menuClient.setText(t.getString("program.menu.client"));
 		menuClientGUI.setText(t.getString("program.menu.clientGUI"));
-		menuFileLobby.setText(t.getString("program.menu.file.lobby"));
-		menuFileLogin.setText(t.getString("program.menu.file.login"));
 		menuFileFriends.setText(t.getString("program.menu.file.friends"));
 		menuMainMenu.setText(t.getString("program.menu.file.mainmenu"));
 		menuFileAI.setText(t.getString("program.menu.file.AI"));

@@ -108,6 +108,12 @@ public class GameMenu_Model extends Model {
 	
 	// SimpleIntegerProperty for HashCode
 	public SimpleLongProperty HashCode = new SimpleLongProperty();
+	
+	//SimpleBooleanProperty for disable the game edits when start a Single Game
+	public SimpleBooleanProperty disableSingleGame = new SimpleBooleanProperty();
+	
+	//SimpleBooleanProperty for enable the game edits when start a FriendsGame
+	public SimpleBooleanProperty enableFriendsgame = new SimpleBooleanProperty();
 
 	public boolean connect(String ipAddress, Integer port) {
 		boolean success = false;
@@ -666,6 +672,22 @@ public class GameMenu_Model extends Model {
 	
 	public void setGameMode(int gameMode) {
 		GameMenu_Model.gameMode=gameMode;
+	}
+	
+	public void setDisableSingeleGame(boolean disable) {
+		this.disableSingleGame.set(disable);
+	}
+	
+	public SimpleBooleanProperty getDisableSingeleGame() {
+		return this.disableSingleGame;
+	}
+	
+	public void setEnableFriendsGame(boolean enable) {
+		this.enableFriendsgame.set(enable);
+	}
+	
+	public SimpleBooleanProperty getEnableFriendsGame() {
+		return this.enableFriendsgame;
 	}
 
 	

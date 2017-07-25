@@ -189,9 +189,10 @@ public class WindChuckers extends Application {
 
         // Close the splash screen, and set the reference to null, so that all
         // Splash_XXX objects can be garbage collected
-        splashView.stop();
-        splashView = null;
-
+        if(splashView != null) {
+            splashView.stop();
+            splashView = null;
+        }
         view.start();
     }
     
@@ -402,6 +403,10 @@ public class WindChuckers extends Application {
     
     public void startGameMenuViewe() {
     	this.view.getStage().show();
+    }
+    
+    public GameMenu_View getGameMenuView() {
+    	return this.view;
     }
 
 	

@@ -132,27 +132,6 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		serviceLocator.getLogger().info("Application controller initialized");
 
 		/**
-		 * Start the Lobby-View
-		 * 
-		 * @author L.Weber
-		 */
-		view.menuFileLobby.setOnAction(e -> {
-			windChuckers = WindChuckers.getWindChuckers();
-			windChuckers.startLobby();
-		});
-
-		/**
-		 * Start the Login-View
-		 * 
-		 * @author L.Weber
-		 */
-		view.menuFileLogin.setOnAction(e -> {
-			serviceLocator.getLogger().info("Start Login");
-			windChuckers = WindChuckers.getWindChuckers();
-			windChuckers.startLogin();
-		});
-
-		/**
 		 * Start the Friends-View
 		 * 
 		 * @author L.Weber
@@ -161,6 +140,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			serviceLocator.getLogger().info("Start Friends");
 			windChuckers = WindChuckers.getWindChuckers();
 			windChuckers.startFriends();
+			view.getStage().hide();
 		});
 
 		/**
@@ -172,6 +152,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			serviceLocator.getLogger().info("Start MainMenu");
 			windChuckers = WindChuckers.getWindChuckers();
 			windChuckers.startMainMenu();
+			view.getStage().close();
 		});
 
 		/**
@@ -310,8 +291,25 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		
 		//start a Game with Friendsd
 		clientServer.getStartGame().addListener((observable, oldValue, newValue) -> {
-			//TODO start the application
+			windChuckers = WindChuckers.getWindChuckers();
+			Platform.runLater(() -> {
+				if(!windChuckers.getGameMenuView().getStage().isShowing()) {
+					windChuckers.startApp();
+				}
+			});
 			serviceLocator.getLogger().info("Boolean for start the game is here, start now");	
+		});
+		
+		//Watch the model for a Single-Game - Disable if its true
+		model.getDisableSingeleGame().addListener((observable, oldValue, newValue) -> {
+			view.userBox.setDisable(true);
+		});
+		
+		//Watch the model for a Friends-Game - Enable if its true
+		model.getEnableFriendsGame().addListener((observable, oldValue, newValue) -> {
+			if(view.userBox.isDisable()) {
+				view.userBox.setDisable(false);
+			}
 		});
 		
 		// check the rounds when change it - is the round equals to the maxround then stop the game
