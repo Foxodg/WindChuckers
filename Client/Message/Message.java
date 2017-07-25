@@ -148,6 +148,9 @@ public class Message {
 	@Element(required = false)
 	private String friendName;
 	
+	@Element(required = false)
+	private long hashFriend;
+	
 
 	// Generator for a unique message ID
 	private static long messageID = 0;
@@ -395,6 +398,18 @@ public class Message {
 		this.hash = hash;
 		this.userName = username;
 	}
+	
+	/**
+	 * For send the both hashs
+	 * @param messageType
+	 * @param hash
+	 * @param hashFriend
+	 */
+	public Message(MessageType messageType, long hash, long hashFriend) {
+		createStandardMessage(messageType);
+		this.hash = hash;
+		this.hashFriend = hashFriend;
+	}
 
 
 	/**
@@ -592,6 +607,10 @@ public class Message {
 	
 	public long getHash() {
 		return this.hash;
+	}
+	
+	public long getHashFriend() {
+		return this.hashFriend;
 	}
 
 }

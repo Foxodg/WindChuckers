@@ -4,6 +4,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import Friends.FriendsController;
 import Message.Message;
 import Message.Message.MessageType;
 import Message.Message.Value;
@@ -34,7 +35,9 @@ public class ClientThreadForServer extends Thread {
 	private int userID;
 	private boolean newRoundLeftRight; //left is true, right is false
 	private ArrayList<String> userList;
-	public static long hashCodeStatic;
+	public static long hashCodeStatic = 0;
+	public static long hashCodeStaticThis;
+	public static long hashCodeStaticFriend;
 	private static ArrayList<String> friendsList = new ArrayList<String>();
 	
 	// SimpleStringProperty for overwatching the chat
@@ -169,14 +172,17 @@ public class ClientThreadForServer extends Thread {
 			}
 			else if(message.getDB() == 91) {
 				logger.info("RandomStartObject is here: " + message.getId());
-				this.setRandomStart(message.getId());
+				FriendsController.setRandomStart(message.getId());
+//				this.setRandomStart(message.getId());
 			}
 		}
 		else if(message.getMessageType() == Message.MessageType.Hash){
 			logger.info("Hash-Code comes back: " + message.getTime());
 			long hash = message.getTime();
 			this.setHashCode(hash);
-			hashCodeStatic = hash;
+			if(hashCodeStatic == 0) {
+				hashCodeStatic = hash;
+			}
 			
 		}
 		else if(message.getMessageType() == Message.MessageType.Time){
@@ -193,6 +199,12 @@ public class ClientThreadForServer extends Thread {
 			this.setStartGame(true);
 			logger.info("Start now the game");
 			this.setStartGame(false);
+		}
+		else if(message.getMessageType() == Message.MessageType.Binom) {
+			long hash = message.getHash();
+			long hashFriend = message.getHashFriend();
+			hashCodeStaticThis = hash;
+			hashCodeStaticFriend = hashFriend;
 		}
 	}
 	
@@ -396,6 +408,14 @@ public class ClientThreadForServer extends Thread {
 	
 	public static ArrayList<String> getFriendsList(){
 		return friendsList;
+	}
+	
+	public static long getHashCodeThis() {
+		return hashCodeStaticThis;
+	}
+	
+	public static long getHashCodeFriend() {
+		return hashCodeStaticFriend;
 	}
 
 }

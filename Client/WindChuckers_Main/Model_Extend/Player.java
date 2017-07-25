@@ -6,14 +6,14 @@ import abstractClasses.Model;
 public class Player extends Model {
 
 	
-	private int playerNumber; 
+	private long playerNumber; 
 	private boolean onTurn = false;
 	private boolean lastWinner = false;
 	private boolean causedPat = false;
 	private int wins = 0;
 
 	
-	public Player(int playerNumber){
+	public Player(long playerNumber){
 		this.setPlayerNumber(playerNumber);
 	}
 
@@ -27,8 +27,12 @@ public class Player extends Model {
 		this.onTurn = onTurn;
 	}
 
-	public void setPlayerNumber(int playerNumber) {
+	public void setPlayerNumber(long playerNumber) {
 		this.playerNumber = playerNumber;
+	}
+	
+	public long getPlayerNumber() {
+		return this.playerNumber;
 	}
 
 

@@ -53,6 +53,8 @@ public class GameMenu_Model extends Model {
 
 	private Player player1 = new Player(1);
 	private Player player2 = new Player(2);
+	
+	ArrayList<Player> playerList = new ArrayList<Player>();
 
 	protected ServiceLocator serviceLocator;
 	private static GameMenu_Model gameModel;
@@ -90,7 +92,8 @@ public class GameMenu_Model extends Model {
 	private int endRow;
 	private int playerType;
 	private int userID;
-	private int randomStart;
+	private int gems;
+	private static long otherHash;
 	private ArrayList<String> userList;
 	private HashMap<Integer, ArrayList<String>> userMap;
 	private static Hashtable<Integer, String> users = new Hashtable<Integer, String>();
@@ -127,6 +130,39 @@ public class GameMenu_Model extends Model {
 		server.setSocket(socket);
 		server.start();
 		return success;
+	}
+	
+	/**
+	 * Create Players with their hashcode
+	 * @param hashCode
+	 * @author L.Weber
+	 */
+	public void buildNewPlayer(long hashCode) {
+		Player player = new Player(hashCode);
+		playerList.add(player);
+	}
+	
+	public void setPlayer(long hashCode, long hashCodeFriend) {
+		
+		Player player = new Player(hashCodeFriend);
+		playerList.add(player);
+		
+		if(hashCode != 0 && hashCodeFriend != 0) {
+			for(int i = 0; i < playerList.size(); i++) {
+				if(playerList.get(i).getPlayerNumber() == hashCode) {
+					//set the player only if this is the first try, because the other player will do this again
+					if(player1.getPlayerNumber() == 1) {
+						player1 = playerList.get(i);
+					}
+				}
+				if(playerList.get(i).getPlayerNumber() == hashCodeFriend) {
+					//set the player only if this is the first try, because the other player will do this again
+					if(player2.getPlayerNumber() == 2) {
+						player2 = playerList.get(i);
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -202,6 +238,16 @@ public class GameMenu_Model extends Model {
 		Message message = new Message(MessageType.Update, xCoordinate2,	yCoordinate2, gems, player);
 		sendMessage(message);
 
+	}
+	
+	/**
+	 * For the NewRound to both clients
+	 * @param win - true = left / false = right
+	 * @author L.Weber
+	 */
+	public void messageConstructorForNewRound(boolean win) {
+		Message message = new Message(MessageType.NewRound, win);
+		sendMessage(message);
 	}
 
 	/**
@@ -605,6 +651,10 @@ public class GameMenu_Model extends Model {
 	public Player getPlayer2() {
 		return player2;
 	}
+	
+	public ArrayList<Player> getPlayerList(){
+		return this.playerList;
+	}
 
 	public void makeMove(int startColumn, int startRow, int endColumn, int endRow, int playerType) {
 		this.setMoveProperty(false);
@@ -658,14 +708,6 @@ public class GameMenu_Model extends Model {
 		return this.userMap;
 	}
 	
-	public void setRandomStart(int randomStart) {
-		this.randomStart = randomStart;
-	}
-	
-	public int getRandomStart() {
-		return this.randomStart;
-	}
-	
 	public static int getGameMode() {
 		return gameMode;
 	}
@@ -688,6 +730,22 @@ public class GameMenu_Model extends Model {
 	
 	public SimpleBooleanProperty getEnableFriendsGame() {
 		return this.enableFriendsgame;
+	}
+	
+	public void setGems(int gems) {
+		this.gems = gems;
+	}
+	
+	public int getGems() {
+		return this.gems;
+	}
+	
+	public static void setOtherHash(long hash) {
+		otherHash = hash;
+	}
+	
+	public static long getOtherHash() {
+		return otherHash;
 	}
 
 	

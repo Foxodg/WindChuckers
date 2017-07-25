@@ -25,7 +25,8 @@ public class FriendsController extends Controller<GameMenu_Model, FriendsView> {
 	ClientThreadForServer clientServer = ClientThreadForServer.getClientServer();
 	
 	private static long hashCode = ClientThreadForServer.hashCodeStatic;
-
+	private static int randomStart = 0;
+	
 	public FriendsController(GameMenu_Model model, FriendsView view, AddFriendsView addview) {
 		super(model, view);
 		this.addview = addview;
@@ -35,6 +36,10 @@ public class FriendsController extends Controller<GameMenu_Model, FriendsView> {
 		model.messageConstructorForName(hash, LoginModel.getUserName());	
 		// get the friendsList
 		model.setFriends(clientServer.getFriendsList());
+		// get the friendsList
+		model.setFriends(clientServer.getFriendsList());
+		//get a random Start
+		model.messageConstructorForDB(91);
 
 		/**
 		 * Close the Friend Menu
@@ -218,6 +223,14 @@ public class FriendsController extends Controller<GameMenu_Model, FriendsView> {
 	
 	public static long getHashCode() {
 		return hashCode;
+	}
+	
+	public static void setRandomStart(int randomStarts) {
+		randomStart = randomStarts;
+	}
+	
+	public static int getRandomStart() {
+		return randomStart;
 	}
 
 }

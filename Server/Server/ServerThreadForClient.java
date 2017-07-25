@@ -275,6 +275,9 @@ public class ServerThreadForClient extends Thread {
 				if(one && two) {
 					Waiter waiter = new Waiter(hash1, hash2);
 					model.setNewWaiter(waiter);
+					
+					//send both hash back to the client
+					sendMessageBackToClient(new Message(MessageType.Binom, hash1, hash2));
 				}
 			} else {
 				Waiter waiter = new Waiter(hash1, hash2);

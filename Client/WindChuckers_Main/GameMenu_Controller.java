@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 import com.sun.media.jfxmedia.logging.Logger;
 
 import Client.ClientThreadForServer;
+import Friends.FriendsController;
 import Login.LoginController;
 import Login.LoginModel;
 import Message.Message;
@@ -92,7 +93,13 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		//send the hash-code and the name to the server for key / value
 		long hash = GameMenu_View.getHashCode();
 		model.messageConstructorForName(hash, LoginModel.getUserName());
-
+		
+		//generate a new Player with this hash
+		model.buildNewPlayer(hash);
+		
+		//set the right player to the right place
+		model.setPlayer(ClientThreadForServer.getHashCodeThis(), ClientThreadForServer.getHashCodeFriend());
+		
 		/**
 		 * For End the Application
 		 * 
@@ -178,6 +185,13 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			} else {
 				towers = view.getTowersP2();
 			}
+			Field[][] fields = view.getFields();
+			GridPane gameBoard= view.getGameBoard();
+			Player player1 = model.getPlayer1();
+			Player player2 = model.getPlayer2();
+			Tower[][] tower1 = view.getTowersP1();
+			Tower[][] tower2 = view.getTowersP2();
+
 			Tower tower = towers[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()];
 			tower.upgradeTower(view.getFields(), tower, clientServer.getXCoordinateUpgrade(), clientServer.getYCoordinateUpgrade(), clientServer.getGems(), view.getTowersP1(), view.getTowersP2());
 		});
@@ -194,8 +208,10 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		 * Set the randomStart Integer for start the game
 		 */
 		clientServer.getRandomStart().addListener((observable, oldValue, newValue) -> {
-			model.setRandomStart(clientServer.getRandomStartInt());
-			serviceLocator.getLogger().info("Random-Object: " + clientServer.getRandomStartInt());
+			if(FriendsController.getRandomStart() == 0) {
+				FriendsController.setRandomStart(clientServer.getRandomStartInt());
+				serviceLocator.getLogger().info("Random-Object: " + clientServer.getRandomStartInt());
+			}
 		});
 
 		/**
@@ -356,8 +372,9 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			Tower[][] tower2 = view.getTowersP2();
 			
 			serviceLocator.getLogger().info("Move coordinates: " + model.getStartColumn() + " " + model.getStartRow() + " " + model.getEndColumn() + " " + model.getEndRow() + " " + model.getPlayerType());
-			tower.move(view.getFields(), view.getGameBoard(), model.getPlayer1(), model.getPlayer2(), view.getTowersP1(), view.getTowersP2(), model.getStartColumn(), model.getStartRow(), model.getEndColumn(), model.getEndRow(), model.getPlayerType());
-
+			if(!fields[model.getStartColumn()][model.getStartRow()].isEmpty()) {
+				tower.move(view.getFields(), view.getGameBoard(), model.getPlayer1(), model.getPlayer2(), view.getTowersP1(), view.getTowersP2(), model.getStartColumn(), model.getStartRow(), model.getEndColumn(), model.getEndRow(), model.getPlayerType());
+			}
 		});
 
 		view.menuTutorial.setOnAction(e -> {
@@ -370,7 +387,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 //		Anmerkung LKu Hier müssen wir noch die Fälle nach einer neuen Runde implementieren.
 //		Immer der Verlierer beginnt
 
-		if (model.getRandomStart() == 2){
+		if (FriendsController.getRandomStart() == 2){
 				model.getPlayer1().setOnTurn(true);
 				model.getPlayer2().setOnTurn(false);
 			for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
@@ -391,7 +408,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			}
 			
 			}
-		else if (model.getRandomStart() == 1){
+		else if (FriendsController.getRandomStart() == 1){
 			model.getPlayer1().setOnTurn(false);
 			model.getPlayer2().setOnTurn(true);
 		for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
@@ -414,7 +431,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 					}
 				}
 			}
-		}else if (model.getRandomStart() == 0){
+		}else if (FriendsController.getRandomStart() == 0){
 			model.getPlayer1().setOnTurn(false);
 			model.getPlayer2().setOnTurn(true);
 		for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
@@ -720,6 +737,8 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			// a new Round with left order will be created
 			newRoundView.leftPlay.setOnAction(e -> {
 				this.buildNewRound(true);
+				//also send this to the server
+				model.messageConstructorForNewRound(true);
 				model.Winner.set(0);
 				((Stage)(((Button)e.getSource()).getScene().getWindow())).close();
 			});
@@ -727,6 +746,8 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			// a new Round with right order will be created
 			newRoundView.rightPlay.setOnAction(e -> {
 				this.buildNewRound(false);
+				//also send this to the server
+				model.messageConstructorForNewRound(false);
 				model.Winner.set(0);
 				((Stage)(((Button)e.getSource()).getScene().getWindow())).close();
 			});
