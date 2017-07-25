@@ -908,11 +908,15 @@ public class Tower extends Button {
 			
 		if (player1.isOnTurn() && this.yPosition == 0){
 			this.upgradeTower(fields, tower, this.getxPosition(), this.getyPosition(), this.getGems(), towersP1, towersP2);
+			model.messageConstructorForUpdate(true, this.getxPosition(), this.getyPosition(), this.getGems(),
+					this.getPlayerNumber());
 			this.setDisable(false);
 			GameMenu_Model.Winner.set(1);
 			
 		} else if(player2.isOnTurn() && this.yPosition == 7){
 			this.upgradeTower(fields, tower, this.xPosition, this.yPosition, gems, towersP1, towersP2);
+			model.messageConstructorForUpdate(true, this.getxPosition(), this.getyPosition(), this.getGems(),
+					this.getPlayerNumber());
 			this.setDisable(false);
 			GameMenu_Model.Winner.set(2);
 		}
