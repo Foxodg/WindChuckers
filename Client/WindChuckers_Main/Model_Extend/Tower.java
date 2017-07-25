@@ -934,9 +934,7 @@ public class Tower extends Button {
 	 * @author l.kunz
 	 */
 	public void upgradeTower(Field[][] fields, Tower tower, int xCoordinateUpgrade, int yCoordinateUpgrade, int gems, Tower[][] towersP1, Tower[][] towersP2) {
-		int column = GridPane.getColumnIndex(fields[xCoordinateUpgrade][yCoordinateUpgrade]);
-		int row = GridPane.getRowIndex(fields[xCoordinateUpgrade][yCoordinateUpgrade]);
-		
+
 			if(this.gems == 0){
 				this.sumoTower = true;
 				this.setText("\u2160");
@@ -962,37 +960,45 @@ public class Tower extends Button {
 	 */
 	public void move(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Tower[][] towersP1, Tower[][] towersP2, int oldX, int oldY, int newX, int newY, int playerType) {
 
-		int column = GridPane.getColumnIndex(fields[newX][newY]);
-		int row = GridPane.getRowIndex(fields[newX][newY]);
-		
-		// Only make the move if its not done
-		if(!fields[oldX][oldY].isEmpty()){
-			this.setxPosition(newX);
-			this.setyPosition(newY);
-			this.setText(newX + "." + newY);
-			
-			fields[oldX][oldY].setEmpty(true);
-			fields[newX][newY].setEmpty(false);
-			
-			GridPane.setColumnIndex(this, column);
-			GridPane.setRowIndex(this, row);
-			
-			Field.disableFields(fields);
-			model.gameStart = false;
+		int newColumnGridPane = GridPane.getColumnIndex(fields[newX][newY]);
+		int newRowGridPane = GridPane.getRowIndex(fields[newX][newY]);
 
-			// The tower will be set on the right position in the tower array
-			if(model.getPlayer1().isOnTurn()){
-				towersP1[newX][newY]=this;
-				towersP1[oldX][oldY]= null;
-			}
-			
-			if(model.getPlayer2().isOnTurn()){
-				towersP2[newX][newY]=this;
-				towersP2[oldX][oldY]= null;
-			}
-			
-			changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY]);
-			
+		// The old field is empty and the new field is busy
+		fields[oldX][oldY].setEmpty(true);
+		fields[newX][newY].setEmpty(false);
+
+		// The coordinates of the tower will be changed
+		this.setxPosition(newX);
+		this.setyPosition(newY);
+
+		// The Tower will be moved on the GridPane
+		GridPane.setColumnIndex(this, newColumnGridPane);
+		GridPane.setRowIndex(this, newRowGridPane);
+		// this.setPlayerSign();
+
+		// The tower will be set on the right position in the tower array
+		if (model.getPlayer1().isOnTurn()) {
+			towersP1[newX][newY] = this;
+			towersP1[oldX][oldY] = null;
+		}
+
+		if (model.getPlayer2().isOnTurn()) {
+			towersP2[newX][newY] = this;
+			towersP2[oldX][oldY] = null;
+		}
+
+		// The turn is finished, disable all fields
+		Field.disableFields(fields);
+
+		// After the first move the boolean gameStart is false
+		model.gameStart = false;
+
+		// We check if a tower reached the last row
+		this.checkWin(fields, player1, player2, this, towersP1, towersP2);
+
+		// Towers of other player will be enabled
+		if (model.Winner.get() == 0) {
+			this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY]);
 		}
 	}
 
