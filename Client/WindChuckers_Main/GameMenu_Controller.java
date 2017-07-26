@@ -760,7 +760,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		//update the DB
 		int winsBefore = LoginModel.getWins();
 		win = win + winsBefore;
-		model.messageConstructorForWin(win);
+		model.messageConstructorForWin(win, LoginModel.getUserName());
 	}
 	
 	//}

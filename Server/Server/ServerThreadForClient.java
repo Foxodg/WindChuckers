@@ -169,8 +169,9 @@ public class ServerThreadForClient extends Thread {
 		} else if (message.getMessageType() == MessageType.WinMessage) {
 			logger.info("Server: " + "Win-Message: ");
 			try {
-				int id = h2.selectWithName(LoginModel.getSurname());
-				h2.updatePreparedStatementWithId(message.getDB(), id);
+				int id = h2.selectWithName(message.getUserName());
+				int win = (int) message.getHash();
+				h2.updatePreparedStatementWithId(win, id);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

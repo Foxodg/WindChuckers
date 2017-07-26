@@ -218,8 +218,8 @@ public class GameMenu_Model extends Model {
 	 * @author L.Weber
 	 * @param win
 	 */
-	public void messageConstructorForWin(int win) {
-		Message message = new Message(MessageType.WinMessage, win);
+	public void messageConstructorForWin(int win, String username) {
+		Message message = new Message(MessageType.WinMessage, win, username);
 		sendMessage(message);
 	}
 
