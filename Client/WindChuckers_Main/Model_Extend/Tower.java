@@ -374,11 +374,11 @@ public class Tower extends Button {
 			if(model.getPlayer1().isOnTurn()){
 				model.getPlayer2().setCausedPat(true);
 				firstAlert.showAndWait();
-				this.changeTurn(fields, model.getPlayer1(), model.getPlayer2(), towersP1, towersP2, fields[this.getxPosition()][this.getyPosition()]);
+				this.changeTurn(fields, model.getPlayer1(), model.getPlayer2(), towersP1, towersP2, fields[this.getxPosition()][this.getyPosition()], this.playerNumber);
 			} else {
 				model.getPlayer1().setCausedPat(true);
 				firstAlert.showAndWait();
-				this.changeTurn(fields, model.getPlayer1(), model.getPlayer2(), towersP1, towersP2, fields[this.getxPosition()][this.getyPosition()]);
+				this.changeTurn(fields, model.getPlayer1(), model.getPlayer2(), towersP1, towersP2, fields[this.getxPosition()][this.getyPosition()], this.playerNumber);
 			}
 	}
 }
@@ -459,7 +459,7 @@ public class Tower extends Button {
 		
 		// Towers of other player will be enabled
 		if(model.Winner.get() == 0){
-		this.changeTurn(fields, player1, player2, towersP1, towersP2, field);
+		this.changeTurn(fields, player1, player2, towersP1, towersP2, field, this.playerNumber);
 		}
 
 		
@@ -791,8 +791,8 @@ public class Tower extends Button {
 	 * @param towersP2
 	 * @author robin
 	 */
-	public void changeTurn(Field[][] fields, Player player1, Player player2, Tower[][] towersP1, Tower[][] towersP2, Field field){
-		if(player1.isOnTurn()){
+	public void changeTurn(Field[][] fields, Player player1, Player player2, Tower[][] towersP1, Tower[][] towersP2, Field field, int player){
+		if(player == 1){
 			player1.setOnTurn(false);
 			player2.setOnTurn(true);
 			Tower.disableTowers(towersP1);
@@ -960,6 +960,19 @@ public class Tower extends Button {
 	 */
 	public void move(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Tower[][] towersP1, Tower[][] towersP2, int oldX, int oldY, int newX, int newY, int playerType) {
 
+		if (!fields[newX][newY].isEmpty() && this.getGems() >= 2 && this.saveSumoMove == 3){
+			this.sumo3Move(fields, gameBoard, player1, player2, fields[newX][newY], towersP1, towersP2);
+		}
+		
+		else if (!fields[newX][newY].isEmpty() && this.getGems() >= 2 && this.saveSumoMove == 2){
+			this.sumo2Move(fields, gameBoard, player1, player2, fields[newX][newY], towersP1, towersP2);
+		}
+		
+		else if (!fields[newX][newY].isEmpty() && this.getGems() >= 1){
+			this.saveSumoMove = 1;
+			this.sumo1Move(fields, gameBoard, player1, player2, fields[newX][newY], towersP1, towersP2);
+		}
+		
 		int newColumnGridPane = GridPane.getColumnIndex(fields[newX][newY]);
 		int newRowGridPane = GridPane.getRowIndex(fields[newX][newY]);
 
@@ -998,7 +1011,7 @@ public class Tower extends Button {
 
 		// Towers of other player will be enabled
 		if (model.Winner.get() == 0) {
-			this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY]);
+			this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], this.playerNumber);
 		}
 	}
 
