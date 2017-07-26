@@ -487,6 +487,9 @@ public class Tower extends Button {
 		int newColumnGridPane = GridPane.getColumnIndex(field);
 		int newRowGridPane = GridPane.getRowIndex(field);
 
+		// Send the move to the server
+		ServiceLocator.getServiceLocator().getLogger().info("Move send to server: " + field.getxPosition() + " " + field.getyPosition() + " " + this.getxPosition() + " " + this.getyPosition() + " " + this.getPlayerNumber());
+		model.messageConstructorForCoordinate(oldX, oldY, newX, newY, this.getPlayerNumber());
 		 
 			if (this.playerNumber == 1){
 
@@ -577,6 +580,9 @@ public class Tower extends Button {
 			int newColumnGridPane = GridPane.getColumnIndex(field);
 			int newRowGridPane = GridPane.getRowIndex(field);
 
+			// Send the move to the server
+			ServiceLocator.getServiceLocator().getLogger().info("Move send to server: " + field.getxPosition() + " " + field.getyPosition() + " " + this.getxPosition() + " " + this.getyPosition() + " " + this.getPlayerNumber());
+			model.messageConstructorForCoordinate(oldX, oldY, newX, newY, this.getPlayerNumber());
 			 
 				if (this.playerNumber == 1){
 
@@ -684,6 +690,9 @@ public class Tower extends Button {
 		int newColumnGridPane = GridPane.getColumnIndex(field);
 		int newRowGridPane = GridPane.getRowIndex(field);
 
+		// Send the move to the server
+		ServiceLocator.getServiceLocator().getLogger().info("Move send to server: " + field.getxPosition() + " " + field.getyPosition() + " " + this.getxPosition() + " " + this.getyPosition() + " " + this.getPlayerNumber());
+		model.messageConstructorForCoordinate(oldX, oldY, newX, newY, this.getPlayerNumber());
 		 
 			 if (this.playerNumber == 1){
 
@@ -849,7 +858,7 @@ public class Tower extends Button {
 	 * @author robin
 	 */
 	public void enableTowers(Field[][] fields, Tower[][] towers, Field field){
-		if(FriendsController.getHashCode() == model.getPlayer1().getPlayerNumber()) {
+		if(FriendsController.getHashCode() == model.getPlayer1().getPlayerNumber() || FriendsController.getRandomStart() == 1) {
 			//this player is player 1
 			if(model.getPlayer1().isOnTurn()) {
 				//Also player1 is on turn
@@ -868,7 +877,7 @@ public class Tower extends Button {
 				this.saveSumoMove = 0;
 			}
 		}
-		else if(FriendsController.getHashCode() == model.getPlayer2().getPlayerNumber()) {
+		else if(FriendsController.getHashCode() == model.getPlayer2().getPlayerNumber() || FriendsController.getRandomStart() == 2) {
 			//this player is player 2
 			if(model.getPlayer2().isOnTurn()) {
 				//also player2 is on turn

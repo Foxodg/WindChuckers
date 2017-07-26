@@ -93,6 +93,7 @@ public class GameMenu_Model extends Model {
 	private int playerType;
 	private int userID;
 	private int gems;
+	private static boolean newRoundLeftRight; //left is true, right is false
 	private static long otherHash;
 	private ArrayList<String> userList;
 	private HashMap<Integer, ArrayList<String>> userMap;
@@ -207,9 +208,12 @@ public class GameMenu_Model extends Model {
 	 */
 	public void messageConstructorForCoordinate(int xCoordinate1, int yCoordinate1,
 			int xCoordinate2, int yCoordinate2, int player) {
-		Message message = new Message(MessageType.Coordinate, xCoordinate1, yCoordinate1, xCoordinate2,
-				yCoordinate2, player);
-		sendMessage(message);
+		if(xCoordinate1 != 0) {
+			//only send if not empty
+			Message message = new Message(MessageType.Coordinate, xCoordinate1, yCoordinate1, xCoordinate2,
+					yCoordinate2, player);
+			sendMessage(message);
+		}
 	}
 
 	/**
@@ -746,6 +750,14 @@ public class GameMenu_Model extends Model {
 	
 	public static long getOtherHash() {
 		return otherHash;
+	}
+	
+	public static boolean getNewRoundLeftRight() {
+		return newRoundLeftRight;
+	}
+	
+	public static void setNewRoundLeftRight(boolean newR) {
+		newRoundLeftRight = newR;
 	}
 
 	
