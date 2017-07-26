@@ -178,13 +178,14 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		 * @author L.Weber
 		 */
 		clientServer.getUpgrade().addListener((observable, oldValue, newValue) -> {
-			
+						
 			Tower[][] towers;
 			if(model.getPlayerType() == 1){
 				towers = view.getTowersP1();
 			} else {
 				towers = view.getTowersP2();
 			}
+			Tower tower = towers[model.getEndColumn()][model.getEndRow()];
 			Field[][] fields = view.getFields();
 			GridPane gameBoard= view.getGameBoard();
 			Player player1 = model.getPlayer1();
@@ -192,8 +193,11 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			Tower[][] tower1 = view.getTowersP1();
 			Tower[][] tower2 = view.getTowersP2();
 
-			Tower tower = towers[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()];
-			tower.upgradeTower(view.getFields(), tower, clientServer.getXCoordinateUpgrade(), clientServer.getYCoordinateUpgrade(), clientServer.getGems(), view.getTowersP1(), view.getTowersP2());
+			Tower towerUpgrade = towers[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()];
+			if(tower.getGems() == clientServer.getGems()) {
+				//update only if the update not already done
+				towerUpgrade.upgradeTower(view.getFields(), towerUpgrade, clientServer.getXCoordinateUpgrade(), clientServer.getYCoordinateUpgrade(), clientServer.getGems(), view.getTowersP1(), view.getTowersP2());
+			}
 		});
 		
 		/**

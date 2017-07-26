@@ -4,6 +4,7 @@ import org.omg.Messaging.SyncScopeHelper;
 
 import com.sun.media.jfxmedia.logging.Logger;
 
+import Friends.FriendsController;
 import WindChuckers_Main.GameMenu_Model;
 import abstractClasses.Model;
 import commonClasses.ServiceLocator;
@@ -848,19 +849,48 @@ public class Tower extends Button {
 	 * @author robin
 	 */
 	public void enableTowers(Field[][] fields, Tower[][] towers, Field field){
-		if (model.gameStart){
-			for(int y = 0; y < 8; y++){
-				for(int x = 0; x < 8; x++){
-					if(towers[x][y]!=null){
-						towers[x][y].setDisable(false);
-						
-			}}}} else{
-					for(int x = 0; x < 8; x++){
+		if(FriendsController.getHashCode() == model.getPlayer1().getPlayerNumber()) {
+			//this player is player 1
+			if(model.getPlayer1().isOnTurn()) {
+				//Also player1 is on turn
+				if (model.gameStart){
 					for(int y = 0; y < 8; y++){
-						if(towers[x][y]!=null && towers[x][y].getColor().equals(field.getColor())){
-							towers[x][y].setDisable(false);
-		}}}}
-		this.saveSumoMove = 0;
+						for(int x = 0; x < 8; x++){
+							if(towers[x][y]!=null){
+								towers[x][y].setDisable(false);
+								
+					}}}} else{
+							for(int x = 0; x < 8; x++){
+							for(int y = 0; y < 8; y++){
+								if(towers[x][y]!=null && towers[x][y].getColor().equals(field.getColor())){
+									towers[x][y].setDisable(false);
+				}}}}
+				this.saveSumoMove = 0;
+			}
+		}
+		else if(FriendsController.getHashCode() == model.getPlayer2().getPlayerNumber()) {
+			//this player is player 2
+			if(model.getPlayer2().isOnTurn()) {
+				//also player2 is on turn
+				if (model.gameStart){
+					for(int y = 0; y < 8; y++){
+						for(int x = 0; x < 8; x++){
+							if(towers[x][y]!=null){
+								towers[x][y].setDisable(false);
+								
+					}}}} else{
+							for(int x = 0; x < 8; x++){
+							for(int y = 0; y < 8; y++){
+								if(towers[x][y]!=null && towers[x][y].getColor().equals(field.getColor())){
+									towers[x][y].setDisable(false);
+				}}}}
+				this.saveSumoMove = 0;
+			}
+		}
+
+
+		
+
 	}
 	
 	/**
