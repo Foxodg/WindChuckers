@@ -107,8 +107,8 @@ public class ClientController {
         		model.messageConstructorForDB(dbMessage);
         	}
         	else if(view.cbchoice.getSelectionModel().getSelectedItem() == MessageType.WinMessage){
-        		int player = 1;
-        		model.messageConstructorForWin(player);
+        		String name = "admin";
+        		model.messageConstructorForWin(2,name);
         	}
         	else {
         		model.messageConstructorForError();
