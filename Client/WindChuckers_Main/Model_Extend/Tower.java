@@ -295,7 +295,7 @@ public class Tower extends Button {
 			// Checks if this is a Sumo 1 or 2 or 3	
 			if(gems == 3 || gems == 2 || gems == 1){
 				// Checks if a sumo hit is possible
-				if (towersP1[this.getxPosition()][this.getyPosition()+1] != null && towersP1[this.getxPosition()][this.getyPosition()+1].getGems() < 2 && this.getyPosition()+2 <= fields.length - 1 && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
+				if (towersP1[this.getxPosition()][this.getyPosition()+1] != null && towersP1[this.getxPosition()][this.getyPosition()+1].getGems() < 1 && this.getyPosition()+2 <= fields.length - 1 && fields[this.getxPosition()][this.getyPosition()+2].isEmpty()){
 					fields[this.getxPosition()][this.getyPosition()+1].setDisable(false);
 				}
 			}
@@ -939,14 +939,14 @@ public class Tower extends Button {
 		if (player1.isOnTurn() && this.yPosition == 0){
 			this.upgradeTower(fields, tower, this.getxPosition(), this.getyPosition(), this.getGems(), towersP1, towersP2);
 			model.messageConstructorForUpdate(true, this.getxPosition(), this.getyPosition(), this.getGems(),
-					this.getPlayerNumber());
+			this.getPlayerNumber());
 			this.setDisable(false);
 			GameMenu_Model.Winner.set(1);
 			
 		} else if(player2.isOnTurn() && this.yPosition == 7){
 			this.upgradeTower(fields, tower, this.xPosition, this.yPosition, gems, towersP1, towersP2);
 			model.messageConstructorForUpdate(true, this.getxPosition(), this.getyPosition(), this.getGems(),
-					this.getPlayerNumber());
+			this.getPlayerNumber());
 			this.setDisable(false);
 			GameMenu_Model.Winner.set(2);
 		}
@@ -967,15 +967,13 @@ public class Tower extends Button {
 
 			if(this.gems == 0){
 				this.sumoTower = true;
-				this.setText("\u2160");
-				//test for windows
-				this.setText("0x2160");
+				this.setText("I");
 				this.gems++;
 			} else if (this.gems == 1){
-				this.setText("\u2161");
+				this.setText("II");
 				this.gems++;
 			} else if (this.gems == 2){
-				this.setText("\u2162");
+				this.setText("III");
 				this.gems++;
 			}
 	}
@@ -1017,7 +1015,6 @@ public class Tower extends Button {
 		// The Tower will be moved on the GridPane
 		GridPane.setColumnIndex(this, newColumnGridPane);
 		GridPane.setRowIndex(this, newRowGridPane);
-		// this.setPlayerSign();
 
 		// The tower will be set on the right position in the tower array
 		if (model.getPlayer1().isOnTurn()) {
