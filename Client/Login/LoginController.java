@@ -72,9 +72,6 @@ public class LoginController extends Controller<GameMenu_Model, LoginView> {
 				//when the password is three times false
 				if (this.counter.get(view.username.getText()) <= 3) {
 					if (loginModel.passwordCheck(view.password.getText())) {
-						LoginModel.setSurname(searchList.get(2));
-						LoginModel.setWins(Integer.parseInt(searchList.get(4)));
-						LoginModel.setUserName(searchList.get(0));
 						model.setUserName(view.username.getText());
 						main.startMainMenu();
 						view.stop();
