@@ -14,6 +14,7 @@ public class LoginModel extends Model {
 	private static String surname;
 	private static int wins;
 	private static String username;
+	private static boolean withoutServer = false;
 
 	
 	public LoginModel(){
@@ -55,6 +56,14 @@ public class LoginModel extends Model {
 	
 	public static String getUserName() {
 		return username;
+	}
+	
+	public static boolean getWithoutServer() {
+		return withoutServer;
+	}
+	
+	public static void setWithoutServer(boolean without) {
+		withoutServer = without;
 	}
 }
 

@@ -63,7 +63,10 @@ public class ServerController {
 		//Watch the board for an update
 		board.getUpgrade().addListener((observable, oldValue, newValue) -> {
 			PlayerType playerType = board.getTile(board.getXCoordinateUpgrade(), board.getYCoordinateUpgrade()).getTower().getPlayerType();
-			ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Update, board.getXCoordinateUpgrade(), board.getYCoordinateUpgrade(), board.getGems(), playerConverter(playerType)));
+			if(board.getXCoordinateUpgrade() == 0) {
+				//when its empty not send it
+				ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Update, board.getXCoordinateUpgrade(), board.getYCoordinateUpgrade(), board.getGems(), playerConverter(playerType)));
+			}
 		});
     }
     

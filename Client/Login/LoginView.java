@@ -32,6 +32,7 @@ public class LoginView extends View <GameMenu_Model>{
 	protected Button btnLogin;
 	protected Button btnUserMenu;
 	protected Button btnRefresh;
+	protected Button btnWithoutServer;
 
 	public LoginView(Stage stage, GameMenu_Model model) {
 		super(stage,model);
@@ -48,10 +49,11 @@ public class LoginView extends View <GameMenu_Model>{
 		
 		btnLogin = new Button();
 		//TODO set to false when work done
-		btnLogin.setDisable(false);
+		btnLogin.setDisable(true);
 		btnUserMenu = new Button();
 		btnRefresh = new Button();
 		btnRefresh.setDisable(true);
+		btnWithoutServer = new Button();
 		password = new PasswordField();
 		username = new TextField();
 		username.setPromptText("username");
@@ -61,7 +63,7 @@ public class LoginView extends View <GameMenu_Model>{
 		HBox loginBox = new HBox();
 		HBox userBox = new HBox();
 		loginBox.getChildren().addAll(username, password ,btnLogin);
-		userBox.getChildren().addAll(btnUserMenu, btnRefresh);
+		userBox.getChildren().addAll(btnUserMenu, btnRefresh, btnWithoutServer);
 		
 		MenuBar menuBar = new MenuBar();
 		menuFileLogin = new Menu();
@@ -100,6 +102,7 @@ public class LoginView extends View <GameMenu_Model>{
 		btnLogin.setText(t.getString("btnLogin"));
 		btnUserMenu.setText(t.getString("btnUserMenu"));
 		btnRefresh.setText(t.getString("btnRefresh"));
+		btnWithoutServer.setText(t.getString("btnWithoutServer"));
 		
 	}
 

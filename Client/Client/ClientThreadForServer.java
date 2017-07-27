@@ -33,6 +33,7 @@ public class ClientThreadForServer extends Thread {
 	private int yCoordinateUpgrade;
 	private int playerType;
 	private int userID;
+	private int player;
 	private boolean newRoundLeftRight; //left is true, right is false
 	private ArrayList<String> userList;
 	public static long hashCodeStatic = 0;
@@ -141,12 +142,12 @@ public class ClientThreadForServer extends Thread {
 			
 		}
 		else if (message.getMessageType() == MessageType.Update){
-			logger.info("Client: " + "Update: " + message.getUpdate() + " x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: " + message.getYCoordinate1() +
-					" x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: " + message.getYCoordinate2() + " Gems: " + message.getGems());
+			logger.info("Client: " + "Update: " + " x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: " + message.getYCoordinate2() + " Gems: " + message.getGems() + " Player: " + message.getPlayer());
 			this.setUpgrade(false);
 			this.setGems(message.getGems());
 			this.setXCoordinateUpgrade(message.getXCoordinate2());
 			this.setYCoordinateUpgrade(message.getYCoordinate2());
+			this.setPlayer(message.getPlayer());
 			this.setUpgrade(true);
 			
 		}
@@ -416,6 +417,14 @@ public class ClientThreadForServer extends Thread {
 	
 	public static long getHashCodeFriend() {
 		return hashCodeStaticFriend;
+	}
+	
+	public int getPlayer() {
+		return this.player;
+	}
+	
+	public void setPlayer(int player) {
+		this.player = player;
 	}
 
 }

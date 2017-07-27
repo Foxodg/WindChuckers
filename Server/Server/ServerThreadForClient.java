@@ -67,11 +67,10 @@ public class ServerThreadForClient extends Thread {
 		} else if (message.getMessageType() == MessageType.Coordinate) {
 			logger.info("Server: " + "x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: "
 					+ message.getYCoordinate1() + " x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: "
-					+ message.getYCoordinate2() + " Value: " + message.getValue());
+					+ message.getYCoordinate2() + " Value: " + message.getPlayer());
 			// send the Message Back to all Clients
 			board.makeMove(new Move(message.getXCoordinate1(), message.getYCoordinate1(), message.getXCoordinate2(),
 					message.getYCoordinate2(), true));
-			board.isWinSituation();
 			sendMessageBackToClient(message);
 			// Safes the coordinates for the hidden-Board on the Server
 			if (this.wantAI) {
@@ -85,8 +84,7 @@ public class ServerThreadForClient extends Thread {
 
 		} else if (message.getMessageType() == MessageType.Update) {
 			logger.info("Server: " + "Update: " + message.getUpdate() + " x-Coordinates: " + message.getXCoordinate2()
-					+ " y-Coordinates: " + message.getYCoordinate2() + " Gems: " + message.getGems() + " Player: "
-					+ message.getPlayer());
+					+ " y-Coordinates: " + message.getYCoordinate2() + " Gems: " + message.getGems() + " Player: " + message.getPlayer());
 			// send the Message Back to all Clients
 			sendMessageBackToClient(message);
 		} else if (message.getMessageType() == MessageType.DBMessage) {
