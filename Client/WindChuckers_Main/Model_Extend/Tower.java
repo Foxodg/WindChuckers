@@ -5,6 +5,7 @@ import org.omg.Messaging.SyncScopeHelper;
 import com.sun.media.jfxmedia.logging.Logger;
 
 import Friends.FriendsController;
+import Login.LoginModel;
 import WindChuckers_Main.GameMenu_Model;
 import abstractClasses.Model;
 import commonClasses.ServiceLocator;
@@ -858,48 +859,67 @@ public class Tower extends Button {
 	 * @author robin
 	 */
 	public void enableTowers(Field[][] fields, Tower[][] towers, Field field){
-		if(FriendsController.getHashCode() == model.getPlayer1().getPlayerNumber() || FriendsController.getRandomStart() == 1) {
-			//this player is player 1
-			if(model.getPlayer1().isOnTurn()) {
-				//Also player1 is on turn
-				if (model.gameStart){
-					for(int y = 0; y < 8; y++){
-						for(int x = 0; x < 8; x++){
-							if(towers[x][y]!=null){
-								towers[x][y].setDisable(false);
-								
-					}}}} else{
+		if(LoginModel.getWithoutServer()) {
+			// if there is no Server and the Player will play without any contrahends
+			if (model.gameStart) {
+				for (int y = 0; y < 8; y++) {
+					for (int x = 0; x < 8; x++) {
+						if (towers[x][y] != null) {
+							towers[x][y].setDisable(false);
+
+						}
+					}
+				}
+			} else {
+				for (int x = 0; x < 8; x++) {
+					for (int y = 0; y < 8; y++) {
+						if (towers[x][y] != null && towers[x][y].getColor().equals(field.getColor())) {
+							towers[x][y].setDisable(false);
+						}
+					}
+				}
+			}
+			this.saveSumoMove = 0;
+		} else {
+			if(FriendsController.getHashCode() == model.getPlayer1().getPlayerNumber() || FriendsController.getRandomStart() == 1) {
+				//this player is player 1
+				if(model.getPlayer1().isOnTurn()) {
+					//Also player1 is on turn
+					if (model.gameStart){
+						for(int y = 0; y < 8; y++){
 							for(int x = 0; x < 8; x++){
-							for(int y = 0; y < 8; y++){
-								if(towers[x][y]!=null && towers[x][y].getColor().equals(field.getColor())){
+								if(towers[x][y]!=null){
 									towers[x][y].setDisable(false);
-				}}}}
-				this.saveSumoMove = 0;
+									
+						}}}} else{
+								for(int x = 0; x < 8; x++){
+								for(int y = 0; y < 8; y++){
+									if(towers[x][y]!=null && towers[x][y].getColor().equals(field.getColor())){
+										towers[x][y].setDisable(false);
+					}}}}
+					this.saveSumoMove = 0;
+				}
+			}
+			else if(FriendsController.getHashCode() == model.getPlayer2().getPlayerNumber() || FriendsController.getRandomStart() == 2) {
+				//this player is player 2
+				if(model.getPlayer2().isOnTurn()) {
+					//also player2 is on turn
+					if (model.gameStart){
+						for(int y = 0; y < 8; y++){
+							for(int x = 0; x < 8; x++){
+								if(towers[x][y]!=null){
+									towers[x][y].setDisable(false);
+									
+						}}}} else{
+								for(int x = 0; x < 8; x++){
+								for(int y = 0; y < 8; y++){
+									if(towers[x][y]!=null && towers[x][y].getColor().equals(field.getColor())){
+										towers[x][y].setDisable(false);
+					}}}}
+					this.saveSumoMove = 0;
+				}
 			}
 		}
-		else if(FriendsController.getHashCode() == model.getPlayer2().getPlayerNumber() || FriendsController.getRandomStart() == 2) {
-			//this player is player 2
-			if(model.getPlayer2().isOnTurn()) {
-				//also player2 is on turn
-				if (model.gameStart){
-					for(int y = 0; y < 8; y++){
-						for(int x = 0; x < 8; x++){
-							if(towers[x][y]!=null){
-								towers[x][y].setDisable(false);
-								
-					}}}} else{
-							for(int x = 0; x < 8; x++){
-							for(int y = 0; y < 8; y++){
-								if(towers[x][y]!=null && towers[x][y].getColor().equals(field.getColor())){
-									towers[x][y].setDisable(false);
-				}}}}
-				this.saveSumoMove = 0;
-			}
-		}
-
-
-		
-
 	}
 	
 	/**
@@ -947,15 +967,13 @@ public class Tower extends Button {
 			
 		if (player1.isOnTurn() && this.yPosition == 0){
 			this.upgradeTower(fields, tower, this.getxPosition(), this.getyPosition(), this.getGems(), towersP1, towersP2);
-			model.messageConstructorForUpdate(true, this.getxPosition(), this.getyPosition(), this.getGems(),
-			this.getPlayerNumber());
+			model.messageConstructorForUpdate(true, this.getxPosition(), this.getyPosition(), this.getGems(), this.getPlayerNumber());
 			this.setDisable(false);
 			GameMenu_Model.Winner.set(1);
 			
 		} else if(player2.isOnTurn() && this.yPosition == 7){
 			this.upgradeTower(fields, tower, this.xPosition, this.yPosition, gems, towersP1, towersP2);
-			model.messageConstructorForUpdate(true, this.getxPosition(), this.getyPosition(), this.getGems(),
-			this.getPlayerNumber());
+			model.messageConstructorForUpdate(true, this.getxPosition(), this.getyPosition(), this.getGems(), this.getPlayerNumber());
 			this.setDisable(false);
 			GameMenu_Model.Winner.set(2);
 		}
