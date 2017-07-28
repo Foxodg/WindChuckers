@@ -3,6 +3,10 @@ package AI;
 import java.util.ArrayList;
 import java.util.Random;
 
+import Message.Message;
+import Message.Message.MessageType;
+import Server.ServerThreadForClient;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 
 public class Board {
@@ -12,6 +16,8 @@ public class Board {
 	Random rand = new Random();
 	private MiniMaxAlphaBeta minimax;
 	private static Board boardSingleton;
+	private static boolean wantDoubleAI;
+	private static boolean wantAI;
 	
 	private int gems;
 	private int xCoordinationUpgrade;
@@ -222,6 +228,13 @@ public class Board {
 		thisPlayerMoves = getAllMoves(playerType);
 		int randomPick = rand.nextInt(thisPlayerMoves.size());
 		Move move = new Move(thisPlayerMoves.get(randomPick), true);
+		int player;
+		if(playerType == PlayerType.ONE) {
+			player = 2;
+		} else {
+			player = 1;
+		}
+		ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Coordinate,move.getX1(),move.getY1(),move.getX2(),move.getY2(), player));
 		return makeMove(move);
 	}
 
@@ -242,7 +255,28 @@ public class Board {
 							.getPlayerType() == PlayerType.ONE) {
 				winning = true;
 				// also update the tower
-				upgradeTower(board[topLine.get(j).getX1()][topLine.get(j).getY1() - 1].getTower());
+				if(this.getDoubleAI()) {
+					upgradeTower(board[topLine.get(j).getX1()][topLine.get(j).getY1() - 1].getTower());
+					//is there no human player this massage must send
+					int player;
+					if(board[topLine.get(j).getX1()][topLine.get(j).getY1() - 1].getTower().getPlayerType() == PlayerType.ONE) {
+						player = 2;
+					} else {
+						player = 1;
+					}
+					ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Update,topLine.get(j).getX1(),topLine.get(j).getY1() - 1,board[topLine.get(j).getX1()][topLine.get(j).getY1() - 1].getTower().getGems(), player));
+					
+				} else if(this.getWantAI()) {
+					upgradeTower(board[topLine.get(j).getX1()][topLine.get(j).getY1() - 1].getTower());
+					//is there no human player this massage must send
+					int player;
+					if(board[topLine.get(j).getX1()][topLine.get(j).getY1() - 1].getTower().getPlayerType() == PlayerType.ONE) {
+						player = 2;
+					} else {
+						player = 1;
+					}
+					ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Update,topLine.get(j).getX1(),topLine.get(j).getY1() - 1,board[topLine.get(j).getX1()][topLine.get(j).getY1() - 1].getTower().getGems(), player));
+				}
 				this.xCoordinationUpgrade = topLine.get(j).getX1();
 			    this.yCoordinationUpgrade = topLine.get(j).getY1() - 1;
 			}
@@ -256,7 +290,18 @@ public class Board {
 				System.err.println(
 						"Upgrade now: " + board[bottomLine.get(i).getX1()][bottomLine.get(i).getY1() - 1].getTower());
 				System.err.println("Position: " + (bottomLine.get(i).getX1()) + " " + (bottomLine.get(i).getY1() - 1));
-				upgradeTower(board[bottomLine.get(i).getX1()][bottomLine.get(i).getY1() - 1].getTower());
+				if(this.getDoubleAI()) {
+					upgradeTower(board[bottomLine.get(i).getX1()][bottomLine.get(i).getY1() - 1].getTower());
+					
+					int player;
+					if(board[topLine.get(i).getX1()][topLine.get(i).getY1() - 1].getTower().getPlayerType() == PlayerType.ONE) {
+						player = 2;
+					} else {
+						player = 1;
+					}
+					ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Update,topLine.get(i).getX1(),topLine.get(i).getY1() - 1,board[topLine.get(i).getX1()][topLine.get(i).getY1() - 1].getTower().getGems(), player));
+					
+				}
 				this.xCoordinationUpgrade = topLine.get(i).getX1();
 				this.yCoordinationUpgrade = topLine.get(i).getY1() -1;
 			}
@@ -284,6 +329,7 @@ public class Board {
 		}
 		this.gems = tower.getGems();
 		this.setUpgrade(true);
+		System.out.println(getTempBoard());
 	}
 
 	/** *************************************************************************************************************************************** **/
@@ -652,65 +698,145 @@ public class Board {
 			bottomTiles.add(board[i][0]);
 			topTiles.add(board[i][7]);
 		}
-
-		if (newRound == NewRound.Left) {
-			// the choice is left
-			for (int x = 0; x < 8; x++) {
+			Tower[][] towersP1Temp = new Tower[8][8];
+			Tower[][] towersP2Temp = new Tower[8][8];
+			
+			if (newRound == NewRound.Left) {
+				// Player 1 towers add to temp array
+				int i = 0;
 				for (int y = 0; y < 8; y++) {
-					// is on this Tile a Tower?
-					if (board[x][y].hasTower(board, x, y)) {
-						// is this tower a Player.ONE or a Player.TWO
-						if (board[x][y].getTower().getPlayerType() == PlayerType.ONE) {
-							// its a Player.ONE && set the Tile back without a
-							// tower
-							towerListPlayerONE.add(board[x][y].getTower());
-							board[x][y] = new Tile(board[x][y].getColor());
-						} else {
-							// its a Player.TWO && set the Tile back without a
-							// tower
-							towerListPlayerTWO.add(board[x][y].getTower());
-							board[x][y] = new Tile(board[x][y].getColor());
+					for (int x = 0; x < 8; x++) {
+						if(board[x][y].hasTower(board, x, y) && board[x][y].getTower().getPlayerType() == PlayerType.ONE) {
+							towersP1Temp[7-i][0] = board[x][y].getTower();
+							i++;
 						}
 					}
 				}
-			}
-			// fill the towers
-			for (int i = 0; i < 8; i++) {
-				// this is the bottomLine
-				board[i][0] = new Tile(towerListPlayerONE.get(i), bottomTiles.get(i).getColor());
-				// this is for the topLine
-				board[i][7] = new Tile(towerListPlayerTWO.get(i), topTiles.get(i).getColor());
-			}
-		} else {
-			// the choice is right
-			for (int y = 8; y > 0; y--) {
-				for (int x = 0; x > 0; x--) {
-					// is on this Tile a Tower?
-					if (board[x][y].hasTower(board, x, y)) {
-						// is this tower a Player.ONE or a Player.TWO
-						if (board[x][y].getTower().getPlayerType() == PlayerType.ONE) {
-							// its a Player.ONE && set the Tile back without a
-							// tower
-							towerListPlayerONE.add(board[x][y].getTower());
-							board[x][y] = new Tile(board[x][y].getColor());
-						} else {
-							// its a Player.TWO && set the Tile back without a
-							// tower
-							towerListPlayerTWO.add(board[x][y].getTower());
-							board[x][y] = new Tile(board[x][y].getColor());
+				// Player 2 towers add to temp array
+				int k = 0;
+				for (int y = 0; y < 8; y++) {
+					for (int x = 0; x < 8; x++) {
+						if(board[x][y].hasTower(board, x, y) && board[x][y].getTower().getPlayerType() == PlayerType.TWO) {
+							towersP2Temp[k][7] = board[x][y].getTower();
+							k++;
 						}
 					}
 				}
+				//is there no human player this massage must send
+				if(this.getDoubleAI()) {
+					ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, true));
+				}
 			}
+			else if(newRound == NewRound.Right) {
+				//Player 1 towers add to temp array
+				int i = 0;
+				for (int y = 0; y < 8; y++) {
+					for (int x = 0; x < 8; x++) {
+						if(board[x][y].hasTower(board, x, y) && board[x][y].getTower().getPlayerType() == PlayerType.ONE) {
+							towersP1Temp[i][0] = board[x][y].getTower();
+							i++;
+						}
+					}
+				}
+				//Player 2 towers add to temp array
+				int k = 0;
+				for (int y = 0; y < 8; y++) {
+					for (int x = 0; x < 8; x++) {
+						if(board[x][y].hasTower(board, x, y) && board[x][y].getTower().getPlayerType() == PlayerType.TWO) {
+							towersP2Temp[7-k][7] = board[x][y].getTower();
+							k++;
+						}
+					}
+				}
+				//is there no human player this massage must send
+				if(this.getDoubleAI()) {
+					ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, false));
+				}
+				
+			}
+			
 			// fill the towers
 			for (int i = 0; i < 8; i++) {
 				// this is the bottomLine
-				board[i][0] = new Tile(towerListPlayerONE.get(i), bottomTiles.get(i).getColor());
+				board[i][0] = new Tile(towersP1Temp[i][0], bottomTiles.get(i).getColor());
 				// this is for the topLine
-				board[i][7] = new Tile(towerListPlayerTWO.get(i), topTiles.get(i).getColor());
+				board[i][7] = new Tile(towersP2Temp[i][7], topTiles.get(i).getColor());
+				// set the rest of the board new
+				Tile[][] tmpTiles = this.getTempTile();
+				board[i][1] = new Tile(tmpTiles[i][1].getColor());
+				board[i][2] = new Tile(tmpTiles[i][1].getColor());
+				board[i][3] = new Tile(tmpTiles[i][1].getColor());
+				board[i][4] = new Tile(tmpTiles[i][1].getColor());
+				board[i][5] = new Tile(tmpTiles[i][1].getColor());
+				board[i][6] = new Tile(tmpTiles[i][1].getColor());
 			}
-		}
+			System.out.println(getTempBoard());
+//		} else {
+//			if (newRound == NewRound.Left) {
+//				// the choice is left
+//				for (int x = 0; x < 8; x++) {
+//					for (int y = 0; y < 8; y++) {
+//						// is on this Tile a Tower?
+//						if (board[x][y].hasTower(board, x, y)) {
+//							// is this tower a Player.ONE or a Player.TWO
+//							if (board[x][y].getTower().getPlayerType() == PlayerType.ONE) {
+//								// its a Player.ONE && set the Tile back without a
+//								// tower
+//								towerListPlayerONE.add(board[x][y].getTower());
+//								board[x][y] = new Tile(board[x][y].getColor());
+//							} else {
+//								// its a Player.TWO && set the Tile back without a
+//								// tower
+//								towerListPlayerTWO.add(board[x][y].getTower());
+//								board[x][y] = new Tile(board[x][y].getColor());
+//							}
+//						}
+//					}
+//				}
+//				// fill the towers
+//				for (int i = 0; i < 8; i++) {
+//					// this is the bottomLine
+//					board[i][0] = new Tile(towerListPlayerONE.get(i), bottomTiles.get(i).getColor());
+//					// this is for the topLine
+//					board[i][7] = new Tile(towerListPlayerTWO.get(i), topTiles.get(i).getColor());
+//				}
+//			} else {
+//				// the choice is right
+//				for (int y = 8; y > 0; y--) {
+//					for (int x = 0; x > 0; x--) {
+//						// is on this Tile a Tower?
+//						if (board[x][y].hasTower(board, x, y)) {
+//							// is this tower a Player.ONE or a Player.TWO
+//							if (board[x][y].getTower().getPlayerType() == PlayerType.ONE) {
+//								// its a Player.ONE && set the Tile back without a
+//								// tower
+//								towerListPlayerONE.add(board[x][y].getTower());
+//								board[x][y] = new Tile(board[x][y].getColor());
+//							} else {
+//								// its a Player.TWO && set the Tile back without a
+//								// tower
+//								towerListPlayerTWO.add(board[x][y].getTower());
+//								board[x][y] = new Tile(board[x][y].getColor());
+//							}
+//						}
+//					}
+//				}
+//				// fill the towers
+//				for (int i = 0; i < 8; i++) {
+//					// this is the bottomLine
+//					board[i][0] = new Tile(towerListPlayerONE.get(i), bottomTiles.get(i).getColor());
+//					// this is for the topLine
+//					board[i][7] = new Tile(towerListPlayerTWO.get(i), topTiles.get(i).getColor());
+//				}
+//			}
+//		}
+//		System.out.println(getTempBoard());
 	}
+		
+		
+		
+
+		
 
 	/**
 	 * Help-Method Check is one Tile free for the other Player when doing the
@@ -1006,5 +1132,21 @@ public class Board {
 	
 	public int getYCoordinateUpgrade() {
 		return this.yCoordinationUpgrade;
+	}
+	
+	public static void setDoubleAI(boolean doubleAI) {
+		wantDoubleAI = doubleAI;
+	}
+	
+	public static boolean getDoubleAI() {
+		return wantDoubleAI;
+	}
+	
+	public static boolean getWantAI() {
+		return wantAI;
+	}
+	
+	public static void setWandAI(boolean ai) {
+		wantAI = ai;
 	}
 }

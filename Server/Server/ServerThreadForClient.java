@@ -30,7 +30,7 @@ public class ServerThreadForClient extends Thread {
 	private int name;
 
 	private boolean wantAI = false;
-	private boolean wantDoubleAI = false;
+	private static boolean wantDoubleAI = false;
 
 	DataBase h2 = DataBase.getDB();
 
@@ -65,28 +65,47 @@ public class ServerThreadForClient extends Thread {
 			// For the Chat-Messaging
 			sendMessageBackToClient(message);
 		} else if (message.getMessageType() == MessageType.Coordinate) {
-			logger.info("Server: " + "x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: "
-					+ message.getYCoordinate1() + " x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: "
-					+ message.getYCoordinate2() + " Value: " + message.getPlayer());
-			// send the Message Back to all Clients
-			board.makeMove(new Move(message.getXCoordinate1(), message.getYCoordinate1(), message.getXCoordinate2(),
-					message.getYCoordinate2(), true));
-			sendMessageBackToClient(message);
-			// Safes the coordinates for the hidden-Board on the Server
-			if (this.wantAI) {
-				Move move = kamisado.setPlayConfiguration(true, 5, message.getPlayer());
-				Board board = Board.getBoard();
-				PlayerType playerType = board.getTile(move.getX2(), move.getY2()).getTower().getPlayerType();
-				Message messageAI = new Message(MessageType.Coordinate, move.getX1(), move.getY1(), move.getX2(),
-						move.getY2(), ServerController.playerConverter(playerType));
-				sendMessageBackToClient(messageAI);
+			if(!this.wantAI) {
+				logger.info("Server: " + "x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: "
+						+ message.getYCoordinate1() + " x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: "
+						+ message.getYCoordinate2() + " Value: " + message.getPlayer());
+				// send the Message Back to all Clients
+				board.makeMove(new Move(message.getXCoordinate1(), message.getYCoordinate1(), message.getXCoordinate2(),
+						message.getYCoordinate2(), true));
+				//send this message back to the client
+				sendMessageBackToClient(message);
+			}
+			else if (this.wantAI) {
+				// Safes the coordinates for the hidden-Board on the Server
+				PlayerType playerT;
+				if(board.getTile(message.getXCoordinate1(), message.getYCoordinate1()).getTower().getPlayerType() == ServerController.playerConverter(message.getPlayer())) {
+					//only when the tower is from the right player
+					board.makeMove(new Move(message.getXCoordinate1(), message.getYCoordinate1(), message.getXCoordinate2(),
+							message.getYCoordinate2(), true));
+					Board board = Board.getBoard();
+					if(!board.isWinSituation()) {
+						//don't send a move back when the game is finish
+						//isWinSituation upgrade also the tower
+						Move move = kamisado.setPlayConfiguration(true, 5, message.getPlayer());
+						PlayerType playerType = board.getTile(move.getX2(), move.getY2()).getTower().getPlayerType();
+						Message messageAI = new Message(MessageType.Coordinate, move.getX1(), move.getY1(), move.getX2(),
+								move.getY2(), ServerController.playerConverter(playerType));
+						sendMessageBackToClient(messageAI);
+					} 
+				}
 			}
 
 		} else if (message.getMessageType() == MessageType.Update) {
-			logger.info("Server: " + "Update: " + message.getUpdate() + " x-Coordinates: " + message.getXCoordinate2()
-					+ " y-Coordinates: " + message.getYCoordinate2() + " Gems: " + message.getGems() + " Player: " + message.getPlayer());
+			logger.info("Server: " + " x-Coordinates: " + message.getXCoordinate2()
+					+ " y-Coordinates: " + message.getYCoordinate2() + " Gems: " + message.getGems() + " Player: " + message.getPlayer());	
+			if(!this.wantDoubleAI) {
+				//update the tower
+				board.upgradeTower(board.getTile(message.getXCoordinate2(), message.getYCoordinate2()).getTower());
+			}
 			// send the Message Back to all Clients
-			sendMessageBackToClient(message);
+			if(!this.wantAI) {
+				sendMessageBackToClient(message);
+			}
 		} else if (message.getMessageType() == MessageType.DBMessage) {
 			logger.info("Server: " + "DB-Message: ");
 			// DB-Message
@@ -186,6 +205,7 @@ public class ServerThreadForClient extends Thread {
 			kamisado.setSumoWinTwo(message.getSumoWinTWO());
 			kamisado.setWinTwo(message.getWinTWO());
 			this.wantAI = true;
+			Board.setWandAI(true);
 		} else if (message.getMessageType() == MessageType.AIDouble) {
 			logger.info("Server: " + "Paramter-Injection DoublePlayer:\n" + "\nONE: " + message.getProgressONE() + "\n"
 					+ message.getMovesONE() + "\n" + message.getBlockONE() + "\n" + message.getSumoBlockONE() + "\n"
@@ -208,6 +228,8 @@ public class ServerThreadForClient extends Thread {
 			kamisado.setWinTwo(message.getWinTWO());
 			this.wantAI = true;
 			this.wantDoubleAI = true;
+			Board.setDoubleAI(true);
+			Board.setWandAI(false);
 
 			if (this.wantAI && this.wantDoubleAI) {
 				Move move = kamisado.setPlayConfiguration(false, 5, message.getPlayer());
@@ -229,8 +251,10 @@ public class ServerThreadForClient extends Thread {
 			} else {
 				newRound = NewRound.Right;
 			}
+			if(!this.wantAI) {
+				sendMessageBackToClient(message);
+			}
 			board.newRound(newRound);
-			sendMessageBackToClient(message);
 		}
 		// For send the name
 		else if (message.getMessageType() == MessageType.Name) {
@@ -416,5 +440,8 @@ public class ServerThreadForClient extends Thread {
 	public void setUserName(int name) {
 		this.name = name;
 	}
-
+	
+	public static boolean getWantDoubleAI() {
+		return wantDoubleAI;
+	}
 }

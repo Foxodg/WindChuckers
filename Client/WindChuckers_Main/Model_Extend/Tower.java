@@ -9,6 +9,7 @@ import Login.LoginModel;
 import WindChuckers_Main.GameMenu_Model;
 import abstractClasses.Model;
 import commonClasses.ServiceLocator;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -423,7 +424,7 @@ public class Tower extends Button {
 
 		
 		// Send the move to the server
-		ServiceLocator.getServiceLocator().getLogger().info("Move send to server: " + field.getxPosition() + " " + field.getyPosition() + " " + this.getxPosition() + " " + this.getyPosition() + " " + this.getPlayerNumber());
+		ServiceLocator.getServiceLocator().getLogger().info("Move send to server: " + field.getxPosition() + " " + field.getyPosition() + " " + this.getxPosition() + " " + this.getyPosition() + " " + this.getPlayerNumber());		
 		model.messageConstructorForCoordinate(oldX, oldY, newX, newY, this.getPlayerNumber());
 		
 		// The old field is empty and the new field is busy
@@ -487,7 +488,7 @@ public class Tower extends Button {
 		
 		int newColumnGridPane = GridPane.getColumnIndex(field);
 		int newRowGridPane = GridPane.getRowIndex(field);
-
+		
 		// Send the move to the server
 		ServiceLocator.getServiceLocator().getLogger().info("Move send to server: " + field.getxPosition() + " " + field.getyPosition() + " " + this.getxPosition() + " " + this.getyPosition() + " " + this.getPlayerNumber());
 		model.messageConstructorForCoordinate(oldX, oldY, newX, newY, this.getPlayerNumber());
@@ -545,6 +546,7 @@ public class Tower extends Button {
 				towersP2[oldX][oldY]= null;
 				towersP1[newX][newY+1] = towersP1[newX][newY];
 				towersP1[newX][newY] = null;		 
+			
 			}
 			
 			
@@ -881,10 +883,10 @@ public class Tower extends Button {
 			}
 			this.saveSumoMove = 0;
 		} else {
-			if(FriendsController.getHashCode() == model.getPlayer1().getPlayerNumber() || FriendsController.getRandomStart() == 1) {
-				//this player is player 1
-				if(model.getPlayer1().isOnTurn()) {
-					//Also player1 is on turn
+			if(model.getPlayer1().isOnTurn()) {
+				//player 1 is on turn
+				if(FriendsController.getHashCode() == model.getPlayer1().getPlayerNumber()) {
+					//this player is player 1
 					if (model.gameStart){
 						for(int y = 0; y < 8; y++){
 							for(int x = 0; x < 8; x++){
@@ -898,12 +900,21 @@ public class Tower extends Button {
 										towers[x][y].setDisable(false);
 					}}}}
 					this.saveSumoMove = 0;
+				} else if(model.getPlayer2().isOnTurn()) {
+					//it not this users turn
+					for(int y = 0; y < 8; y++){
+						for(int x = 0; x < 8; x++){
+							if(towers[x][y]!=null){
+								towers[x][y].setDisable(true);
+							}
+						}
+					}
 				}
 			}
-			else if(FriendsController.getHashCode() == model.getPlayer2().getPlayerNumber() || FriendsController.getRandomStart() == 2) {
-				//this player is player 2
-				if(model.getPlayer2().isOnTurn()) {
-					//also player2 is on turn
+			else if(model.getPlayer2().isOnTurn()) {
+				//player 2 is on turn
+				if(FriendsController.getHashCode() == model.getPlayer2().getPlayerNumber()) {
+					//this player is player 2
 					if (model.gameStart){
 						for(int y = 0; y < 8; y++){
 							for(int x = 0; x < 8; x++){
@@ -917,6 +928,15 @@ public class Tower extends Button {
 										towers[x][y].setDisable(false);
 					}}}}
 					this.saveSumoMove = 0;
+				} else if (model.getPlayer1().isOnTurn()) {
+					//it not this users turn
+					for(int y = 0; y < 8; y++){
+						for(int x = 0; x < 8; x++){
+							if(towers[x][y]!=null){
+								towers[x][y].setDisable(true);
+							}
+						}
+					}
 				}
 			}
 		}
@@ -967,15 +987,16 @@ public class Tower extends Button {
 			
 		if (player1.isOnTurn() && this.yPosition == 0){
 			this.upgradeTower(fields, tower, this.getxPosition(), this.getyPosition(), this.getGems(), towersP1, towersP2);
-			model.messageConstructorForUpdate(true, this.getxPosition(), this.getyPosition(), this.getGems(), this.getPlayerNumber());
 			this.setDisable(false);
-			GameMenu_Model.Winner.set(1);
-			
+			if(GameMenu_Model.Winner.get() == 2 || GameMenu_Model.Winner.get() == 0) {
+				GameMenu_Model.Winner.set(1);
+			}
 		} else if(player2.isOnTurn() && this.yPosition == 7){
 			this.upgradeTower(fields, tower, this.xPosition, this.yPosition, gems, towersP1, towersP2);
-			model.messageConstructorForUpdate(true, this.getxPosition(), this.getyPosition(), this.getGems(), this.getPlayerNumber());
 			this.setDisable(false);
-			GameMenu_Model.Winner.set(2);
+			if(GameMenu_Model.Winner.get() == 1 || GameMenu_Model.Winner.get() == 0) {
+				GameMenu_Model.Winner.set(2);
+			}
 		}
 	}
 
@@ -992,6 +1013,7 @@ public class Tower extends Button {
 	 */
 	public void upgradeTower(Field[][] fields, Tower tower, int xCoordinateUpgrade, int yCoordinateUpgrade, int gems, Tower[][] towersP1, Tower[][] towersP2) {
 
+		Platform.runLater(() -> {
 			if(this.gems == 0){
 				this.sumoTower = true;
 				this.setText("I");
@@ -1003,6 +1025,10 @@ public class Tower extends Button {
 				this.setText("III");
 				this.gems++;
 			}
+		});
+		
+			//also upgrade the tower of the other clients and server
+			model.messageConstructorForUpdate(xCoordinateUpgrade, yCoordinateUpgrade, this.getGems(), this.getPlayerNumber());
 	}
 	
 	/**
@@ -1014,7 +1040,7 @@ public class Tower extends Button {
 	 * @param playerType
 	 */
 	public void move(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Tower[][] towersP1, Tower[][] towersP2, int oldX, int oldY, int newX, int newY, int playerType) {
-
+		
 		if (!fields[newX][newY].isEmpty() && this.getGems() >= 2 && this.saveSumoMove == 3){
 			this.sumo3Move(fields, gameBoard, player1, player2, fields[newX][newY], towersP1, towersP2);
 		}

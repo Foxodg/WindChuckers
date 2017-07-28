@@ -2,7 +2,10 @@ package MainMenu;
 
 import com.sun.media.jfxmedia.logging.Logger;
 
+import Friends.FriendsController;
 import Friends.FriendsView;
+import Login.LoginModel;
+import WindChuckers_Main.GameMenu_Controller;
 import WindChuckers_Main.GameMenu_Model;
 import WindChuckers_Main.WindChuckers;
 import abstractClasses.Controller;
@@ -26,6 +29,10 @@ public class MainMenuController extends Controller<GameMenu_Model, MainMenuView>
 		
 		
 		view.btnSingleGame.setOnAction(e -> {
+			//set this Player on Player1
+			LoginModel.setForcePlayer(true);
+			//send a Message to the Server that we need an AI
+			model.messageContstructorForAISingle(100, 100, 15, 15, 25, Double.POSITIVE_INFINITY);
 			//set option Sinlge-Game
 			model.setGameMode(1);
 			main.startApp();
@@ -39,6 +46,10 @@ public class MainMenuController extends Controller<GameMenu_Model, MainMenuView>
 		
 		
 		view.btnStandardGame.setOnAction(e -> {
+			//set this Player on Player1
+			LoginModel.setForcePlayer(true);
+			//send a Message to the Server that we need an AI
+			model.messageContstructorForAISingle(100, 100, 15, 15, 25, Double.POSITIVE_INFINITY);
 			//set option Standard-Game
 			model.setGameMode(3);
 			main.startApp();
@@ -51,6 +62,10 @@ public class MainMenuController extends Controller<GameMenu_Model, MainMenuView>
 		});
 		
 		view.btnLongGame.setOnAction(e -> {
+			//set this Player on Player1
+			LoginModel.setForcePlayer(true);
+			//send a Message to the Server that we need an AI
+			model.messageContstructorForAISingle(100, 100, 15, 15, 25, Double.POSITIVE_INFINITY);
 			//set option Long-Game
 			model.setGameMode(7);
 			main.startApp();
@@ -63,6 +78,10 @@ public class MainMenuController extends Controller<GameMenu_Model, MainMenuView>
 		});
 		
 		view.btnMarathonGame.setOnAction(e -> {
+			//set this Player on Player1
+			LoginModel.setForcePlayer(true);
+			//send a Message to the Server that we need an AI
+			model.messageContstructorForAISingle(100, 100, 15, 15, 25, Double.POSITIVE_INFINITY);
 			//set option Marathon-Game
 			model.setGameMode(15);
 			//start the main-App

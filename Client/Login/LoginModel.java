@@ -15,6 +15,7 @@ public class LoginModel extends Model {
 	private static int wins;
 	private static String username;
 	private static boolean withoutServer = false;
+	private static boolean forcePlayer;
 
 	
 	public LoginModel(){
@@ -64,6 +65,14 @@ public class LoginModel extends Model {
 	
 	public static void setWithoutServer(boolean without) {
 		withoutServer = without;
+	}
+	
+	public static void setForcePlayer(boolean force) {
+		forcePlayer = force;
+	}
+	
+	public static boolean getForcePlayer() {
+		return forcePlayer;
 	}
 }
 

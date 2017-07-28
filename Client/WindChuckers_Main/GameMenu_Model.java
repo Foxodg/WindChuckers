@@ -49,7 +49,7 @@ public class GameMenu_Model extends Model {
 	
 	public static IntegerProperty Winner = new SimpleIntegerProperty(0);
 	
-	private static int gameMode = 2;
+	private static int gameMode = 100;
 
 	private Player player1 = new Player(1);
 	private Player player2 = new Player(2);
@@ -152,7 +152,7 @@ public class GameMenu_Model extends Model {
 			for(int i = 0; i < playerList.size(); i++) {
 				if(playerList.get(i).getPlayerNumber() == hashCode) {
 					//set the player only if this is the first try, because the other player will do this again
-					if(player1.getPlayerNumber() == 1) {
+					if(player1.getPlayerNumber() == 1 || player1.getPlayerNumber() == ClientThreadForServer.hashCodeStatic) {
 						player1 = playerList.get(i);
 					}
 				}
@@ -160,9 +160,12 @@ public class GameMenu_Model extends Model {
 					//set the player only if this is the first try, because the other player will do this again
 					if(player2.getPlayerNumber() == 2) {
 						player2 = playerList.get(i);
+						//now reset the player one again
 					}
 				}
 			}
+		} else {
+			player1.setPlayerNumber(ClientThreadForServer.hashCodeStatic);
 		}
 	}
 
@@ -208,12 +211,10 @@ public class GameMenu_Model extends Model {
 	 */
 	public void messageConstructorForCoordinate(int xCoordinate1, int yCoordinate1,
 			int xCoordinate2, int yCoordinate2, int player) {
-		if(xCoordinate1 != 0) {
 			//only send if not empty
 			Message message = new Message(MessageType.Coordinate, xCoordinate1, yCoordinate1, xCoordinate2,
 					yCoordinate2, player);
 			sendMessage(message);
-		}
 	}
 
 	/**
@@ -238,7 +239,7 @@ public class GameMenu_Model extends Model {
 	 * @param yCoordinate2
 	 * @param gems
 	 */
-	public void messageConstructorForUpdate(boolean update, int xCoordinate2, int yCoordinate2, int gems, int player) {
+	public void messageConstructorForUpdate(int xCoordinate2, int yCoordinate2, int gems, int player) {
 		Message message = new Message(MessageType.Update, xCoordinate2,	yCoordinate2, gems, player);
 		sendMessage(message);
 

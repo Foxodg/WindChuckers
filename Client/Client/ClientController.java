@@ -100,7 +100,7 @@ public class ClientController {
         		int yCoordinate2 = 5;
         		int gems = 1;
         		int player = 1;
-        		model.messageConstructorForUpdate(update, xCoordinate2, yCoordinate2, gems, player);
+        		model.messageConstructorForUpdate(xCoordinate2, yCoordinate2, gems, player);
         	}
         	else if(view.cbchoice.getSelectionModel().getSelectedItem() == MessageType.DBMessage){
         		int dbMessage = 1;

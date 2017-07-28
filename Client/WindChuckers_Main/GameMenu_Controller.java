@@ -16,6 +16,7 @@ import Client.ClientThreadForServer;
 import Friends.FriendsController;
 import Login.LoginController;
 import Login.LoginModel;
+import MainMenu.MainMenuController;
 import Message.Message;
 import Message.Message.MessageType;
 import WindChuckers_Main.WindChuckers;
@@ -86,7 +87,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		TowerHandler towerHandler = new TowerHandler(); // Anonym Class to
 														// handle the tower
 														// events
-		
+
 		// model.getPlayer1().setOnTurn(true); // Je nach dem wer anfängt, müssen
 		// // wir noch implementieren
 
@@ -95,7 +96,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		} else if (FriendsController.getRandomStart() == 2) {
 			model.getPlayer2().setOnTurn(true);
 		}
-		
+
 		// get the friendsList
 		model.setFriends(clientServer.getFriendsList());
 		// send the hash-code and the name to the server for key / value
@@ -203,12 +204,21 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			Tower[][] tower1 = view.getTowersP1();
 			Tower[][] tower2 = view.getTowersP2();
 
-			Tower towerUpgrade = towers[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()];
-			if (tower.getGems() == clientServer.getGems()) {
-				// update only if the update not already done
-				towerUpgrade.upgradeTower(view.getFields(), towerUpgrade, clientServer.getXCoordinateUpgrade(),
-						clientServer.getYCoordinateUpgrade(), clientServer.getGems(), view.getTowersP1(),
-						view.getTowersP2());
+			if (!fields[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()].isEmpty()) {
+				// only when the field is occupied and the playerTyp is the right
+				if(towers[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()].getPlayerNumber() == clientServer.getPlayer()) {
+					Tower towerUpgrade = towers[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()];
+					if (tower.getGems() != clientServer.getGems()) {
+						// update only if the update not already done
+						towerUpgrade.upgradeTower(view.getFields(), towerUpgrade, clientServer.getXCoordinateUpgrade(),
+								clientServer.getYCoordinateUpgrade(), clientServer.getGems(), view.getTowersP1(),
+								view.getTowersP2());
+						serviceLocator.getLogger()
+								.info("Update-Message is here: " + " x-coordinate: " + clientServer.getXCoordinateUpgrade()
+										+ " y-coordinate: " + clientServer.getYCoordinateUpgrade() + " Gems: "
+										+ clientServer.getGems());
+					}
+				}
 			}
 		});
 
@@ -218,7 +228,9 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		 * @author L.Weber
 		 */
 		clientServer.getNewRound().addListener((observable, oldValue, newValue) -> {
-			this.buildNewRound(model.getNewRoundLeftRight());
+			Platform.runLater(() -> {
+				this.buildNewRound(model.getNewRoundLeftRight());
+			});
 		});
 
 		/**
@@ -389,12 +401,18 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			Tower[][] tower1 = view.getTowersP1();
 			Tower[][] tower2 = view.getTowersP2();
 
-			serviceLocator.getLogger().info("Move coordinates: " + model.getStartColumn() + " " + model.getStartRow()
-					+ " " + model.getEndColumn() + " " + model.getEndRow() + " " + model.getPlayerType());
-			if (!fields[model.getStartColumn()][model.getStartRow()].isEmpty()) {
-				tower.move(view.getFields(), view.getGameBoard(), model.getPlayer1(), model.getPlayer2(),
-						view.getTowersP1(), view.getTowersP2(), model.getStartColumn(), model.getStartRow(),
-						model.getEndColumn(), model.getEndRow(), model.getPlayerType());
+			serviceLocator.getLogger().info("Move coordinates: " + model.getStartColumn() + " " + model.getStartRow() + " " + model.getEndColumn() + " " + model.getEndRow() + " " + model.getPlayerType());
+			if (clientServer.getPlayerType() != 0 || !fields[model.getStartColumn()][model.getStartRow()].isEmpty()) {
+				if(towers[clientServer.getStartColumn()][clientServer.getStartRow()] != null
+						&& view.getFields() != null && view.getGameBoard() != null && model.getPlayer1() != null 
+						&&model.getPlayer2() != null && view.getTowersP1() != null && view.getTowersP2() != null) {
+					if (towers[clientServer.getStartColumn()][clientServer.getStartRow()].getPlayerNumber() == clientServer.getPlayerType()) {
+						// do this only when there is a tower and also the right player
+						tower.move(view.getFields(), view.getGameBoard(), model.getPlayer1(), model.getPlayer2(),
+								view.getTowersP1(), view.getTowersP2(), model.getStartColumn(), model.getStartRow(),
+								model.getEndColumn(), model.getEndRow(), model.getPlayerType());
+					}
+				}
 			}
 		});
 
@@ -408,92 +426,213 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		// implementieren.
 		// Immer der Verlierer beginnt
 
-		if (FriendsController.getRandomStart() == 1) {
-			model.getPlayer1().setOnTurn(true);
-			model.getPlayer2().setOnTurn(false);
-			for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
-				for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
-					if (view.getTowersP1()[x][y] != null) {
-						view.getTowersP1()[x][y].setOnAction(towerHandler);
+		if (LoginModel.getWithoutServer()) {
+			if (FriendsController.getRandomStart() == 1) {
+				model.getPlayer1().setOnTurn(true);
+				model.getPlayer2().setOnTurn(false);
+				for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+					for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+						if (view.getTowersP1()[x][y] != null) {
+							view.getTowersP1()[x][y].setOnAction(towerHandler);
+						}
+					}
+				}
+
+				for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+					for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+						if (view.getTowersP2()[x][y] != null) {
+							view.getTowersP2()[x][y].setOnAction(towerHandler);
+							view.getTowersP2()[x][y].setDisable(true);
+						}
+					}
+				}
+
+			} else if (FriendsController.getRandomStart() == 2) {
+				model.getPlayer1().setOnTurn(false);
+				model.getPlayer2().setOnTurn(true);
+				for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+					for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+						if (view.getTowersP2()[x][y] != null) {
+							view.getTowersP2()[x][y].setOnAction(towerHandler);
+						}
+					}
+				}
+
+				for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+					for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+						if (view.getTowersP1()[x][y] != null) {
+							view.getTowersP1()[x][y].setOnAction(towerHandler);
+							view.getTowersP1()[x][y].setDisable(true); // Je nach dem
+																		// wer anfängt
+																		// -> müssen wir
+																		// noch
+																		// implementieren
+						}
+					}
+				}
+			} else if (FriendsController.getRandomStart() == 0) {
+				model.getPlayer1().setOnTurn(false);
+				model.getPlayer2().setOnTurn(true);
+				for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+					for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+						if (view.getTowersP2()[x][y] != null) {
+							view.getTowersP2()[x][y].setOnAction(towerHandler);
+						}
+					}
+				}
+
+				for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+					for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+						if (view.getTowersP1()[x][y] != null) {
+							view.getTowersP1()[x][y].setOnAction(towerHandler);
+							view.getTowersP1()[x][y].setDisable(true); // Je nach dem
+																		// wer anfängt
+																		// -> müssen wir
+																		// noch
+																		// implementieren
+						}
 					}
 				}
 			}
+		} else {
+			if (LoginModel.getForcePlayer()) {
+				FriendsController.setRandomStart(1);
+			}
+			if (FriendsController.getRandomStart() == 1) {
+				if (FriendsController.getHashCode() == model.getPlayer1().getPlayerNumber()
+						|| LoginModel.getForcePlayer()) {
+					// this player is player1
+					view.lblUser1.setText(LoginModel.getUserName());
+					model.getPlayer1().setOnTurn(true);
+					model.getPlayer2().setOnTurn(false);
+					for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+						for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+							if (view.getTowersP1()[x][y] != null) {
+								view.getTowersP1()[x][y].setOnAction(towerHandler);
+							}
+						}
+					}
 
-			for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
-				for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
-					if (view.getTowersP2()[x][y] != null) {
-						view.getTowersP2()[x][y].setOnAction(towerHandler);
-						view.getTowersP2()[x][y].setDisable(true);
+					for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+						for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+							if (view.getTowersP2()[x][y] != null) {
+								view.getTowersP2()[x][y].setOnAction(towerHandler);
+								view.getTowersP2()[x][y].setDisable(true);
+							}
+						}
+					}
+				} else {
+					// this player is player 2
+					view.lblUser2.setText(LoginModel.getUserName());
+					model.getPlayer1().setOnTurn(true);
+					model.getPlayer2().setOnTurn(false);
+					for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+						for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+							if (view.getTowersP1()[x][y] != null) {
+								view.getTowersP1()[x][y].setOnAction(towerHandler);
+								view.getTowersP1()[x][y].setDisable(true);
+							}
+						}
+					}
+
+					for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+						for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+							if (view.getTowersP2()[x][y] != null) {
+								view.getTowersP2()[x][y].setOnAction(towerHandler);
+								view.getTowersP2()[x][y].setDisable(true);
+							}
+						}
+					}
+				}
+			} else if (FriendsController.getRandomStart() == 2) {
+				if (FriendsController.getHashCode() == model.getPlayer2().getPlayerNumber()) {
+					// this player is player 2
+					view.lblUser2.setText(LoginModel.getUserName());
+					model.getPlayer1().setOnTurn(false);
+					model.getPlayer2().setOnTurn(true);
+					for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+						for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+							if (view.getTowersP2()[x][y] != null) {
+								view.getTowersP2()[x][y].setOnAction(towerHandler);
+							}
+						}
+					}
+
+					for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+						for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+							if (view.getTowersP1()[x][y] != null) {
+								view.getTowersP1()[x][y].setOnAction(towerHandler);
+								view.getTowersP1()[x][y].setDisable(true);
+							}
+						}
+					}
+				} else {
+					// this player is player1
+					view.lblUser1.setText(LoginModel.getUserName());
+					model.getPlayer1().setOnTurn(false);
+					model.getPlayer2().setOnTurn(true);
+					for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+						for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+							if (view.getTowersP2()[x][y] != null) {
+								view.getTowersP2()[x][y].setOnAction(towerHandler);
+								view.getTowersP2()[x][y].setDisable(true);
+							}
+						}
+					}
+
+					for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+						for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+							if (view.getTowersP1()[x][y] != null) {
+								view.getTowersP1()[x][y].setOnAction(towerHandler);
+								view.getTowersP1()[x][y].setDisable(true);
+							}
+						}
+					}
+				}
+			} else if (FriendsController.getRandomStart() == 0) {
+				model.getPlayer1().setOnTurn(false);
+				model.getPlayer2().setOnTurn(true);
+				for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+					for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+						if (view.getTowersP2()[x][y] != null) {
+							view.getTowersP2()[x][y].setOnAction(towerHandler);
+						}
+					}
+				}
+
+				for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
+					for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+						if (view.getTowersP1()[x][y] != null) {
+							view.getTowersP1()[x][y].setOnAction(towerHandler);
+							view.getTowersP1()[x][y].setDisable(true); // Je nach dem
+																		// wer anfängt
+																		// -> müssen wir
+																		// noch
+																		// implementieren
+						}
 					}
 				}
 			}
-
-		} else if (FriendsController.getRandomStart() == 2) {
-			model.getPlayer1().setOnTurn(false);
-			model.getPlayer2().setOnTurn(true);
-			for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
-				for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
-					if (view.getTowersP2()[x][y] != null) {
-						view.getTowersP2()[x][y].setOnAction(towerHandler);
-					}
-				}
-			}
-
-			for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
-				for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
-					if (view.getTowersP1()[x][y] != null) {
-						view.getTowersP1()[x][y].setOnAction(towerHandler);
-						view.getTowersP1()[x][y].setDisable(true); // Je nach dem
-																	// wer anfängt
-																	// -> müssen wir
-																	// noch
-																	// implementieren
-					}
-				}
-			}
-		} else if (FriendsController.getRandomStart() == 0) {
-			model.getPlayer1().setOnTurn(false);
-			model.getPlayer2().setOnTurn(true);
-			for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
-				for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
-					if (view.getTowersP2()[x][y] != null) {
-						view.getTowersP2()[x][y].setOnAction(towerHandler);
-					}
-				}
-			}
-
-			for (int y = 0; y < GameMenu_Model.DIMENSION; y++) {
-				for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
-					if (view.getTowersP1()[x][y] != null) {
-						view.getTowersP1()[x][y].setOnAction(towerHandler);
-						view.getTowersP1()[x][y].setDisable(true); // Je nach dem
-																	// wer anfängt
-																	// -> müssen wir
-																	// noch
-																	// implementieren
-					}
-				}
-			}
-
-			/**
-			 * Boolean Winner will be watched with a property. As soon as someone wins the
-			 * win method will be started
-			 * 
-			 * @author robin
-			 */
-			model.Winner.addListener((observable, oldValue, newValue) -> {
-				if (newValue.intValue() == 1) {
-					model.getPlayer1().setWins();
-					this.win(model.getPlayer1().getWins());
-				}
-
-				if (newValue.intValue() == 2) {
-					model.getPlayer2().setWins();
-					this.win(model.getPlayer2().getWins());
-				}
-			});
-
 		}
+
+		/**
+		 * Boolean Winner will be watched with a property. As soon as someone wins the
+		 * win method will be started
+		 * 
+		 * @author robin
+		 */
+		model.Winner.addListener((observable, oldValue, newValue) -> {
+			if (newValue.intValue() == 1) {
+				model.getPlayer1().setWins();
+				this.win(model.getPlayer1().getWins());
+			}
+
+			if (newValue.intValue() == 2) {
+				model.getPlayer2().setWins();
+				this.win(model.getPlayer2().getWins());
+			}
+		});
+
 	}
 
 	/**
@@ -790,4 +929,5 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	public void setModel(GameMenu_Model model) {
 		this.model = model;
 	}
+
 }
