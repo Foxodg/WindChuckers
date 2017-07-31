@@ -2,6 +2,7 @@ package AI;
 
 import java.util.logging.Logger;
 
+import Login.LoginModel;
 import Message.Message.MessageType;
 import WindChuckers_Main.GameMenu_Model;
 import abstractClasses.Controller;
@@ -33,6 +34,10 @@ public class AI_Controller extends Controller<GameMenu_Model, AI_View> {
 		view.btnSingePlayer.setOnAction(e -> {
 			model.messageContstructorForAISingle(Double.parseDouble(view.txtWeightProgressRight.getText()), Double.parseDouble(view.txtWeightMovesRight.getText()),
 					view.sliderWeightBlockRight.getValue(), view.sliderWieghtSumoBlockRight.getValue(), view.sliderWeightSumoWinRight.getValue(), view.sliderWinRight.getValue());
+			
+			//set the right Flags
+			LoginModel.setSingleAI(true);
+			LoginModel.setDoubleAI(false);
 		});
 		
 		/**
@@ -44,6 +49,10 @@ public class AI_Controller extends Controller<GameMenu_Model, AI_View> {
 					view.sliderWeightBlockLeft.getValue(), view.sliderWeightSumoBlockLeft.getValue(), view.sliderWeightSumoWinLeft.getValue(), view.sliderWinLeft.getValue(),
 					Double.parseDouble(view.txtWeightProgressRight.getText()), Double.parseDouble(view.txtWeightMovesRight.getText()),
 					view.sliderWeightBlockRight.getValue(), view.sliderWieghtSumoBlockRight.getValue(), view.sliderWeightSumoWinRight.getValue(), view.sliderWinRight.getValue());
+			
+			//set the right Flags
+			LoginModel.setSingleAI(false);
+			LoginModel.setDoubleAI(true);
 		});
 		
 		view.cb.selectedProperty().addListener(new ChangeListener<Boolean>() {

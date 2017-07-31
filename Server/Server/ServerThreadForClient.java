@@ -29,7 +29,7 @@ public class ServerThreadForClient extends Thread {
 	private Board board = Board.getBoard();
 	private int name;
 
-	private boolean wantAI = false;
+	private static boolean wantAI = false;
 	private static boolean wantDoubleAI = false;
 
 	DataBase h2 = DataBase.getDB();
@@ -64,20 +64,24 @@ public class ServerThreadForClient extends Thread {
 			logger.info("Server: " + "Chat-Message: " + message.getChatMessage());
 			// For the Chat-Messaging
 			sendMessageBackToClient(message);
+			
 		} else if (message.getMessageType() == MessageType.Coordinate) {
-			if(!this.wantAI) {
-				logger.info("Server: " + "x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: "
+			
+			if(!this.wantAI && !this.wantDoubleAI) {
+				//This is a Friends-Game don't need to do anything on the server only response to clients
+				logger.info("Server Friends-Game: " + "x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: "
 						+ message.getYCoordinate1() + " x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: "
 						+ message.getYCoordinate2() + " Value: " + message.getPlayer());
-				// send the Message Back to all Clients
-				board.makeMove(new Move(message.getXCoordinate1(), message.getYCoordinate1(), message.getXCoordinate2(),
-						message.getYCoordinate2(), true));
 				//send this message back to the client
 				sendMessageBackToClient(message);
 			}
+			
 			else if (this.wantAI) {
+				//This is a Single-AI-Game make the move on the board here and send back to the clinet
+				logger.info("Server Single-AI-Game: " + "x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: "
+						+ message.getYCoordinate1() + " x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: "
+						+ message.getYCoordinate2() + " Value: " + message.getPlayer());
 				// Safes the coordinates for the hidden-Board on the Server
-				PlayerType playerT;
 				if(board.getTile(message.getXCoordinate1(), message.getYCoordinate1()).getTower().getPlayerType() == ServerController.playerConverter(message.getPlayer())) {
 					//only when the tower is from the right player
 					board.makeMove(new Move(message.getXCoordinate1(), message.getYCoordinate1(), message.getXCoordinate2(),
@@ -94,17 +98,31 @@ public class ServerThreadForClient extends Thread {
 					} 
 				}
 			}
+			
+			else if (this.wantDoubleAI) {
+				//This is a Double-AI Game - We don't to need send back anything. Only send from server to client (one-way)
+				logger.info("Server Double-AI-Game: " + "x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: "
+						+ message.getYCoordinate1() + " x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: "
+						+ message.getYCoordinate2() + " Value: " + message.getPlayer());
+			}
 
 		} else if (message.getMessageType() == MessageType.Update) {
-			logger.info("Server: " + " x-Coordinates: " + message.getXCoordinate2()
-					+ " y-Coordinates: " + message.getYCoordinate2() + " Gems: " + message.getGems() + " Player: " + message.getPlayer());	
-			if(!this.wantDoubleAI) {
-				//update the tower
+			if(!this.wantAI && !this.wantDoubleAI) {
+				//This is a Single-AI-Game make the move on the board here and send back to the clinet
+				logger.info("Server Friend-Game: " + " x-Coordinates: " + message.getXCoordinate2()
+				+ " y-Coordinates: " + message.getYCoordinate2() + " Gems: " + message.getGems() + " Player: " + message.getPlayer());	
+				sendMessageBackToClient(message);
+			}
+			else if(this.wantAI) {
+				//This is a Single-AI-Game make the move on the board here and don't send back to the clinet
+				logger.info("Server Single-AI-Game: " + " x-Coordinates: " + message.getXCoordinate2()
+				+ " y-Coordinates: " + message.getYCoordinate2() + " Gems: " + message.getGems() + " Player: " + message.getPlayer());	
 				board.upgradeTower(board.getTile(message.getXCoordinate2(), message.getYCoordinate2()).getTower());
 			}
-			// send the Message Back to all Clients
-			if(!this.wantAI) {
-				sendMessageBackToClient(message);
+			if(this.wantDoubleAI) {
+				//This is a Double-AI Game - We don't to need send back anything. Only send from server to client (one-way)
+				logger.info("Server Double-AI-Game: " + " x-Coordinates: " + message.getXCoordinate2()
+				+ " y-Coordinates: " + message.getYCoordinate2() + " Gems: " + message.getGems() + " Player: " + message.getPlayer());	
 			}
 		} else if (message.getMessageType() == MessageType.DBMessage) {
 			logger.info("Server: " + "DB-Message: ");
@@ -193,7 +211,6 @@ public class ServerThreadForClient extends Thread {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			sendMessageBackToClient(message);
 		} else if (message.getMessageType() == MessageType.AISingle) {
 			logger.info("Server: " + "Paramter-Injection SinglePlayer:\n" + message.getProgressTWO() + "\n"
 					+ message.getMovesTWO() + "\n" + message.getBlockTWO() + "\n" + message.getSumoBlockTWO() + "\n"
@@ -226,12 +243,12 @@ public class ServerThreadForClient extends Thread {
 			kamisado.setSumoBlockTwo(message.getSumoBlockTWO());
 			kamisado.setSumoWinTwo(message.getSumoWinTWO());
 			kamisado.setWinTwo(message.getWinTWO());
-			this.wantAI = true;
+			this.wantAI = false;
 			this.wantDoubleAI = true;
 			Board.setDoubleAI(true);
 			Board.setWandAI(false);
 
-			if (this.wantAI && this.wantDoubleAI) {
+			if (this.wantDoubleAI) {
 				Move move = kamisado.setPlayConfiguration(false, 5, message.getPlayer());
 			}
 		}
@@ -245,16 +262,26 @@ public class ServerThreadForClient extends Thread {
 		}
 		// NewRound
 		else if (message.getMessageType() == MessageType.NewRound) {
-			NewRound newRound;
-			if (message.getWin() == true) {
-				newRound = NewRound.Left;
-			} else {
-				newRound = NewRound.Right;
-			}
-			if(!this.wantAI) {
+			if(!this.wantAI && !this.wantDoubleAI) {
+				//For the Friends-Game
 				sendMessageBackToClient(message);
 			}
-			board.newRound(newRound);
+			if(this.wantAI) {
+				//For the Single AI-Game
+				NewRound newRound;
+				if (message.getWin() == true) {
+					newRound = NewRound.Left;
+				} else {
+					newRound = NewRound.Right;
+				}
+				if(!this.wantAI) {
+					sendMessageBackToClient(message);
+				}
+				board.newRound(newRound);
+			}
+			if(this.wantDoubleAI) {
+				//For the Double-AI-Game is nothing to do
+			}
 		}
 		// For send the name
 		else if (message.getMessageType() == MessageType.Name) {

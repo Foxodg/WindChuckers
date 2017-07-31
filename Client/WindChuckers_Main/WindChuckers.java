@@ -366,7 +366,7 @@ public class WindChuckers extends Application {
 	public void  startNewRound() {
 		Stage newRoundStage = new Stage();
     	model = GameMenu_Model.getGameModel();
-    	newRoundView = new WindChuckers_Main.newRoundPopup.newRoundView(newRoundStage, model);	
+    	newRoundView = newRoundView.getNewRoundView(newRoundStage, model);// new WindChuckers_Main.newRoundPopup.newRoundView(newRoundStage, model);	
     	newRoundView.start();
 	}
 	

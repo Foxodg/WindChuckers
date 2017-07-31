@@ -189,35 +189,74 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		 * @author L.Weber
 		 */
 		clientServer.getUpgrade().addListener((observable, oldValue, newValue) -> {
+			if (clientServer.getUpgrade().get() == true) {
+				Tower[][] towers;
+				if (model.getPlayerType() == 1) {
+					towers = view.getTowersP1();
+				} else {
+					towers = view.getTowersP2();
+				}
+				Tower tower = towers[clientServer.getXCoordinateUpgrade()][clientServer.getXCoordinateUpgrade()];
+				Field[][] fields = view.getFields();
+				GridPane gameBoard = view.getGameBoard();
+				Player player1 = model.getPlayer1();
+				Player player2 = model.getPlayer2();
+				Tower[][] tower1 = view.getTowersP1();
+				Tower[][] tower2 = view.getTowersP2();
 
-			Tower[][] towers;
-			if (model.getPlayerType() == 1) {
-				towers = view.getTowersP1();
-			} else {
-				towers = view.getTowersP2();
-			}
-			Tower tower = towers[model.getEndColumn()][model.getEndRow()];
-			Field[][] fields = view.getFields();
-			GridPane gameBoard = view.getGameBoard();
-			Player player1 = model.getPlayer1();
-			Player player2 = model.getPlayer2();
-			Tower[][] tower1 = view.getTowersP1();
-			Tower[][] tower2 = view.getTowersP2();
+				if (!LoginModel.getSingleAI() && !LoginModel.getDoubleAI()) {
+					// This is for the Friends-Game
+					serviceLocator.getLogger()
+							.info("Update-Message is here Friends-Game: " + " x-coordinate: "
+									+ clientServer.getXCoordinateUpgrade() + " y-coordinate: "
+									+ clientServer.getYCoordinateUpgrade() + " Gems: " + clientServer.getGems());
 
-			if (!fields[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()].isEmpty()) {
-				// only when the field is occupied and the playerTyp is the right
-				if(towers[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()].getPlayerNumber() == clientServer.getPlayer()) {
-					Tower towerUpgrade = towers[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()];
-					if (tower.getGems() != clientServer.getGems()) {
-						// update only if the update not already done
-						towerUpgrade.upgradeTower(view.getFields(), towerUpgrade, clientServer.getXCoordinateUpgrade(),
-								clientServer.getYCoordinateUpgrade(), clientServer.getGems(), view.getTowersP1(),
-								view.getTowersP2());
-						serviceLocator.getLogger()
-								.info("Update-Message is here: " + " x-coordinate: " + clientServer.getXCoordinateUpgrade()
-										+ " y-coordinate: " + clientServer.getYCoordinateUpgrade() + " Gems: "
-										+ clientServer.getGems());
+					// only check is this move already done
+					if (!fields[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()].isEmpty()) {
+						if (tower != null && tower.getPlayerNumber() == clientServer.getPlayerType()) {
+							if (tower.getGems() != clientServer.getGems()) {
+								Tower towerUpgrade = towers[clientServer.getXCoordinateUpgrade()][clientServer
+										.getYCoordinateUpgrade()];
+								// Special-Methode - don't send the message again
+								towerUpgrade.upgradeTowerFromServer(view.getFields(), towerUpgrade,
+										clientServer.getXCoordinateUpgrade(), clientServer.getYCoordinateUpgrade(),
+										clientServer.getGems(), view.getTowersP1(), view.getTowersP2());
+							}
+						}
 					}
+				} else if (LoginModel.getSingleAI()) {
+					// This is for the Single-AI-Game
+					serviceLocator.getLogger()
+							.info("Update-Message is here Single-AI-Game: " + " x-coordinate: "
+									+ clientServer.getXCoordinateUpgrade() + " y-coordinate: "
+									+ clientServer.getYCoordinateUpgrade() + " Gems: " + clientServer.getGems());
+
+					// only check is this move already done
+					// only check is this move already done
+					if (!fields[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()].isEmpty()) {
+						if (tower != null && tower.getPlayerNumber() == clientServer.getPlayerType()) {
+							if (tower.getGems() != clientServer.getGems()) {
+								Tower towerUpgrade = towers[clientServer.getXCoordinateUpgrade()][clientServer
+										.getYCoordinateUpgrade()];
+								towerUpgrade.upgradeTower(view.getFields(), towerUpgrade,
+										clientServer.getXCoordinateUpgrade(), clientServer.getYCoordinateUpgrade(),
+										clientServer.getGems(), view.getTowersP1(), view.getTowersP2());
+							}
+						}
+					}
+				} else if (LoginModel.getDoubleAI()) {
+					// This is for the Double-AI-Game
+					serviceLocator.getLogger()
+							.info("Update-Message is here Double-AI-Game: " + " x-coordinate: "
+									+ clientServer.getXCoordinateUpgrade() + " y-coordinate: "
+									+ clientServer.getYCoordinateUpgrade() + " Gems: " + clientServer.getGems());
+
+					// do the move, without any checks
+					Tower towerUpgrade = towers[clientServer.getXCoordinateUpgrade()][clientServer
+							.getYCoordinateUpgrade()];
+					towerUpgrade.upgradeTower(view.getFields(), towerUpgrade, clientServer.getXCoordinateUpgrade(),
+							clientServer.getYCoordinateUpgrade(), clientServer.getGems(), view.getTowersP1(),
+							view.getTowersP2());
 				}
 			}
 		});
@@ -228,9 +267,8 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		 * @author L.Weber
 		 */
 		clientServer.getNewRound().addListener((observable, oldValue, newValue) -> {
-			Platform.runLater(() -> {
-				this.buildNewRound(model.getNewRoundLeftRight());
-			});
+			this.buildNewRound(model.getNewRoundLeftRight());
+			clientServer.setNewRound(false);
 		});
 
 		/**
@@ -385,32 +423,67 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		 * @author L.Weber
 		 */
 		model.getMoveProperty().addListener((observable, oldValue, newValue) -> {
-			serviceLocator.getLogger().info("The Move Message reaches the GameMenu_Controller");
+			if (clientServer.getValue().get() == true) {
+				serviceLocator.getLogger().info("The Move Message reaches the GameMenu_Controller");
 
-			Tower[][] towers;
-			if (model.getPlayerType() == 1) {
-				towers = view.getTowersP1();
-			} else {
-				towers = view.getTowersP2();
-			}
-			Tower tower = towers[model.getStartColumn()][model.getStartRow()];
-			Field[][] fields = view.getFields();
-			GridPane gameBoard = view.getGameBoard();
-			Player player1 = model.getPlayer1();
-			Player player2 = model.getPlayer2();
-			Tower[][] tower1 = view.getTowersP1();
-			Tower[][] tower2 = view.getTowersP2();
+				Tower[][] towers;
+				if (model.getPlayerType() == 1) {
+					towers = view.getTowersP1();
+				} else {
+					towers = view.getTowersP2();
+				}
+				Tower tower = towers[model.getStartColumn()][model.getStartRow()];
+				Field[][] fields = view.getFields();
+				GridPane gameBoard = view.getGameBoard();
+				Player player1 = model.getPlayer1();
+				Player player2 = model.getPlayer2();
+				Tower[][] tower1 = view.getTowersP1();
+				Tower[][] tower2 = view.getTowersP2();
 
-			serviceLocator.getLogger().info("Move coordinates: " + model.getStartColumn() + " " + model.getStartRow() + " " + model.getEndColumn() + " " + model.getEndRow() + " " + model.getPlayerType());
-			if (clientServer.getPlayerType() != 0 || !fields[model.getStartColumn()][model.getStartRow()].isEmpty()) {
-				if(towers[clientServer.getStartColumn()][clientServer.getStartRow()] != null
-						&& view.getFields() != null && view.getGameBoard() != null && model.getPlayer1() != null 
-						&&model.getPlayer2() != null && view.getTowersP1() != null && view.getTowersP2() != null) {
-					if (towers[clientServer.getStartColumn()][clientServer.getStartRow()].getPlayerNumber() == clientServer.getPlayerType()) {
-						// do this only when there is a tower and also the right player
-						tower.move(view.getFields(), view.getGameBoard(), model.getPlayer1(), model.getPlayer2(),
-								view.getTowersP1(), view.getTowersP2(), model.getStartColumn(), model.getStartRow(),
-								model.getEndColumn(), model.getEndRow(), model.getPlayerType());
+				if (!LoginModel.getSingleAI() && !LoginModel.getDoubleAI()) {
+					// This is for the Friends-Game
+					serviceLocator.getLogger()
+							.info("Move coordinates Friends-Game: " + model.getStartColumn() + " " + model.getStartRow()
+									+ " " + model.getEndColumn() + " " + model.getEndRow() + " "
+									+ model.getPlayerType());
+
+					// only check is this move already done
+					if (!fields[model.getStartColumn()][model.getStartRow()].isEmpty()) {
+						if (tower != null) {
+							tower.move(view.getFields(), view.getGameBoard(), model.getPlayer1(), model.getPlayer2(),
+									view.getTowersP1(), view.getTowersP2(), model.getStartColumn(), model.getStartRow(),
+									model.getEndColumn(), model.getEndRow(), model.getPlayerType());
+						}
+					}
+				} else if (LoginModel.getSingleAI()) {
+					// This is for the Single-AI-Game
+					serviceLocator.getLogger()
+							.info("Move coordinates Single-AI-Game: " + model.getStartColumn() + " "
+									+ model.getStartRow() + " " + model.getEndColumn() + " " + model.getEndRow() + " "
+									+ model.getPlayerType());
+
+					// only check is this move already done
+					if (!fields[model.getStartColumn()][model.getStartRow()].isEmpty()) {
+						if (tower != null && tower.getPlayerNumber() == clientServer.getPlayerType()) {
+							tower.move(view.getFields(), view.getGameBoard(), model.getPlayer1(), model.getPlayer2(),
+									view.getTowersP1(), view.getTowersP2(), model.getStartColumn(), model.getStartRow(),
+									model.getEndColumn(), model.getEndRow(), model.getPlayerType());
+						}
+					}
+				} else if (LoginModel.getDoubleAI()) {
+					// This is for the Double-AI-Game
+					serviceLocator.getLogger()
+							.info("Move coordinates Double-AI-Game: " + model.getStartColumn() + " "
+									+ model.getStartRow() + " " + model.getEndColumn() + " " + model.getEndRow() + " "
+									+ model.getPlayerType());
+
+					// only check is this move already done
+					if (!fields[model.getStartColumn()][model.getStartRow()].isEmpty()) {
+						if (tower != null && tower.getPlayerNumber() == clientServer.getPlayerType()) {
+							tower.move(view.getFields(), view.getGameBoard(), model.getPlayer1(), model.getPlayer2(),
+									view.getTowersP1(), view.getTowersP2(), model.getStartColumn(), model.getStartRow(),
+									model.getEndColumn(), model.getEndRow(), model.getPlayerType());
+						}
 					}
 				}
 			}
@@ -622,14 +695,29 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		 * @author robin
 		 */
 		model.Winner.addListener((observable, oldValue, newValue) -> {
-			if (newValue.intValue() == 1) {
-				model.getPlayer1().setWins();
+			if (LoginModel.getWithoutServer()) {
+				if (newValue.intValue() == 1) {
+					model.getPlayer1().setWins();
+				}
 				this.win(model.getPlayer1().getWins());
-			}
-
-			if (newValue.intValue() == 2) {
-				model.getPlayer2().setWins();
-				this.win(model.getPlayer2().getWins());
+				if (newValue.intValue() == 2) {
+					model.getPlayer2().setWins();
+					this.win(model.getPlayer2().getWins());
+				}
+			} else {
+				if (clientServer.hashCodeStatic == model.getPlayer1().getPlayerNumber()) {
+					// This Player is player 1
+					if (newValue.intValue() == 1) {
+						model.getPlayer1().setWins();
+						this.win(model.getPlayer1().getWins());
+					}
+				} else if (clientServer.hashCodeStatic == model.getPlayer2().getPlayerNumber()) {
+					// This Player is player 2
+					if (newValue.intValue() == 2) {
+						model.getPlayer2().setWins();
+						this.win(model.getPlayer2().getWins());
+					}
+				}
 			}
 		});
 
@@ -790,78 +878,155 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	 * @author l.kunz
 	 */
 	private void buildNewRound(boolean newRoundLeftRight) {
-		Tower[][] towersP1Temp = new Tower[model.DIMENSION][model.DIMENSION];
-		Tower[][] towersP2Temp = new Tower[model.DIMENSION][model.DIMENSION];
+		if(LoginModel.getForcePlayer()) {
+			Tower[][] towersP1Temp = new Tower[model.DIMENSION][model.DIMENSION];
+			Tower[][] towersP2Temp = new Tower[model.DIMENSION][model.DIMENSION];
 
-		if (newRoundLeftRight) {
-			// Player 1 Towers will be added in a Temp Array
-			int i = 0;
-			for (int y = 0; y < 8; y++) {
-				for (int x = 0; x < 8; x++) {
-					if (view.fields[x][y].isEmpty() == false && view.towersP1[x][y] != null) {
-						towersP1Temp[i][7] = view.towersP1[x][y];
-						i++;
+			if (newRoundLeftRight) {
+				// Player 1 Towers will be added in a Temp Array
+				int i = 0;
+				for (int y = 0; y < 8; y++) {
+					for (int x = 0; x < 8; x++) {
+						if (view.fields[x][y].isEmpty() == false && view.towersP1[x][y] != null) {
+							towersP1Temp[i][7] = view.towersP1[x][y];
+							i++;
+						}
+					}
+				}
+
+				// Player 2 Towers will be added in a Temp Array
+				int k = 0;
+				for (int y = 0; y < 8; y++) {
+					for (int x = 0; x < 8; x++) {
+						if (view.fields[x][y].isEmpty() == false && view.towersP2[x][y] != null) {
+							towersP2Temp[7 - k][0] = view.towersP2[x][y];
+							k++;
+						}
+						view.fields[x][y].setEmpty(true);
+					}
+				}
+
+			} else if (!newRoundLeftRight) {
+
+				// Player 1 Towers will be added in a Temp Array
+				int i = 0;
+				for (int y = 0; y < 8; y++) {
+					for (int x = 0; x < 8; x++) {
+						if (view.fields[x][y].isEmpty() == false && view.towersP1[x][y] != null) {
+							towersP1Temp[7 - i][7] = view.towersP1[x][y];
+							i++;
+						}
+					}
+				}
+
+				// Player 2 Towers will be added in a Temp Array
+				int k = 0;
+				for (int y = 0; y < 8; y++) {
+					for (int x = 0; x < 8; x++) {
+						if (view.fields[x][y].isEmpty() == false && view.towersP2[x][y] != null) {
+							towersP2Temp[k][0] = view.towersP2[x][y];
+							k++;
+						}
+						view.fields[x][y].setEmpty(true);
 					}
 				}
 			}
 
-			// Player 2 Towers will be added in a Temp Array
-			int k = 0;
-			for (int y = 0; y < 8; y++) {
-				for (int x = 0; x < 8; x++) {
-					if (view.fields[x][y].isEmpty() == false && view.towersP2[x][y] != null) {
-						towersP2Temp[7 - k][0] = view.towersP2[x][y];
-						k++;
+			// Towers will be reset on a start position (right or left)
+			for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+
+				towersP1Temp[x][7].setxPosition(x);
+				towersP1Temp[x][7].setyPosition(7);
+				GridPane.setColumnIndex(towersP1Temp[x][7], x);
+				GridPane.setRowIndex(towersP1Temp[x][7], 0);
+
+				towersP2Temp[x][0].setxPosition(x);
+				towersP2Temp[x][0].setyPosition(0);
+				GridPane.setColumnIndex(towersP2Temp[x][0], x);
+				GridPane.setRowIndex(towersP2Temp[x][0], 7);
+
+				view.towersP1 = towersP1Temp;
+				view.towersP2 = towersP2Temp;
+				view.fields[x][view.towersP1.length - 1].setEmpty(false);
+				view.fields[x][view.towersP2.length - view.towersP2.length].setEmpty(false);
+			}
+		} else {
+			Tower[][] towersP1Temp = new Tower[model.DIMENSION][model.DIMENSION];
+			Tower[][] towersP2Temp = new Tower[model.DIMENSION][model.DIMENSION];
+			Tower[][] towersP1 = view.getTowersP1();
+			Tower[][] towersP2 = view.getTowersP2();
+			Field[][] fields = view.getFields();
+
+			if (newRoundLeftRight) {
+				// Player 1 Towers will be added in a Temp Array
+				int i = 0;
+				for (int y = 0; y < 8; y++) {
+					for (int x = 0; x < 8; x++) {
+						if (fields[x][y].isEmpty() == false && towersP1[x][y] != null) {
+							towersP1Temp[i][7] = towersP1[x][y];
+							i++;
+						}
 					}
-					view.fields[x][y].setEmpty(true);
+				}
+
+				// Player 2 Towers will be added in a Temp Array
+				int k = 0;
+				for (int y = 0; y < 8; y++) {
+					for (int x = 0; x < 8; x++) {
+						if (fields[x][y].isEmpty() == false && towersP2[x][y] != null) {
+							towersP2Temp[7 - k][0] = towersP2[x][y];
+							k++;
+						}
+						fields[x][y].setEmpty(true);
+					}
+				}
+
+			} else if (!newRoundLeftRight) {
+
+				// Player 1 Towers will be added in a Temp Array
+				int i = 0;
+				for (int y = 0; y < 8; y++) {
+					for (int x = 0; x < 8; x++) {
+						if (fields[x][y].isEmpty() == false && towersP1[x][y] != null) {
+							towersP1Temp[7 - i][7] = towersP1[x][y];
+							i++;
+						}
+					}
+				}
+
+				// Player 2 Towers will be added in a Temp Array
+				int k = 0;
+				for (int y = 0; y < 8; y++) {
+					for (int x = 0; x < 8; x++) {
+						if (fields[x][y].isEmpty() == false && towersP2[x][y] != null) {
+							towersP2Temp[k][0] = towersP2[x][y];
+							k++;
+						}
+						fields[x][y].setEmpty(true);
+					}
 				}
 			}
 
-		} else if (!newRoundLeftRight) {
+			// Towers will be reset on a start position (right or left)
+			for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
 
-			// Player 1 Towers will be added in a Temp Array
-			int i = 0;
-			for (int y = 0; y < 8; y++) {
-				for (int x = 0; x < 8; x++) {
-					if (view.fields[x][y].isEmpty() == false && view.towersP1[x][y] != null) {
-						towersP1Temp[7 - i][7] = view.towersP1[x][y];
-						i++;
-					}
-				}
-			}
+				towersP1Temp[x][7].setxPosition(x);
+				towersP1Temp[x][7].setyPosition(7);
+				GridPane.setColumnIndex(towersP1Temp[x][7], x);
+				GridPane.setRowIndex(towersP1Temp[x][7], 0);
 
-			// Player 2 Towers will be added in a Temp Array
-			int k = 0;
-			for (int y = 0; y < 8; y++) {
-				for (int x = 0; x < 8; x++) {
-					if (view.fields[x][y].isEmpty() == false && view.towersP2[x][y] != null) {
-						towersP2Temp[k][0] = view.towersP2[x][y];
-						k++;
-					}
-					view.fields[x][y].setEmpty(true);
-				}
-			}
+				towersP2Temp[x][0].setxPosition(x);
+				towersP2Temp[x][0].setyPosition(0);
+				GridPane.setColumnIndex(towersP2Temp[x][0], x);
+				GridPane.setRowIndex(towersP2Temp[x][0], 7);
+
+				view.towersP1 = towersP1Temp;
+				view.towersP2 = towersP2Temp;
+				view.fields[x][towersP1.length - 1].setEmpty(false);
+				view.fields[x][towersP2.length - towersP2.length].setEmpty(false);
 		}
+	}
 
-		// Towers will be reset on a start position (right or left)
-		for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
-
-			towersP1Temp[x][7].setxPosition(x);
-			towersP1Temp[x][7].setyPosition(7);
-			GridPane.setColumnIndex(towersP1Temp[x][7], x);
-			GridPane.setRowIndex(towersP1Temp[x][7], 0);
-
-			towersP2Temp[x][0].setxPosition(x);
-			towersP2Temp[x][0].setyPosition(0);
-			GridPane.setColumnIndex(towersP2Temp[x][0], x);
-			GridPane.setRowIndex(towersP2Temp[x][0], 7);
-
-			view.towersP1 = towersP1Temp;
-			view.towersP2 = towersP2Temp;
-			view.fields[x][view.towersP1.length - 1].setEmpty(false);
-			view.fields[x][view.towersP2.length - view.towersP2.length].setEmpty(false);
-
-		}
 	}
 
 	/**
@@ -872,52 +1037,105 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	 */
 	private void win(int win) {
 		// Win Procedure
-		windChuckers = WindChuckers.getWindChuckers();
-		Alert winMessage = new Alert(AlertType.INFORMATION);
-		winMessage.setTitle("Gratulation!");
+		if (LoginModel.getWithoutServer()) {
+			windChuckers = WindChuckers.getWindChuckers();
+			Alert winMessage = new Alert(AlertType.INFORMATION);
+			winMessage.setTitle("Gratulation!");
 
-		if (model.getPlayer1().win()) {
-			winMessage.setHeaderText("Player 1 wins!");
-			winMessage.showAndWait();
-			view.resetGameBoard();
-			view.getStage().close();
-			windChuckers.startMainMenu();
+			if (model.getPlayer1().win()) {
+				winMessage.setHeaderText("Player 1 wins!");
+				winMessage.showAndWait();
+				view.resetGameBoard();
+				view.getStage().close();
+				windChuckers.startMainMenu();
+			}
+
+			else if (model.getPlayer2().win()) {
+				winMessage.setHeaderText("Player 2 wins!");
+				winMessage.showAndWait();
+				view.resetGameBoard();
+				view.getStage().close();
+				windChuckers.startMainMenu();
+			}
+
+			if (!model.getPlayer1().win() && !model.getPlayer2().win()) {
+				windChuckers.startNewRound();
+
+				// a new Round with left order will be created
+				newRoundView.leftPlay.setOnAction(e -> {
+					this.buildNewRound(true);
+					// also send this to the server
+					model.messageConstructorForNewRound(true);
+					model.Winner.set(0);
+					((Stage) (((Button) e.getSource()).getScene().getWindow())).close();
+				});
+
+				// a new Round with right order will be created
+				newRoundView.rightPlay.setOnAction(e -> {
+					this.buildNewRound(false);
+					// also send this to the server
+					model.messageConstructorForNewRound(false);
+					model.Winner.set(0);
+					((Stage) (((Button) e.getSource()).getScene().getWindow())).close();
+				});
+			}
+
+			// update the DB
+			int winsBefore = LoginModel.getWins();
+			win = win + winsBefore;
+			model.messageConstructorForWin(win, LoginModel.getUserName());
+		} else {
+			windChuckers = WindChuckers.getWindChuckers();
+			Alert winMessage = new Alert(AlertType.INFORMATION);
+			winMessage.setTitle("Gratulation!");
+
+			if (clientServer.hashCodeStatic == model.getPlayer1().getPlayerNumber()) {
+				// this is player 1
+				if (model.getPlayer1().win()) {
+					winMessage.setHeaderText("Player 1 wins!");
+					winMessage.showAndWait();
+					view.resetGameBoard();
+					view.getStage().close();
+					windChuckers.startMainMenu();
+				}
+			} else if (clientServer.hashCodeStatic == model.getPlayer2().getPlayerNumber()) {
+				// this is player 2
+				if (model.getPlayer2().win()) {
+					winMessage.setHeaderText("Player 2 wins!");
+					winMessage.showAndWait();
+					view.resetGameBoard();
+					view.getStage().close();
+					windChuckers.startMainMenu();
+				}
+			}
+
+			if (!model.getPlayer1().win() && !model.getPlayer2().win()) {
+				windChuckers.startNewRound();
+
+				// a new Round with left order will be created
+				newRoundView.leftPlay.setOnAction(e -> {
+					this.buildNewRound(true);
+					// also send this to the server
+					model.messageConstructorForNewRound(true);
+					model.Winner.set(0);
+					((Stage) (((Button) e.getSource()).getScene().getWindow())).close();
+				});
+
+				// a new Round with right order will be created
+				newRoundView.rightPlay.setOnAction(e -> {
+					this.buildNewRound(false);
+					// also send this to the server
+					model.messageConstructorForNewRound(false);
+					model.Winner.set(0);
+					((Stage) (((Button) e.getSource()).getScene().getWindow())).close();
+				});
+			}
+
+			// update the DB
+			int winsBefore = LoginModel.getWins();
+			win = win + winsBefore;
+			model.messageConstructorForWin(win, LoginModel.getUserName());
 		}
-
-		else if (model.getPlayer2().win()) {
-			winMessage.setHeaderText("Player 2 wins!");
-			winMessage.showAndWait();
-			view.resetGameBoard();
-			view.getStage().close();
-			windChuckers.startMainMenu();
-		}
-
-		if (!model.getPlayer1().win() && !model.getPlayer2().win()) {
-			windChuckers.startNewRound();
-
-			// a new Round with left order will be created
-			newRoundView.leftPlay.setOnAction(e -> {
-				this.buildNewRound(true);
-				// also send this to the server
-				model.messageConstructorForNewRound(true);
-				model.Winner.set(0);
-				((Stage) (((Button) e.getSource()).getScene().getWindow())).close();
-			});
-
-			// a new Round with right order will be created
-			newRoundView.rightPlay.setOnAction(e -> {
-				this.buildNewRound(false);
-				// also send this to the server
-				model.messageConstructorForNewRound(false);
-				model.Winner.set(0);
-				((Stage) (((Button) e.getSource()).getScene().getWindow())).close();
-			});
-		}
-
-		// update the DB
-		int winsBefore = LoginModel.getWins();
-		win = win + winsBefore;
-		model.messageConstructorForWin(win, LoginModel.getUserName());
 	}
 
 	// }

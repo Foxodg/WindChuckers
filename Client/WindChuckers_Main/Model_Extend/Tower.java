@@ -421,11 +421,6 @@ public class Tower extends Button {
 
 		int newColumnGridPane = GridPane.getColumnIndex(field);
 		int newRowGridPane = GridPane.getRowIndex(field);
-
-		
-		// Send the move to the server
-		ServiceLocator.getServiceLocator().getLogger().info("Move send to server: " + field.getxPosition() + " " + field.getyPosition() + " " + this.getxPosition() + " " + this.getyPosition() + " " + this.getPlayerNumber());		
-		model.messageConstructorForCoordinate(oldX, oldY, newX, newY, this.getPlayerNumber());
 		
 		// The old field is empty and the new field is busy
 		fields[oldX][oldY].setEmpty(true);
@@ -457,6 +452,10 @@ public class Tower extends Button {
 		// After the first move the boolean gameStart is false
 		model.gameStart = false;
 		
+		// Send the move to the server
+		ServiceLocator.getServiceLocator().getLogger().info("Move send to server: " + field.getxPosition() + " " + field.getyPosition() + " " + this.getxPosition() + " " + this.getyPosition() + " " + this.getPlayerNumber());		
+		model.messageConstructorForCoordinate(oldX, oldY, newX, newY, this.getPlayerNumber());
+		
 		// We check if a tower reached the last row
 		this.checkWin(fields, player1, player2, this, towersP1, towersP2);
 		
@@ -464,8 +463,6 @@ public class Tower extends Button {
 		if(model.Winner.get() == 0){
 		this.changeTurn(fields, player1, player2, towersP1, towersP2, field, this.playerNumber);
 		}
-
-		
 	}}
 	
 	/**
@@ -795,7 +792,6 @@ public class Tower extends Button {
 				this.notChangeTurnSumo(fields, player1, player2, towersP1, towersP2, field);
 			}		
 	}
-
 	/**
 	 * This method will activate the opponents towers and change the turn
 	 * @param player1
@@ -883,6 +879,7 @@ public class Tower extends Button {
 			}
 			this.saveSumoMove = 0;
 		} else {
+			//For the Game with the Server
 			if(model.getPlayer1().isOnTurn()) {
 				//player 1 is on turn
 				if(FriendsController.getHashCode() == model.getPlayer1().getPlayerNumber()) {
@@ -989,13 +986,17 @@ public class Tower extends Button {
 			this.upgradeTower(fields, tower, this.getxPosition(), this.getyPosition(), this.getGems(), towersP1, towersP2);
 			this.setDisable(false);
 			if(GameMenu_Model.Winner.get() == 2 || GameMenu_Model.Winner.get() == 0) {
-				GameMenu_Model.Winner.set(1);
+				if(!LoginModel.getDoubleAI()) {
+					GameMenu_Model.Winner.set(1);
+				}
 			}
 		} else if(player2.isOnTurn() && this.yPosition == 7){
 			this.upgradeTower(fields, tower, this.xPosition, this.yPosition, gems, towersP1, towersP2);
 			this.setDisable(false);
 			if(GameMenu_Model.Winner.get() == 1 || GameMenu_Model.Winner.get() == 0) {
-				GameMenu_Model.Winner.set(2);
+				if(!LoginModel.getDoubleAI()) {
+					GameMenu_Model.Winner.set(2);
+				}
 			}
 		}
 	}
@@ -1012,7 +1013,6 @@ public class Tower extends Button {
 	 * @author l.kunz
 	 */
 	public void upgradeTower(Field[][] fields, Tower tower, int xCoordinateUpgrade, int yCoordinateUpgrade, int gems, Tower[][] towersP1, Tower[][] towersP2) {
-
 		Platform.runLater(() -> {
 			if(this.gems == 0){
 				this.sumoTower = true;
@@ -1026,9 +1026,51 @@ public class Tower extends Button {
 				this.gems++;
 			}
 		});
+
 		
-			//also upgrade the tower of the other clients and server
+		if(!LoginModel.getSingleAI() && !LoginModel.getDoubleAI()) {
+			//For the Single Friends-Game - send it to the other client
+			ServiceLocator.getServiceLocator().getLogger().info("Update Client: Friends-Game - send the update-Message to the other Client");
 			model.messageConstructorForUpdate(xCoordinateUpgrade, yCoordinateUpgrade, this.getGems(), this.getPlayerNumber());
+		}
+		
+		if(LoginModel.getSingleAI()) {
+			//For the Single AI-Game - send it to the other client
+			ServiceLocator.getServiceLocator().getLogger().info("Update Client: Single AI-Game - send the update-Message to the other Client");
+			model.messageConstructorForUpdate(xCoordinateUpgrade, yCoordinateUpgrade, this.getGems(), this.getPlayerNumber());
+			
+		}
+		else if(LoginModel.getDoubleAI()) {
+			//For the Double AI-Game - nothing to do the update will send from the Server
+			ServiceLocator.getServiceLocator().getLogger().info("Update Client: Double AI-Game - not send or update on the client");
+		}
+	}
+	
+	/**
+	 * Only for update a tower, when the message comes from a Friends-game
+	 * @param fields
+	 * @param tower
+	 * @param xCoordinateUpgrade
+	 * @param yCoordinateUpgrade
+	 * @param gems
+	 * @param towersP1
+	 * @param towersP2
+	 * @author L.Weber
+	 */
+	public void upgradeTowerFromServer(Field[][] fields, Tower tower, int xCoordinateUpgrade, int yCoordinateUpgrade, int gems, Tower[][] towersP1, Tower[][] towersP2) {
+		Platform.runLater(() -> {
+			if(this.gems == 0){
+				this.sumoTower = true;
+				this.setText("I");
+				this.gems++;
+			} else if (this.gems == 1){
+				this.setText("II");
+				this.gems++;
+			} else if (this.gems == 2){
+				this.setText("III");
+				this.gems++;
+			}
+		});
 	}
 	
 	/**
@@ -1086,12 +1128,25 @@ public class Tower extends Button {
 		// After the first move the boolean gameStart is false
 		model.gameStart = false;
 
-		// We check if a tower reached the last row
-		this.checkWin(fields, player1, player2, this, towersP1, towersP2);
-
-		// Towers of other player will be enabled
-		if (model.Winner.get() == 0) {
-			this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], this.playerNumber);
+		if(!LoginModel.getSingleAI() && !LoginModel.getDoubleAI()) {
+			//This is for the Friends-Game - it's not necessary to check the update, because the update will send anyway from the Server
+			if(this.playerNumber == playerType) {
+				this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], playerType);
+			}
+		}
+		
+		else if(LoginModel.getSingleAI()) {
+			//This is for the Single-AI-Game - it's not necessary to check the update, because the update will send anyway from the Server
+			if(this.playerNumber == playerType) {
+				this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], playerType);
+			}
+		}
+		
+		else if(LoginModel.getDoubleAI()) {
+			//This is for the Single-AI-Game - it's not necessary to check the update, because the update will send anyway from the Server
+			if(this.playerNumber == playerType) {
+				this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], playerType);
+			}
 		}
 	}
 

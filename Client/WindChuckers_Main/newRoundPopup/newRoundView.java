@@ -25,8 +25,22 @@ public class newRoundView  extends View<GameMenu_Model> {
 	protected Label explanation;
 	public static Button leftPlay;
 	public static Button rightPlay;
+	private static newRoundView newRoundView;
+	
+	/**
+	 * Singleton
+	 * @param stage
+	 * @param model
+	 * @return newRoundView
+	 * @author L.Weber
+	 */
+	public static newRoundView getNewRoundView(Stage stage, GameMenu_Model model) {
+		if (newRoundView == null)
+			newRoundView = new newRoundView(stage,model);
+		return newRoundView;
+	}
 
-	public newRoundView(Stage stage, GameMenu_Model model) {
+	private newRoundView(Stage stage, GameMenu_Model model) {
 		super(stage, model);
 		stage.setTitle("new Round");
 		stage.setAlwaysOnTop(true);

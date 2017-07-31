@@ -49,13 +49,13 @@ public class Kamisado {
 			} else {
 				playerType = PlayerType.TWO;
 			}
-			AlphaBetaPlayer player2 = new AlphaBetaPlayer(playerType, depth, weightVerticalTwo, weightPossibleTwo,
+			AlphaBetaPlayer player2 = AlphaBetaPlayer.getAlphaBeta2(playerType, depth, weightVerticalTwo, weightPossibleTwo,
 					weightBlockTwo, weightSumoWinTwo, weightSumoBlockTwo, winTwo);
 			return play(player2, board, playerType);
 		} else {
-			AlphaBetaPlayer player1 = new AlphaBetaPlayer(PlayerType.ONE, depth, weightVerticalOne, weightPossibleOne,
+			AlphaBetaPlayer player1 = AlphaBetaPlayer.getAlphaBeta1(PlayerType.ONE, depth, weightVerticalOne, weightPossibleOne,
 					weightBlockOne, weightSumoWinOne, weightSumoBlockOne, winOne);
-			AlphaBetaPlayer player2 = new AlphaBetaPlayer(PlayerType.TWO, depth, weightVerticalTwo, weightPossibleTwo,
+			AlphaBetaPlayer player2 = AlphaBetaPlayer.getAlphaBeta2(PlayerType.TWO, depth, weightVerticalTwo, weightPossibleTwo,
 					weightBlockTwo, weightSumoWinTwo, weightSumoBlockTwo, winTwo);
 			play(player1, player2, board);
 			return null;
@@ -76,6 +76,7 @@ public class Kamisado {
 			
 		}
 		return move;
+		
 	}
 
 	public void play(AlphaBetaPlayer player1, AlphaBetaPlayer player2, Board board) {

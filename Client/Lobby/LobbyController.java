@@ -64,6 +64,7 @@ public class LobbyController extends Controller<GameMenu_Model, LobbyView> {
 			if(pressed) {
 				//send ready to server
 				model.messageConstructorForWaiter(FriendsController.getHashCode());
+				model.setPlayer(ClientThreadForServer.getHashCodeThis(), ClientThreadForServer.getHashCodeFriend());
 			} else {
 				//send not ready to server
 				model.messageConstructorForWaiter(FriendsController.getHashCode());

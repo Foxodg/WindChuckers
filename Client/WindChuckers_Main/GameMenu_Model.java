@@ -145,8 +145,11 @@ public class GameMenu_Model extends Model {
 	
 	public void setPlayer(long hashCode, long hashCodeFriend) {
 		
-		Player player = new Player(hashCodeFriend);
-		playerList.add(player);
+		Player playerFriend = new Player(hashCodeFriend);
+		Player playerThis = new Player(hashCode);
+		long hashCodeForThisClient = ClientThreadForServer.hashCodeStatic;
+		playerList.add(playerFriend);
+		playerList.add(playerThis);
 		
 		if(hashCode != 0 && hashCodeFriend != 0) {
 			for(int i = 0; i < playerList.size(); i++) {
@@ -154,13 +157,16 @@ public class GameMenu_Model extends Model {
 					//set the player only if this is the first try, because the other player will do this again
 					if(player1.getPlayerNumber() == 1 || player1.getPlayerNumber() == ClientThreadForServer.hashCodeStatic) {
 						player1 = playerList.get(i);
+						//reset the player 2
+						player2.setPlayerNumber(hashCodeFriend);
 					}
 				}
 				if(playerList.get(i).getPlayerNumber() == hashCodeFriend) {
 					//set the player only if this is the first try, because the other player will do this again
-					if(player2.getPlayerNumber() == 2) {
+					if(player2.getPlayerNumber() == 2 || player2.getPlayerNumber() == ClientThreadForServer.hashCodeStatic) {
 						player2 = playerList.get(i);
-						//now reset the player one again
+						//reset the player 1
+						player1.setPlayerNumber(hashCode);
 					}
 				}
 			}

@@ -15,6 +15,8 @@ public class LoginModel extends Model {
 	private static int wins;
 	private static String username;
 	private static boolean withoutServer = false;
+	private static boolean singleAI = false;
+	private static boolean doubleAI = false;
 	private static boolean forcePlayer;
 
 	
@@ -73,6 +75,22 @@ public class LoginModel extends Model {
 	
 	public static boolean getForcePlayer() {
 		return forcePlayer;
+	}
+	
+	public static void setSingleAI(boolean single) {
+		singleAI = single;
+	}
+	
+	public static boolean getSingleAI() {
+		return singleAI;
+	}
+	
+	public static void setDoubleAI(boolean doubleA) {
+		doubleAI = doubleA;
+	}
+	
+	public static boolean getDoubleAI() {
+		return doubleAI;
 	}
 }
 

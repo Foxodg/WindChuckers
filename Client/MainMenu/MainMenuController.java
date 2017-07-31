@@ -33,6 +33,8 @@ public class MainMenuController extends Controller<GameMenu_Model, MainMenuView>
 			LoginModel.setForcePlayer(true);
 			//send a Message to the Server that we need an AI
 			model.messageContstructorForAISingle(100, 100, 15, 15, 25, Double.POSITIVE_INFINITY);
+			//also set the SingleAI-Flag
+			LoginModel.setSingleAI(true);
 			//set option Sinlge-Game
 			model.setGameMode(1);
 			main.startApp();
@@ -50,6 +52,8 @@ public class MainMenuController extends Controller<GameMenu_Model, MainMenuView>
 			LoginModel.setForcePlayer(true);
 			//send a Message to the Server that we need an AI
 			model.messageContstructorForAISingle(100, 100, 15, 15, 25, Double.POSITIVE_INFINITY);
+			//also set the SingleAI-Flag
+			LoginModel.setSingleAI(true);
 			//set option Standard-Game
 			model.setGameMode(3);
 			main.startApp();
@@ -66,6 +70,8 @@ public class MainMenuController extends Controller<GameMenu_Model, MainMenuView>
 			LoginModel.setForcePlayer(true);
 			//send a Message to the Server that we need an AI
 			model.messageContstructorForAISingle(100, 100, 15, 15, 25, Double.POSITIVE_INFINITY);
+			//also set the SingleAI-Flag
+			LoginModel.setSingleAI(true);
 			//set option Long-Game
 			model.setGameMode(7);
 			main.startApp();
@@ -82,6 +88,8 @@ public class MainMenuController extends Controller<GameMenu_Model, MainMenuView>
 			LoginModel.setForcePlayer(true);
 			//send a Message to the Server that we need an AI
 			model.messageContstructorForAISingle(100, 100, 15, 15, 25, Double.POSITIVE_INFINITY);
+			//also set the SingleAI-Flag
+			LoginModel.setSingleAI(true);
 			//set option Marathon-Game
 			model.setGameMode(15);
 			//start the main-App
@@ -99,6 +107,10 @@ public class MainMenuController extends Controller<GameMenu_Model, MainMenuView>
 			windChuckers = WindChuckers.getWindChuckers();
 			windChuckers.startFriends();
 			view.getStage().hide();
+			//set the DoubleAI-Flag to false
+			LoginModel.setDoubleAI(false);
+			//set the SingleAI-Flag to false
+			LoginModel.setSingleAI(false);
 			//start the main-App only in the Background
 			main.startApp();
 			main.getGameMenuView().getStage().close();

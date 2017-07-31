@@ -142,8 +142,8 @@ public class ClientThreadForServer extends Thread {
 			
 		}
 		else if (message.getMessageType() == MessageType.Update){
-			logger.info("Client: " + "Update: " + " x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: " + message.getYCoordinate2() + " Gems: " + message.getGems() + " Player: " + message.getPlayer());
 			this.setUpgrade(false);
+			logger.info("Client: " + "Update: " + " x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: " + message.getYCoordinate2() + " Gems: " + message.getGems() + " Player: " + message.getPlayer());
 			this.setGems(message.getGems());
 			this.setXCoordinateUpgrade(message.getXCoordinate2());
 			this.setYCoordinateUpgrade(message.getYCoordinate2());
@@ -192,7 +192,6 @@ public class ClientThreadForServer extends Thread {
 		}
 		else if(message.getMessageType() == Message.MessageType.NewRound){
 			logger.info("New Round");
-			this.setNewRound(false);
 			this.newRoundLeftRight = message.getWin();
 			this.setNewRound(true);
 		}

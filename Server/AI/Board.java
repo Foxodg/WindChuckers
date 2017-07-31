@@ -234,7 +234,9 @@ public class Board {
 		} else {
 			player = 1;
 		}
-		ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Coordinate,move.getX1(),move.getY1(),move.getX2(),move.getY2(), player));
+		if(this.wantDoubleAI) {
+			ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Coordinate,move.getX1(),move.getY1(),move.getX2(),move.getY2(), player));
+		}
 		return makeMove(move);
 	}
 
@@ -256,6 +258,7 @@ public class Board {
 				winning = true;
 				// also update the tower
 				if(this.getDoubleAI()) {
+					//This is for the Double-AI-Game - one way direction - send always upgrades
 					upgradeTower(board[topLine.get(j).getX1()][topLine.get(j).getY1() - 1].getTower());
 					//is there no human player this massage must send
 					int player;
@@ -264,9 +267,10 @@ public class Board {
 					} else {
 						player = 1;
 					}
-					ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Update,topLine.get(j).getX1(),topLine.get(j).getY1() - 1,board[topLine.get(j).getX1()][topLine.get(j).getY1() - 1].getTower().getGems(), player));
+					ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Update,topLine.get(j).getX1(),(topLine.get(j).getY1()-1),board[topLine.get(j).getX1()][(topLine.get(j).getY1()-1)].getTower().getGems(), player));
 					
 				} else if(this.getWantAI()) {
+					//This is for a Single-AI-Game the towers has to upgrade ond we has to send the message back to the client
 					upgradeTower(board[topLine.get(j).getX1()][topLine.get(j).getY1() - 1].getTower());
 					//is there no human player this massage must send
 					int player;
@@ -275,7 +279,7 @@ public class Board {
 					} else {
 						player = 1;
 					}
-					ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Update,topLine.get(j).getX1(),topLine.get(j).getY1() - 1,board[topLine.get(j).getX1()][topLine.get(j).getY1() - 1].getTower().getGems(), player));
+					ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Update,topLine.get(j).getX1(),(topLine.get(j).getY1()-1),board[topLine.get(j).getX1()][(topLine.get(j).getY1()-1)].getTower().getGems(), player));
 				}
 				this.xCoordinationUpgrade = topLine.get(j).getX1();
 			    this.yCoordinationUpgrade = topLine.get(j).getY1() - 1;
@@ -294,16 +298,26 @@ public class Board {
 					upgradeTower(board[bottomLine.get(i).getX1()][bottomLine.get(i).getY1() - 1].getTower());
 					
 					int player;
-					if(board[topLine.get(i).getX1()][topLine.get(i).getY1() - 1].getTower().getPlayerType() == PlayerType.ONE) {
+					if(board[bottomLine.get(i).getX1()][bottomLine.get(i).getY1() - 1].getTower().getPlayerType() == PlayerType.ONE) {
 						player = 2;
 					} else {
 						player = 1;
 					}
-					ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Update,topLine.get(i).getX1(),topLine.get(i).getY1() - 1,board[topLine.get(i).getX1()][topLine.get(i).getY1() - 1].getTower().getGems(), player));
-					
+					ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Update,bottomLine.get(i).getX1(),(bottomLine.get(i).getY1()-1),board[bottomLine.get(i).getX1()][(bottomLine.get(i).getY1()-1)].getTower().getGems(), player));
 				}
-				this.xCoordinationUpgrade = topLine.get(i).getX1();
-				this.yCoordinationUpgrade = topLine.get(i).getY1() -1;
+				if(this.wantAI) {
+					upgradeTower(board[bottomLine.get(i).getX1()][bottomLine.get(i).getY1() - 1].getTower());
+					
+					int player;
+					if(board[bottomLine.get(i).getX1()][bottomLine.get(i).getY1() - 1].getTower().getPlayerType() == PlayerType.ONE) {
+						player = 2;
+					} else {
+						player = 1;
+					}
+					ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Update,bottomLine.get(i).getX1(),(bottomLine.get(i).getY1()-1),board[bottomLine.get(i).getX1()][(bottomLine.get(i).getY1()-1)].getTower().getGems(), player));
+				}
+				this.xCoordinationUpgrade = bottomLine.get(i).getX1();
+				this.yCoordinationUpgrade = bottomLine.get(i).getY1() -1;
 			}
 		}
 		return winning;
