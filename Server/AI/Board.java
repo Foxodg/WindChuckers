@@ -272,7 +272,7 @@ public class Board {
 				} else if(this.getWantAI()) {
 					//This is for a Single-AI-Game the towers has to upgrade ond we has to send the message back to the client
 					upgradeTower(board[topLine.get(j).getX1()][topLine.get(j).getY1() - 1].getTower());
-					this.newRound(NewRound.Left);
+					this.newRound(NewRound.Right);
 					//the sending for update and new round is in the ServerThreadForClient
 				}
 				this.xCoordinationUpgrade = topLine.get(j).getX1();
@@ -772,19 +772,20 @@ public class Board {
 			}
 			
 			// fill the towers
+			new Board();
 			for (int i = 0; i < 8; i++) {
 				Tile[][] tmpTiles = this.getTempTile();
 				// this is the bottomLine
-				board[i][0] = new Tile(towersP1Temp[i][0], tmpTiles[i][0].getColor());
+				board[i][0] = new Tile(towersP1Temp[i][0], board[i][0].getColor());
 				// this is for the topLine
-				board[i][7] = new Tile(towersP2Temp[i][7], tmpTiles[i][0].getColor());
+				board[i][7] = new Tile(towersP2Temp[i][7], board[i][7].getColor());
 				// set the rest of the board new
-				board[i][1] = new Tile(tmpTiles[i][1].getColor());
-				board[i][2] = new Tile(tmpTiles[i][2].getColor());
-				board[i][3] = new Tile(tmpTiles[i][3].getColor());
-				board[i][4] = new Tile(tmpTiles[i][4].getColor());
-				board[i][5] = new Tile(tmpTiles[i][5].getColor());
-				board[i][6] = new Tile(tmpTiles[i][6].getColor());
+				board[i][1] = new Tile(board[i][1].getColor());
+				board[i][2] = new Tile(board[i][2].getColor());
+				board[i][3] = new Tile(board[i][3].getColor());
+				board[i][4] = new Tile(board[i][4].getColor());
+				board[i][5] = new Tile(board[i][5].getColor());
+				board[i][6] = new Tile(board[i][6].getColor());
 			}
 			System.out.println(getTempBoard());
 //		} else {

@@ -106,7 +106,17 @@ public class ServerThreadForClient extends Thread {
 							//check now is it a win Situation?
 							if(this.board.isWinSituation()) {
 								ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Update,messageAI.getXCoordinate2(),messageAI.getYCoordinate2(), board.getTile(messageAI.getXCoordinate2(), messageAI.getYCoordinate2()).getTower().getGems()+1, messageAI.getPlayer()));
-								ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, false));
+								ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, true));
+								
+								//Now the turn is done - it's time to make the next move
+								board.setLastMove(move);
+								Board boardNext = Board.getBoard();
+								Move moveNext = kamisado.setPlayConfiguration(true, 5, message.getPlayer());
+								PlayerType playerTypeNext = boardNext.getTile(moveNext.getX2(), moveNext.getY2()).getTower().getPlayerType();
+								Message messageAINext = new Message(MessageType.Coordinate, moveNext.getX1(), moveNext.getY1(), moveNext.getX2(),
+										moveNext.getY2(), ServerController.playerConverter(playerTypeNext));
+								ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Coordinate,moveNext.getX1(), moveNext.getY1(), moveNext.getX2(),
+										moveNext.getY2(), ServerController.playerConverter(playerTypeNext)));
 							}
 						}
 					} 
