@@ -889,7 +889,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	 * @author l.kunz
 	 */
 	private void buildNewRound(boolean newRoundLeftRight) {
-		if(LoginModel.getForcePlayer()) {
+		if(LoginModel.getWithoutServer()) {
 			Tower[][] towersP1Temp = new Tower[model.DIMENSION][model.DIMENSION];
 			Tower[][] towersP2Temp = new Tower[model.DIMENSION][model.DIMENSION];
 
