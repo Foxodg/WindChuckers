@@ -1253,6 +1253,53 @@ public class Tower extends Button {
 				}
 			}
 		}
+		else if(LoginModel.getDoubleAI()) {
+				//Friends-Game
+				if (!fields[newX][newY].isEmpty() && this.getGems() >= 2 && this.saveSumoMove == 3){
+					this.sumo3Move(fields, gameBoard, player1, player2, fields[newX][newY], towersP1, towersP2);
+				}
+				
+				else if (!fields[newX][newY].isEmpty() && this.getGems() >= 2 && this.saveSumoMove == 2){
+					this.sumo2Move(fields, gameBoard, player1, player2, fields[newX][newY], towersP1, towersP2);
+				}
+				
+				else if (!fields[newX][newY].isEmpty() && this.getGems() >= 1){
+					this.saveSumoMove = 1;
+					this.sumo1Move(fields, gameBoard, player1, player2, fields[newX][newY], towersP1, towersP2);
+				}
+				
+				int newColumnGridPane = GridPane.getColumnIndex(fields[newX][newY]);
+				int newRowGridPane = GridPane.getRowIndex(fields[newX][newY]);
+
+				// The old field is empty and the new field is busy
+				fields[oldX][oldY].setEmpty(true);
+				fields[newX][newY].setEmpty(false);
+
+				// The coordinates of the tower will be changed
+				this.setxPosition(newX);
+				this.setyPosition(newY);
+
+				// The Tower will be moved on the GridPane
+				GridPane.setColumnIndex(this, newColumnGridPane);
+				GridPane.setRowIndex(this, newRowGridPane);
+
+				// The tower will be set on the right position in the tower array
+				if (model.getPlayer1().getPlayerNumber() == playerType) {
+					towersP1[newX][newY] = this;
+					towersP1[oldX][oldY] = null;
+				}
+
+				if (model.getPlayer2().getPlayerNumber() == playerType) {
+					towersP2[newX][newY] = this;
+					towersP2[oldX][oldY] = null;
+				}
+
+				// The turn is finished, disable all fields
+				Field.disableFields(fields);
+
+				// After the first move the boolean gameStart is false
+				model.gameStart = false;
+		}
 	}
 
 	
