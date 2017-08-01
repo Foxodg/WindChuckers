@@ -238,9 +238,11 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 							if (tower.getGems() != clientServer.getGems()) {
 								Tower towerUpgrade = towers[clientServer.getXCoordinateUpgrade()][clientServer
 										.getYCoordinateUpgrade()];
-								towerUpgrade.upgradeTower(view.getFields(), towerUpgrade,
-										clientServer.getXCoordinateUpgrade(), clientServer.getYCoordinateUpgrade(),
-										clientServer.getGems(), view.getTowersP1(), view.getTowersP2());
+								if(towerUpgrade.checkWinSituation(fields, player1, player2, tower, view.getTowersP1(), view.getTowersP2())) {
+									towerUpgrade.upgradeTower(view.getFields(), towerUpgrade,
+											clientServer.getXCoordinateUpgrade(), clientServer.getYCoordinateUpgrade(),
+											clientServer.getGems(), view.getTowersP1(), view.getTowersP2());
+								}
 							}
 						}
 					}
@@ -456,6 +458,10 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 						}
 					}
 				} else if (LoginModel.getSingleAI()) {
+					//First Check the incoming Message - is it a pat-Situation?
+					if(model.getPlayerType() == 9) {
+						tower.checkPat(fields, view.getTowersP1(), view.getTowersP2());
+					}
 					// This is for the Single-AI-Game
 					serviceLocator.getLogger()
 							.info("Move coordinates Single-AI-Game: " + model.getStartColumn() + " "

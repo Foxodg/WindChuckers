@@ -25,6 +25,7 @@ public class Tower extends Button {
 	private int gems; 
 	private boolean sumoTower = false;
 	private int saveSumoMove = 0;
+	private static Field lastField;
 	
 	protected Tower (String color){
 		super();
@@ -343,7 +344,7 @@ public class Tower extends Button {
 	 * @param towersP2
 	 * @author robin
 	 */
-	private void checkPat(Field[][] fields, Tower[][] towersP1, Tower[][] towersP2) {
+	public void checkPat(Field[][] fields, Tower[][] towersP1, Tower[][] towersP2) {
 		int possibleMoves = 0;
 		Alert firstAlert = new Alert(AlertType.INFORMATION);
 		firstAlert.setTitle("Information");
@@ -454,6 +455,8 @@ public class Tower extends Button {
 		
 		// Send the move to the server
 		ServiceLocator.getServiceLocator().getLogger().info("Move send to server: " + field.getxPosition() + " " + field.getyPosition() + " " + this.getxPosition() + " " + this.getyPosition() + " " + this.getPlayerNumber());		
+		//set the last field
+		lastField = fields[newX][newY];		
 		model.messageConstructorForCoordinate(oldX, oldY, newX, newY, this.getPlayerNumber());
 		
 		// We check if a tower reached the last row
@@ -1001,6 +1004,29 @@ public class Tower extends Button {
 		}
 	}
 
+	
+	/**
+	 * For check message leaking
+	 * 
+	 * @param fields
+	 * @param player1
+	 * @param player2
+	 * @param tower
+	 * @param towersP1
+	 * @param towersP2
+	 * @return
+	 * @author L.Weber
+	 */
+	public boolean checkWinSituation(Field[][] fields, Player player1, Player player2, Tower tower, Tower[][] towersP1,
+			Tower[][] towersP2) {
+		if (player1.isOnTurn() && tower.yPosition == 0 && tower.getPlayerNumber() == 1) {
+			return true;
+		} else if (player2.isOnTurn() && tower.yPosition == 7 && tower.getPlayerNumber() == 2) {
+			return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * This method will upgrade a tower to the different Sumo Towers
 	 * @param fields
@@ -1082,70 +1108,143 @@ public class Tower extends Button {
 	 * @param playerType
 	 */
 	public void move(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Tower[][] towersP1, Tower[][] towersP2, int oldX, int oldY, int newX, int newY, int playerType) {
-		
-		if (!fields[newX][newY].isEmpty() && this.getGems() >= 2 && this.saveSumoMove == 3){
-			this.sumo3Move(fields, gameBoard, player1, player2, fields[newX][newY], towersP1, towersP2);
-		}
-		
-		else if (!fields[newX][newY].isEmpty() && this.getGems() >= 2 && this.saveSumoMove == 2){
-			this.sumo2Move(fields, gameBoard, player1, player2, fields[newX][newY], towersP1, towersP2);
-		}
-		
-		else if (!fields[newX][newY].isEmpty() && this.getGems() >= 1){
-			this.saveSumoMove = 1;
-			this.sumo1Move(fields, gameBoard, player1, player2, fields[newX][newY], towersP1, towersP2);
-		}
-		
-		int newColumnGridPane = GridPane.getColumnIndex(fields[newX][newY]);
-		int newRowGridPane = GridPane.getRowIndex(fields[newX][newY]);
-
-		// The old field is empty and the new field is busy
-		fields[oldX][oldY].setEmpty(true);
-		fields[newX][newY].setEmpty(false);
-
-		// The coordinates of the tower will be changed
-		this.setxPosition(newX);
-		this.setyPosition(newY);
-
-		// The Tower will be moved on the GridPane
-		GridPane.setColumnIndex(this, newColumnGridPane);
-		GridPane.setRowIndex(this, newRowGridPane);
-
-		// The tower will be set on the right position in the tower array
-		if (model.getPlayer1().isOnTurn()) {
-			towersP1[newX][newY] = this;
-			towersP1[oldX][oldY] = null;
-		}
-
-		if (model.getPlayer2().isOnTurn()) {
-			towersP2[newX][newY] = this;
-			towersP2[oldX][oldY] = null;
-		}
-
-		// The turn is finished, disable all fields
-		Field.disableFields(fields);
-
-		// After the first move the boolean gameStart is false
-		model.gameStart = false;
-
 		if(!LoginModel.getSingleAI() && !LoginModel.getDoubleAI()) {
-			//This is for the Friends-Game - it's not necessary to check the update, because the update will send anyway from the Server
-			if(this.playerNumber == playerType) {
-				this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], playerType);
+			//Friends-Game
+			if (!fields[newX][newY].isEmpty() && this.getGems() >= 2 && this.saveSumoMove == 3){
+				this.sumo3Move(fields, gameBoard, player1, player2, fields[newX][newY], towersP1, towersP2);
+			}
+			
+			else if (!fields[newX][newY].isEmpty() && this.getGems() >= 2 && this.saveSumoMove == 2){
+				this.sumo2Move(fields, gameBoard, player1, player2, fields[newX][newY], towersP1, towersP2);
+			}
+			
+			else if (!fields[newX][newY].isEmpty() && this.getGems() >= 1){
+				this.saveSumoMove = 1;
+				this.sumo1Move(fields, gameBoard, player1, player2, fields[newX][newY], towersP1, towersP2);
+			}
+			
+			int newColumnGridPane = GridPane.getColumnIndex(fields[newX][newY]);
+			int newRowGridPane = GridPane.getRowIndex(fields[newX][newY]);
+
+			// The old field is empty and the new field is busy
+			fields[oldX][oldY].setEmpty(true);
+			fields[newX][newY].setEmpty(false);
+
+			// The coordinates of the tower will be changed
+			this.setxPosition(newX);
+			this.setyPosition(newY);
+
+			// The Tower will be moved on the GridPane
+			GridPane.setColumnIndex(this, newColumnGridPane);
+			GridPane.setRowIndex(this, newRowGridPane);
+
+			// The tower will be set on the right position in the tower array
+			if (model.getPlayer1().getPlayerNumber() == playerType) {
+				towersP1[newX][newY] = this;
+				towersP1[oldX][oldY] = null;
+			}
+
+			if (model.getPlayer2().getPlayerNumber() == playerType) {
+				towersP2[newX][newY] = this;
+				towersP2[oldX][oldY] = null;
+			}
+
+			// The turn is finished, disable all fields
+			Field.disableFields(fields);
+
+			// After the first move the boolean gameStart is false
+			model.gameStart = false;
+
+			if(!LoginModel.getSingleAI() && !LoginModel.getDoubleAI()) {
+				//This is for the Friends-Game - it's not necessary to check the update, because the update will send anyway from the Server
+				if(this.playerNumber == playerType) {
+					this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], playerType);
+				}
+			}
+			
+			else if(LoginModel.getSingleAI()) {
+				//This is for the Single-AI-Game - it's not necessary to check the update, because the update will send anyway from the Server
+				if(this.playerNumber == playerType) {
+					this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], playerType);
+				}
+			}
+			
+			else if(LoginModel.getDoubleAI()) {
+				//This is for the Single-AI-Game - it's not necessary to check the update, because the update will send anyway from the Server
+				if(this.playerNumber == playerType) {
+					this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], playerType);
+				}
 			}
 		}
-		
 		else if(LoginModel.getSingleAI()) {
-			//This is for the Single-AI-Game - it's not necessary to check the update, because the update will send anyway from the Server
-			if(this.playerNumber == playerType) {
-				this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], playerType);
-			}
-		}
-		
-		else if(LoginModel.getDoubleAI()) {
-			//This is for the Single-AI-Game - it's not necessary to check the update, because the update will send anyway from the Server
-			if(this.playerNumber == playerType) {
-				this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], playerType);
+			if ((playerType == 1 && model.getPlayer1().isOnTurn() && towersP1[oldX][oldY].getColor().equals(lastField.getColor()))
+					|| (playerType == 2 && model.getPlayer2().isOnTurn()) && towersP2[oldX][oldY].getColor().equals(lastField.getColor()) ) {
+				//Single AI Game
+				if (!fields[newX][newY].isEmpty() && this.getGems() >= 2 && this.saveSumoMove == 3){
+					this.sumo3Move(fields, gameBoard, player1, player2, fields[newX][newY], towersP1, towersP2);
+				}
+				
+				else if (!fields[newX][newY].isEmpty() && this.getGems() >= 2 && this.saveSumoMove == 2){
+					this.sumo2Move(fields, gameBoard, player1, player2, fields[newX][newY], towersP1, towersP2);
+				}
+				
+				else if (!fields[newX][newY].isEmpty() && this.getGems() >= 1){
+					this.saveSumoMove = 1;
+					this.sumo1Move(fields, gameBoard, player1, player2, fields[newX][newY], towersP1, towersP2);
+				}
+				
+				int newColumnGridPane = GridPane.getColumnIndex(fields[newX][newY]);
+				int newRowGridPane = GridPane.getRowIndex(fields[newX][newY]);
+
+				// The old field is empty and the new field is busy
+				fields[oldX][oldY].setEmpty(true);
+				fields[newX][newY].setEmpty(false);
+
+				// The coordinates of the tower will be changed
+				this.setxPosition(newX);
+				this.setyPosition(newY);
+
+				// The Tower will be moved on the GridPane
+				GridPane.setColumnIndex(this, newColumnGridPane);
+				GridPane.setRowIndex(this, newRowGridPane);
+
+				// The tower will be set on the right position in the tower array
+				if (model.getPlayer1().getPlayerNumber() == playerType) {
+					towersP1[newX][newY] = this;
+					towersP1[oldX][oldY] = null;
+				}
+
+				if (model.getPlayer2().getPlayerNumber() == playerType) {
+					towersP2[newX][newY] = this;
+					towersP2[oldX][oldY] = null;
+				}
+
+				// The turn is finished, disable all fields
+				Field.disableFields(fields);
+
+				// After the first move the boolean gameStart is false
+				model.gameStart = false;
+
+				if(!LoginModel.getSingleAI() && !LoginModel.getDoubleAI()) {
+					//This is for the Friends-Game - it's not necessary to check the update, because the update will send anyway from the Server
+					if(this.playerNumber == playerType) {
+						this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], playerType);
+					}
+				}
+				
+				else if(LoginModel.getSingleAI()) {
+					//This is for the Single-AI-Game - it's not necessary to check the update, because the update will send anyway from the Server
+					if(this.playerNumber == playerType) {
+						this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], playerType);
+					}
+				}
+				
+				else if(LoginModel.getDoubleAI()) {
+					//This is for the Single-AI-Game - it's not necessary to check the update, because the update will send anyway from the Server
+					if(this.playerNumber == playerType) {
+						this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], playerType);
+					}
+				}
 			}
 		}
 	}

@@ -280,6 +280,11 @@ public class Board {
 						player = 1;
 					}
 					ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Update,topLine.get(j).getX1(),(topLine.get(j).getY1()-1),board[topLine.get(j).getX1()][(topLine.get(j).getY1()-1)].getTower().getGems(), player));
+					
+					if(board[topLine.get(j).getX1()][topLine.get(j).getY1() - 1].getTower().getPlayerType() == PlayerType.ONE) {
+					//is it the AI-Player who wins then send also a new Round Message
+						ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, true));
+					}
 				}
 				this.xCoordinationUpgrade = topLine.get(j).getX1();
 			    this.yCoordinationUpgrade = topLine.get(j).getY1() - 1;
@@ -385,7 +390,15 @@ public class Board {
 			System.err.println("No more moves for the tower: " + board[lastMove.getX2()][lastMove.getY2()].getTower()
 					+ " X: " + lastMove.getX2() + " Y: " + lastMove.getY2());
 			System.err.print(getTempBoard());
-			thisPlayerMoves = getNextPossibleMoves(changePlayerType(playerType));
+			if(this.getDoubleAI()) {
+				//if there no human player - change the player
+				thisPlayerMoves = getNextPossibleMoves(changePlayerType(playerType));
+			}
+			if(this.getWantAI()) {
+				//For Single-Player - send a zero-Message with Player 9 to send a message to the client, thats now a pat-situtaion
+				ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Coordinate,0,0,0,0,9));
+			}
+
 		}
 
 		return thisPlayerMoves;
@@ -771,18 +784,18 @@ public class Board {
 			
 			// fill the towers
 			for (int i = 0; i < 8; i++) {
-				// this is the bottomLine
-				board[i][0] = new Tile(towersP1Temp[i][0], bottomTiles.get(i).getColor());
-				// this is for the topLine
-				board[i][7] = new Tile(towersP2Temp[i][7], topTiles.get(i).getColor());
-				// set the rest of the board new
 				Tile[][] tmpTiles = this.getTempTile();
+				// this is the bottomLine
+				board[i][0] = new Tile(towersP1Temp[i][0], tmpTiles[i][0].getColor());
+				// this is for the topLine
+				board[i][7] = new Tile(towersP2Temp[i][7], tmpTiles[i][0].getColor());
+				// set the rest of the board new
 				board[i][1] = new Tile(tmpTiles[i][1].getColor());
-				board[i][2] = new Tile(tmpTiles[i][1].getColor());
-				board[i][3] = new Tile(tmpTiles[i][1].getColor());
-				board[i][4] = new Tile(tmpTiles[i][1].getColor());
-				board[i][5] = new Tile(tmpTiles[i][1].getColor());
-				board[i][6] = new Tile(tmpTiles[i][1].getColor());
+				board[i][2] = new Tile(tmpTiles[i][2].getColor());
+				board[i][3] = new Tile(tmpTiles[i][3].getColor());
+				board[i][4] = new Tile(tmpTiles[i][4].getColor());
+				board[i][5] = new Tile(tmpTiles[i][5].getColor());
+				board[i][6] = new Tile(tmpTiles[i][6].getColor());
 			}
 			System.out.println(getTempBoard());
 //		} else {

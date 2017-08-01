@@ -16,6 +16,7 @@ import AI.Kamisado;
 import AI.Move;
 import AI.NewRound;
 import AI.PlayerType;
+import AI.Tile;
 import DataBase.DataBase;
 import Login.LoginModel;
 import Message.Message;
@@ -28,6 +29,7 @@ public class ServerThreadForClient extends Thread {
 	private Kamisado kamisado;
 	private Board board = Board.getBoard();
 	private int name;
+	private static Tile lastInComingTile;
 
 	private static boolean wantAI = false;
 	private static boolean wantDoubleAI = false;
@@ -81,6 +83,8 @@ public class ServerThreadForClient extends Thread {
 				logger.info("Server Single-AI-Game: " + "x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: "
 						+ message.getYCoordinate1() + " x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: "
 						+ message.getYCoordinate2() + " Value: " + message.getPlayer());
+				//Safe the color from the incoming Tile
+				lastInComingTile = board.getTile(message.getXCoordinate2(), message.getYCoordinate2());
 				// Safes the coordinates for the hidden-Board on the Server
 				if(board.getTile(message.getXCoordinate1(), message.getYCoordinate1()).getTower().getPlayerType() == ServerController.playerConverter(message.getPlayer())) {
 					//only when the tower is from the right player
@@ -94,7 +98,12 @@ public class ServerThreadForClient extends Thread {
 						PlayerType playerType = board.getTile(move.getX2(), move.getY2()).getTower().getPlayerType();
 						Message messageAI = new Message(MessageType.Coordinate, move.getX1(), move.getY1(), move.getX2(),
 								move.getY2(), ServerController.playerConverter(playerType));
-						sendMessageBackToClient(messageAI);
+						if(lastInComingTile.getColor() == board.getTile(messageAI.getXCoordinate2(), messageAI.getYCoordinate2()).getTower().getColor()) {
+							sendMessageBackToClient(messageAI);	
+							logger.info("Server Single-AI-Game: Send message back to client: " + "x-Coordinates1: " + messageAI.getXCoordinate1() + " y-Coordinates1: "
+							+ messageAI.getYCoordinate1() + " x-Coordinates2: " + messageAI.getXCoordinate2() + " y-Coordinates2: "
+							+ messageAI.getYCoordinate2() + " Value: " + messageAI.getPlayer());
+						}
 					} 
 				}
 			}
