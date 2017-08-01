@@ -272,19 +272,8 @@ public class Board {
 				} else if(this.getWantAI()) {
 					//This is for a Single-AI-Game the towers has to upgrade ond we has to send the message back to the client
 					upgradeTower(board[topLine.get(j).getX1()][topLine.get(j).getY1() - 1].getTower());
-					//is there no human player this massage must send
-					int player;
-					if(board[topLine.get(j).getX1()][topLine.get(j).getY1() - 1].getTower().getPlayerType() == PlayerType.ONE) {
-						player = 2;
-					} else {
-						player = 1;
-					}
-					ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Update,topLine.get(j).getX1(),(topLine.get(j).getY1()-1),board[topLine.get(j).getX1()][(topLine.get(j).getY1()-1)].getTower().getGems(), player));
-					
-					if(board[topLine.get(j).getX1()][topLine.get(j).getY1() - 1].getTower().getPlayerType() == PlayerType.ONE) {
-					//is it the AI-Player who wins then send also a new Round Message
-						ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, true));
-					}
+					this.newRound(NewRound.Left);
+					//the sending for update and new round is in the ServerThreadForClient
 				}
 				this.xCoordinationUpgrade = topLine.get(j).getX1();
 			    this.yCoordinationUpgrade = topLine.get(j).getY1() - 1;
@@ -751,7 +740,7 @@ public class Board {
 				}
 				//is there no human player this massage must send
 				if(this.getDoubleAI()) {
-					ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, true));
+					ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, false));
 				}
 			}
 			else if(newRound == NewRound.Right) {

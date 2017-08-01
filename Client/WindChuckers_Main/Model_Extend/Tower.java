@@ -1234,7 +1234,13 @@ public class Tower extends Button {
 				
 				else if(LoginModel.getSingleAI()) {
 					//This is for the Single-AI-Game - it's not necessary to check the update, because the update will send anyway from the Server
-					if(this.playerNumber == playerType) {
+					Tower tower;
+					if(model.getPlayer1().getPlayerNumber() == playerType) {
+						tower = towersP1[newX][newY];
+					} else {
+						tower = towersP2[newX][newY];
+					}
+					if(this.playerNumber == playerType && !this.checkWinSituation(fields, player1, player2, tower, towersP1, towersP2)) {
 						this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], playerType);
 					}
 				}

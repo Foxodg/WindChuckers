@@ -103,6 +103,11 @@ public class ServerThreadForClient extends Thread {
 							logger.info("Server Single-AI-Game: Send message back to client: " + "x-Coordinates1: " + messageAI.getXCoordinate1() + " y-Coordinates1: "
 							+ messageAI.getYCoordinate1() + " x-Coordinates2: " + messageAI.getXCoordinate2() + " y-Coordinates2: "
 							+ messageAI.getYCoordinate2() + " Value: " + messageAI.getPlayer());
+							//check now is it a win Situation?
+							if(this.board.isWinSituation()) {
+								ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Update,messageAI.getXCoordinate2(),messageAI.getYCoordinate2(), board.getTile(messageAI.getXCoordinate2(), messageAI.getYCoordinate2()).getTower().getGems()+1, messageAI.getPlayer()));
+								ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, false));
+							}
 						}
 					} 
 				}
