@@ -381,12 +381,31 @@ public class Tower extends Button {
 				model.getPlayer2().setCausedPat(true);
 				firstAlert.showAndWait();
 				this.changeTurn(fields, model.getPlayer1(), model.getPlayer2(), towersP1, towersP2, fields[this.getxPosition()][this.getyPosition()], this.playerNumber);
+				model.messageConstructorForCoordinate(this.playerNumber, 0, 0, 0, 9);
 			} else {
 				model.getPlayer1().setCausedPat(true);
 				firstAlert.showAndWait();
 				this.changeTurn(fields, model.getPlayer1(), model.getPlayer2(), towersP1, towersP2, fields[this.getxPosition()][this.getyPosition()], this.playerNumber);
+				model.messageConstructorForCoordinate(this.playerNumber, 0, 0, 0, 9);
 			}
 	}
+}
+	/**
+	 * For the incoming check if pat
+	 * @param fields
+	 * @param towersP1
+	 * @param towersP2
+	 * @author L.Weber
+	 */
+	public void checkPatServer(Field[][] fields, Tower[][] towersP1, Tower[][] towersP2, int player) {
+
+			if(player == 1){
+				model.getPlayer2().setCausedPat(true);
+				this.changeTurn(fields, model.getPlayer1(), model.getPlayer2(), towersP1, towersP2, fields[this.getxPosition()][this.getyPosition()], 1);
+			} else {
+				model.getPlayer1().setCausedPat(true);
+				this.changeTurn(fields, model.getPlayer1(), model.getPlayer2(), towersP1, towersP2, fields[this.getxPosition()][this.getyPosition()], 2);
+			}
 }
 
 	/**
@@ -1059,7 +1078,7 @@ public class Tower extends Button {
 		if(!LoginModel.getSingleAI() && !LoginModel.getDoubleAI()) {
 			//For the Single Friends-Game - send it to the other client
 			ServiceLocator.getServiceLocator().getLogger().info("Update Client: Friends-Game - send the update-Message to the other Client");
-			model.messageConstructorForUpdate(xCoordinateUpgrade, yCoordinateUpgrade, this.getGems()+1, this.getPlayerNumber());
+			model.messageConstructorForUpdate(xCoordinateUpgrade, yCoordinateUpgrade, this.getGems(), this.getPlayerNumber());
 		}
 		
 		if(LoginModel.getSingleAI()) {

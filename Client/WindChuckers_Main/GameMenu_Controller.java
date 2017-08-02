@@ -12,6 +12,8 @@ import java.util.function.Consumer;
 
 import com.sun.media.jfxmedia.logging.Logger;
 
+import AI.Move;
+import AI.PlayerType;
 import Client.ClientThreadForServer;
 import Friends.FriendsController;
 import Login.LoginController;
@@ -66,6 +68,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	private HashMap<Integer, ArrayList<String>> userMap;
 	private long stopTimer;
 	private static int roundCounter = 0;
+	private static boolean updateAlreadyDone = false;
 
 	public GameMenu_Controller(GameMenu_Model model, GameMenu_View view, newRoundView newRoundView, Board board, Player player) {
 		super(model, view);
@@ -206,12 +209,13 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 					// only check is this move already done
 					if (!fields[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()].isEmpty()) {
 						if (tower != null && tower.getPlayerNumber() == clientServer.getPlayerType()) {
-							if (tower.getGems() != clientServer.getGems() || tower.getGems() < clientServer.getGems()) {
+							if (tower.getGems() == clientServer.getGems() && updateAlreadyDone == false) {
 									Tower towerUpgrade = towers[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()];
 									// Special-Methode - don't send the message again
 									if(towerUpgrade.checkWinSituation(fields, player1, player2, tower, view.getTowersP1(), view.getTowersP2())) {
 										towerUpgrade.upgradeTowerFromServer(view.getFields(), towerUpgrade,	clientServer.getXCoordinateUpgrade(), clientServer.getYCoordinateUpgrade(),
 												clientServer.getGems(), view.getTowersP1(), view.getTowersP2());  
+										updateAlreadyDone = true;
 									}  
 							}
 						}
@@ -248,12 +252,10 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 									+ clientServer.getXCoordinateUpgrade() + " y-coordinate: "
 									+ clientServer.getYCoordinateUpgrade() + " Gems: " + clientServer.getGems());
 
-					// do the move, without any checks
-					Tower towerUpgrade = towers[clientServer.getXCoordinateUpgrade()][clientServer
-							.getYCoordinateUpgrade()];
-					towerUpgrade.upgradeTower(view.getFields(), towerUpgrade, clientServer.getXCoordinateUpgrade(),
-							clientServer.getYCoordinateUpgrade(), clientServer.getGems(), view.getTowersP1(),
-							view.getTowersP2());
+					// do the upgrade, without any checks
+						Tower towerUpgrade = towers[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()];
+						      towerUpgrade.upgradeTower(view.getFields(), towerUpgrade, clientServer.getXCoordinateUpgrade(),
+						      clientServer.getYCoordinateUpgrade(), clientServer.getGems(), view.getTowersP1(), view.getTowersP2());
 				}
 			}
 		});
@@ -438,6 +440,12 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 				Tower[][] tower2 = view.getTowersP2();
 
 				if (!LoginModel.getSingleAI() && !LoginModel.getDoubleAI()) {
+					if(model.getPlayerType() == 9) {
+						Tower towerTmp = Tower.getBlueTower();
+						Platform.runLater(() -> {
+							towerTmp.checkPatServer(view.getFields(), view.getTowersP1(), view.getTowersP2(),model.getStartColumn());
+						});
+					}
 					// This is for the Friends-Game
 					serviceLocator.getLogger()
 							.info("Move coordinates Friends-Game: " + model.getStartColumn() + " " + model.getStartRow()
@@ -450,13 +458,15 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 							tower.move(view.getFields(), view.getGameBoard(), model.getPlayer1(), model.getPlayer2(),
 									view.getTowersP1(), view.getTowersP2(), model.getStartColumn(), model.getStartRow(),
 									model.getEndColumn(), model.getEndRow(), model.getPlayerType());
+							updateAlreadyDone = false;
 						}
 					}
 				} else if (LoginModel.getSingleAI()) {
 					//First Check the incoming Message - is it a pat-Situation?
 					if(model.getPlayerType() == 9) {
+						Tower towerTmp = Tower.getBlueTower();
 						Platform.runLater(() -> {
-							tower.checkPat(fields, view.getTowersP1(), view.getTowersP2());
+							towerTmp.checkPatServer(view.getFields(), view.getTowersP1(), view.getTowersP2(), model.getStartColumn());
 						});
 					}
 					// This is for the Single-AI-Game

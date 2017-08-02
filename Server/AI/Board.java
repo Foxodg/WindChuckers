@@ -5,6 +5,7 @@ import java.util.Random;
 
 import Message.Message;
 import Message.Message.MessageType;
+import Server.ServerController;
 import Server.ServerThreadForClient;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -272,7 +273,7 @@ public class Board {
 				} else if(this.getWantAI()) {
 					//This is for a Single-AI-Game the towers has to upgrade ond we has to send the message back to the client
 					upgradeTower(board[topLine.get(j).getX1()][topLine.get(j).getY1() - 1].getTower());
-					this.newRound(NewRound.Right);
+					this.newRound(NewRound.Left);
 					//the sending for update and new round is in the ServerThreadForClient
 				}
 				this.xCoordinationUpgrade = topLine.get(j).getX1();
@@ -385,7 +386,12 @@ public class Board {
 			}
 			if(this.getWantAI()) {
 				//For Single-Player - send a zero-Message with Player 9 to send a message to the client, thats now a pat-situtaion
-				ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Coordinate,0,0,0,0,9));
+				ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Coordinate,ServerController.playerConverter(playerType),0,0,0,9));
+				Kamisado kamisado = Kamisado.getKamisado();
+				Move move = kamisado.setPlayConfiguration(true, 5, 2);
+				PlayerType playerTypeTemp = this.getTile(move.getX2(), move.getY2()).getTower().getPlayerType();
+				Message messageAI = new Message(MessageType.Coordinate, move.getX1(), move.getY1(), move.getX2(),
+						move.getY2(), ServerController.playerConverter(playerTypeTemp));
 			}
 
 		}
@@ -750,7 +756,7 @@ public class Board {
 					}
 					//is there no human player this massage must send
 					if(this.getDoubleAI()) {
-						ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, false));
+						ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, true));
 					}
 				}
 				else if(newRound == NewRound.Right) {
@@ -776,7 +782,7 @@ public class Board {
 					}
 					//is there no human player this massage must send
 					if(this.getDoubleAI()) {
-						ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, false));
+						ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, true));
 					}
 					
 				}

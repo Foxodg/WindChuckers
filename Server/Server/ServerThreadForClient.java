@@ -68,9 +68,12 @@ public class ServerThreadForClient extends Thread {
 			// For the Chat-Messaging
 			sendMessageBackToClient(message);
 			
-		} else if (message.getMessageType() == MessageType.Coordinate) {
-			
+		} else if (message.getMessageType() == MessageType.Coordinate) {			
 			if(!this.wantAI && !this.wantDoubleAI) {
+				if(message.getPlayer() == 9) {
+					Message messagePat = new Message(MessageType.Coordinate,message.getXCoordinate1(),0,0,0, 9);
+					sendMessageBackToClient(messagePat);
+				}
 				//This is a Friends-Game don't need to do anything on the server only response to clients
 				logger.info("Server Friends-Game: " + "x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: "
 						+ message.getYCoordinate1() + " x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: "
@@ -107,7 +110,7 @@ public class ServerThreadForClient extends Thread {
 							//check now is it a win Situation?
 							if(this.board.isWinSituation()) {
 								ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Update,messageAI.getXCoordinate2(),messageAI.getYCoordinate2(), board.getTile(messageAI.getXCoordinate2(), messageAI.getYCoordinate2()).getTower().getGems()+1, messageAI.getPlayer()));
-								ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, false));
+								ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, true));
 								
 								//Now the turn is done - it's time to make the next move
 								board.setLastMove(move);
