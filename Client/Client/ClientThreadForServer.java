@@ -8,6 +8,7 @@ import Friends.FriendsController;
 import Message.Message;
 import Message.Message.MessageType;
 import Message.Message.Value;
+import WindChuckers_Main.GameMenu_Model;
 import WindChuckers_Main.GameMenu_View;
 import WindChuckers_Main.WindChuckers;
 import commonClasses.ServiceLocator;
@@ -193,7 +194,10 @@ public class ClientThreadForServer extends Thread {
 		}
 		else if(message.getMessageType() == Message.MessageType.NewRound){
 			logger.info("New Round");
-			this.newRoundLeftRight = message.getWin();
+			boolean winbool = message.getWin();
+			GameMenu_Model model = GameMenu_Model.getGameModel();
+			model.setNewRoundLeftRight(winbool);
+			this.newRoundLeftRight = winbool;
 			this.setNewRound(true);
 		}
 		else if(message.getMessageType() == Message.MessageType.Waiter) {

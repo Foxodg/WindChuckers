@@ -206,13 +206,13 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 					// only check is this move already done
 					if (!fields[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()].isEmpty()) {
 						if (tower != null && tower.getPlayerNumber() == clientServer.getPlayerType()) {
-							if (tower.getGems() != clientServer.getGems()) {
-								Tower towerUpgrade = towers[clientServer.getXCoordinateUpgrade()][clientServer
-										.getYCoordinateUpgrade()];
-								// Special-Methode - don't send the message again
-								towerUpgrade.upgradeTowerFromServer(view.getFields(), towerUpgrade,
-										clientServer.getXCoordinateUpgrade(), clientServer.getYCoordinateUpgrade(),
-										clientServer.getGems(), view.getTowersP1(), view.getTowersP2());
+							if (tower.getGems() != clientServer.getGems() || tower.getGems() < clientServer.getGems()) {
+									Tower towerUpgrade = towers[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()];
+									// Special-Methode - don't send the message again
+									if(towerUpgrade.checkWinSituation(fields, player1, player2, tower, view.getTowersP1(), view.getTowersP2())) {
+										towerUpgrade.upgradeTowerFromServer(view.getFields(), towerUpgrade,	clientServer.getXCoordinateUpgrade(), clientServer.getYCoordinateUpgrade(),
+												clientServer.getGems(), view.getTowersP1(), view.getTowersP2());  
+									}  
 							}
 						}
 					}
@@ -970,76 +970,89 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			Tower[][] towersP1 = view.getTowersP1();
 			Tower[][] towersP2 = view.getTowersP2();
 			Field[][] fields = view.getFields();
-
-			if (newRoundLeftRight) {
-				// Player 1 Towers will be added in a Temp Array
-				int i = 0;
-				for (int y = 0; y < 8; y++) {
-					for (int x = 0; x < 8; x++) {
-						if (fields[x][y].isEmpty() == false && towersP1[x][y] != null) {
-							towersP1Temp[i][7] = towersP1[x][y];
-							i++;
-						}
-					}
-				}
-
-				// Player 2 Towers will be added in a Temp Array
-				int k = 0;
-				for (int y = 0; y < 8; y++) {
-					for (int x = 0; x < 8; x++) {
-						if (fields[x][y].isEmpty() == false && towersP2[x][y] != null) {
-							towersP2Temp[7 - k][0] = towersP2[x][y];
-							k++;
-						}
-						fields[x][y].setEmpty(true);
-					}
-				}
-
-			} else if (!newRoundLeftRight) {
-
-				// Player 1 Towers will be added in a Temp Array
-				int i = 0;
-				for (int y = 0; y < 8; y++) {
-					for (int x = 0; x < 8; x++) {
-						if (fields[x][y].isEmpty() == false && towersP1[x][y] != null) {
-							towersP1Temp[7 - i][7] = towersP1[x][y];
-							i++;
-						}
-					}
-				}
-
-				// Player 2 Towers will be added in a Temp Array
-				int k = 0;
-				for (int y = 0; y < 8; y++) {
-					for (int x = 0; x < 8; x++) {
-						if (fields[x][y].isEmpty() == false && towersP2[x][y] != null) {
-							towersP2Temp[k][0] = towersP2[x][y];
-							k++;
-						}
-						fields[x][y].setEmpty(true);
-					}
+			
+			boolean newRoundIsBuild = false;
+			for(int z = 0; z < model.DIMENSION; z++) {
+				if(!fields[z][7].isEmpty() && !fields[z][0].isEmpty()) {
+					newRoundIsBuild = true;
+				} else {
+					newRoundIsBuild = false;
+					break;
 				}
 			}
+			if(newRoundIsBuild == false) {
+				if (newRoundLeftRight) {
+					// Player 1 Towers will be added in a Temp Array
+					int i = 0;
+					for (int y = 0; y < 8; y++) {
+						for (int x = 0; x < 8; x++) {
+							if (fields[x][y].isEmpty() == false && towersP1[x][y] != null) {
+								towersP1Temp[i][7] = towersP1[x][y];
+								i++;
+							}
+						}
+					}
 
-			// Towers will be reset on a start position (right or left)
-			for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+					// Player 2 Towers will be added in a Temp Array
+					int k = 0;
+					for (int y = 0; y < 8; y++) {
+						for (int x = 0; x < 8; x++) {
+							if (fields[x][y].isEmpty() == false && towersP2[x][y] != null) {
+								towersP2Temp[7 - k][0] = towersP2[x][y];
+								k++;
+							}
+							fields[x][y].setEmpty(true);
+						}
+					}
 
-				towersP1Temp[x][7].setxPosition(x);
-				towersP1Temp[x][7].setyPosition(7);
-				GridPane.setColumnIndex(towersP1Temp[x][7], x);
-				GridPane.setRowIndex(towersP1Temp[x][7], 0);
+				} else if (!newRoundLeftRight) {
 
-				towersP2Temp[x][0].setxPosition(x);
-				towersP2Temp[x][0].setyPosition(0);
-				GridPane.setColumnIndex(towersP2Temp[x][0], x);
-				GridPane.setRowIndex(towersP2Temp[x][0], 7);
+					// Player 1 Towers will be added in a Temp Array
+					int i = 0;
+					for (int y = 0; y < 8; y++) {
+						for (int x = 0; x < 8; x++) {
+							if (fields[x][y].isEmpty() == false && towersP1[x][y] != null) {
+								towersP1Temp[7 - i][7] = towersP1[x][y];
+								i++;
+							}
+						}
+					}
 
-				view.towersP1 = towersP1Temp;
-				view.towersP2 = towersP2Temp;
-				view.fields[x][towersP1.length - 1].setEmpty(false);
-				view.fields[x][towersP2.length - towersP2.length].setEmpty(false);
+					// Player 2 Towers will be added in a Temp Array
+					int k = 0;
+					for (int y = 0; y < 8; y++) {
+						for (int x = 0; x < 8; x++) {
+							if (fields[x][y].isEmpty() == false && towersP2[x][y] != null) {
+								towersP2Temp[k][0] = towersP2[x][y];
+								k++;
+							}
+							fields[x][y].setEmpty(true);
+						}
+					}
+				}
+
+				// Towers will be reset on a start position (right or left)
+				for (int x = 0; x < GameMenu_Model.DIMENSION; x++) {
+
+					towersP1Temp[x][7].setxPosition(x);
+					towersP1Temp[x][7].setyPosition(7);
+					GridPane.setColumnIndex(towersP1Temp[x][7], x);
+					GridPane.setRowIndex(towersP1Temp[x][7], 0);
+
+					towersP2Temp[x][0].setxPosition(x);
+					towersP2Temp[x][0].setyPosition(0);
+					GridPane.setColumnIndex(towersP2Temp[x][0], x);
+					GridPane.setRowIndex(towersP2Temp[x][0], 7);
+
+					view.towersP1 = towersP1Temp;
+					view.towersP2 = towersP2Temp;
+					view.fields[x][towersP1.length - 1].setEmpty(false);
+					view.fields[x][towersP2.length - towersP2.length].setEmpty(false);
+			}
 		}
 	}
+
+
 
 	}
 

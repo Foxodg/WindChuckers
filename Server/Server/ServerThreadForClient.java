@@ -107,7 +107,7 @@ public class ServerThreadForClient extends Thread {
 							//check now is it a win Situation?
 							if(this.board.isWinSituation()) {
 								ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.Update,messageAI.getXCoordinate2(),messageAI.getYCoordinate2(), board.getTile(messageAI.getXCoordinate2(), messageAI.getYCoordinate2()).getTower().getGems()+1, messageAI.getPlayer()));
-								ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, true));
+								ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, false));
 								
 								//Now the turn is done - it's time to make the next move
 								board.setLastMove(move);
@@ -299,9 +299,9 @@ public class ServerThreadForClient extends Thread {
 				} else {
 					newRound = NewRound.Right;
 				}
-				if(!this.wantAI) {
-					sendMessageBackToClient(message);
-				}
+//				if(!this.wantAI) {
+//					sendMessageBackToClient(message);
+//				}
 				board.newRound(newRound);
 			}
 			if(this.wantDoubleAI) {

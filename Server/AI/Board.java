@@ -704,90 +704,103 @@ public class Board {
 	 * @param newRound
 	 */
 	public void newRound(NewRound newRound) {
-		ArrayList<Tile> bottomTiles = new ArrayList<Tile>();
-		ArrayList<Tile> topTiles = new ArrayList<Tile>();
-		ArrayList<Tower> towerListPlayerONE = new ArrayList<Tower>();
-		ArrayList<Tower> towerListPlayerTWO = new ArrayList<Tower>();
-
-		// need the Tiles from the board
-		for (int i = 0; i < 8; i++) {
-			bottomTiles.add(board[i][0]);
-			topTiles.add(board[i][7]);
-		}
-			Tower[][] towersP1Temp = new Tower[8][8];
-			Tower[][] towersP2Temp = new Tower[8][8];
-			
-			if (newRound == NewRound.Left) {
-				// Player 1 towers add to temp array
-				int i = 0;
-				for (int y = 0; y < 8; y++) {
-					for (int x = 0; x < 8; x++) {
-						if(board[x][y].hasTower(board, x, y) && board[x][y].getTower().getPlayerType() == PlayerType.ONE) {
-							towersP1Temp[7-i][0] = board[x][y].getTower();
-							i++;
-						}
-					}
-				}
-				// Player 2 towers add to temp array
-				int k = 0;
-				for (int y = 0; y < 8; y++) {
-					for (int x = 0; x < 8; x++) {
-						if(board[x][y].hasTower(board, x, y) && board[x][y].getTower().getPlayerType() == PlayerType.TWO) {
-							towersP2Temp[k][7] = board[x][y].getTower();
-							k++;
-						}
-					}
-				}
-				//is there no human player this massage must send
-				if(this.getDoubleAI()) {
-					ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, false));
-				}
+		boolean newRoundIsBuild = false;
+		for(int z = 0; z < 8; z++) {
+			if(board[z][7].isOccupied() && board[z][0].isOccupied()) {
+				newRoundIsBuild = true;
+			} else {
+				newRoundIsBuild = false;
+				break;
 			}
-			else if(newRound == NewRound.Right) {
-				//Player 1 towers add to temp array
-				int i = 0;
-				for (int y = 0; y < 8; y++) {
-					for (int x = 0; x < 8; x++) {
-						if(board[x][y].hasTower(board, x, y) && board[x][y].getTower().getPlayerType() == PlayerType.ONE) {
-							towersP1Temp[i][0] = board[x][y].getTower();
-							i++;
+		}
+		if(newRoundIsBuild == false) {
+			ArrayList<Tile> bottomTiles = new ArrayList<Tile>();
+			ArrayList<Tile> topTiles = new ArrayList<Tile>();
+			ArrayList<Tower> towerListPlayerONE = new ArrayList<Tower>();
+			ArrayList<Tower> towerListPlayerTWO = new ArrayList<Tower>();
+
+			// need the Tiles from the board
+			for (int i = 0; i < 8; i++) {
+				bottomTiles.add(board[i][0]);
+				topTiles.add(board[i][7]);
+			}
+				Tower[][] towersP1Temp = new Tower[8][8];
+				Tower[][] towersP2Temp = new Tower[8][8];
+				
+				if (newRound == NewRound.Left) {
+					// Player 1 towers add to temp array
+					int i = 0;
+					for (int y = 0; y < 8; y++) {
+						for (int x = 0; x < 8; x++) {
+							if(board[x][y].hasTower(board, x, y) && board[x][y].getTower().getPlayerType() == PlayerType.ONE) {
+								towersP1Temp[7-i][0] = board[x][y].getTower();
+								i++;
+							}
 						}
 					}
-				}
-				//Player 2 towers add to temp array
-				int k = 0;
-				for (int y = 0; y < 8; y++) {
-					for (int x = 0; x < 8; x++) {
-						if(board[x][y].hasTower(board, x, y) && board[x][y].getTower().getPlayerType() == PlayerType.TWO) {
-							towersP2Temp[7-k][7] = board[x][y].getTower();
-							k++;
+					// Player 2 towers add to temp array
+					int k = 0;
+					for (int y = 0; y < 8; y++) {
+						for (int x = 0; x < 8; x++) {
+							if(board[x][y].hasTower(board, x, y) && board[x][y].getTower().getPlayerType() == PlayerType.TWO) {
+								towersP2Temp[k][7] = board[x][y].getTower();
+								k++;
+							}
 						}
 					}
+					//is there no human player this massage must send
+					if(this.getDoubleAI()) {
+						ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, false));
+					}
 				}
-				//is there no human player this massage must send
-				if(this.getDoubleAI()) {
-					ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, false));
+				else if(newRound == NewRound.Right) {
+					//Player 1 towers add to temp array
+					int i = 0;
+					for (int y = 0; y < 8; y++) {
+						for (int x = 0; x < 8; x++) {
+							if(board[x][y].hasTower(board, x, y) && board[x][y].getTower().getPlayerType() == PlayerType.ONE) {
+								towersP1Temp[i][0] = board[x][y].getTower();
+								i++;
+							}
+						}
+					}
+					//Player 2 towers add to temp array
+					int k = 0;
+					for (int y = 0; y < 8; y++) {
+						for (int x = 0; x < 8; x++) {
+							if(board[x][y].hasTower(board, x, y) && board[x][y].getTower().getPlayerType() == PlayerType.TWO) {
+								towersP2Temp[7-k][7] = board[x][y].getTower();
+								k++;
+							}
+						}
+					}
+					//is there no human player this massage must send
+					if(this.getDoubleAI()) {
+						ServerThreadForClient.sendMessageBackToClient(new Message(MessageType.NewRound, false));
+					}
+					
 				}
 				
-			}
-			
-			// fill the towers
-			new Board();
-			for (int i = 0; i < 8; i++) {
-				Tile[][] tmpTiles = this.getTempTile();
-				// this is the bottomLine
-				board[i][0] = new Tile(towersP1Temp[i][0], board[i][0].getColor());
-				// this is for the topLine
-				board[i][7] = new Tile(towersP2Temp[i][7], board[i][7].getColor());
-				// set the rest of the board new
-				board[i][1] = new Tile(board[i][1].getColor());
-				board[i][2] = new Tile(board[i][2].getColor());
-				board[i][3] = new Tile(board[i][3].getColor());
-				board[i][4] = new Tile(board[i][4].getColor());
-				board[i][5] = new Tile(board[i][5].getColor());
-				board[i][6] = new Tile(board[i][6].getColor());
-			}
-			System.out.println(getTempBoard());
+				// fill the towers
+				new Board();
+				for (int i = 0; i < 8; i++) {
+					Tile[][] tmpTiles = this.getTempTile();
+					// this is the bottomLine
+					board[i][0] = new Tile(towersP1Temp[i][0], board[i][0].getColor());
+					// this is for the topLine
+					board[i][7] = new Tile(towersP2Temp[i][7], board[i][7].getColor());
+					// set the rest of the board new
+					board[i][1] = new Tile(board[i][1].getColor());
+					board[i][2] = new Tile(board[i][2].getColor());
+					board[i][3] = new Tile(board[i][3].getColor());
+					board[i][4] = new Tile(board[i][4].getColor());
+					board[i][5] = new Tile(board[i][5].getColor());
+					board[i][6] = new Tile(board[i][6].getColor());
+				}
+				System.out.println(getTempBoard());
+		}
+		
+		
 //		} else {
 //			if (newRound == NewRound.Left) {
 //				// the choice is left

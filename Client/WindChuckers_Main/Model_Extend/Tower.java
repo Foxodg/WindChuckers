@@ -1059,7 +1059,7 @@ public class Tower extends Button {
 		if(!LoginModel.getSingleAI() && !LoginModel.getDoubleAI()) {
 			//For the Single Friends-Game - send it to the other client
 			ServiceLocator.getServiceLocator().getLogger().info("Update Client: Friends-Game - send the update-Message to the other Client");
-			model.messageConstructorForUpdate(xCoordinateUpgrade, yCoordinateUpgrade, this.getGems(), this.getPlayerNumber());
+			model.messageConstructorForUpdate(xCoordinateUpgrade, yCoordinateUpgrade, this.getGems()+1, this.getPlayerNumber());
 		}
 		
 		if(LoginModel.getSingleAI()) {
@@ -1157,7 +1157,16 @@ public class Tower extends Button {
 			// After the first move the boolean gameStart is false
 			model.gameStart = false;
 			
-			this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], playerType);
+			//This is for the Single-AI-Game - it's not necessary to check the update, because the update will send anyway from the Server
+			Tower tower;
+			if(playerType == 1) {
+				tower = towersP1[newX][newY];
+			} else {
+				tower = towersP2[newX][newY];
+			}
+			if(!this.checkWinSituation(fields, player1, player2, tower, towersP1, towersP2)) {
+				this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], playerType);
+			}
 		}
 		else if(LoginModel.getSingleAI()) {
 			if ((playerType == 1 && model.getPlayer1().isOnTurn() && towersP1[oldX][oldY].getColor().equals(lastField.getColor()))
