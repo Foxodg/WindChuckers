@@ -4,6 +4,7 @@ import org.omg.Messaging.SyncScopeHelper;
 
 import com.sun.media.jfxmedia.logging.Logger;
 
+import Client.ClientThreadForServer;
 import Friends.FriendsController;
 import Login.LoginModel;
 import WindChuckers_Main.GameMenu_Model;
@@ -26,6 +27,7 @@ public class Tower extends Button {
 	private boolean sumoTower = false;
 	private int saveSumoMove = 0;
 	private static Field lastField;
+	private static boolean firstMove = true;
 	
 	protected Tower (String color){
 		super();
@@ -1139,12 +1141,12 @@ public class Tower extends Button {
 			GridPane.setRowIndex(this, newRowGridPane);
 
 			// The tower will be set on the right position in the tower array
-			if (model.getPlayer1().getPlayerNumber() == playerType) {
+			if (playerType == 1) {
 				towersP1[newX][newY] = this;
 				towersP1[oldX][oldY] = null;
 			}
 
-			if (model.getPlayer2().getPlayerNumber() == playerType) {
+			if (playerType == 2) {
 				towersP2[newX][newY] = this;
 				towersP2[oldX][oldY] = null;
 			}
@@ -1154,27 +1156,8 @@ public class Tower extends Button {
 
 			// After the first move the boolean gameStart is false
 			model.gameStart = false;
-
-			if(!LoginModel.getSingleAI() && !LoginModel.getDoubleAI()) {
-				//This is for the Friends-Game - it's not necessary to check the update, because the update will send anyway from the Server
-				if(this.playerNumber == playerType) {
-					this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], playerType);
-				}
-			}
 			
-			else if(LoginModel.getSingleAI()) {
-				//This is for the Single-AI-Game - it's not necessary to check the update, because the update will send anyway from the Server
-				if(this.playerNumber == playerType) {
-					this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], playerType);
-				}
-			}
-			
-			else if(LoginModel.getDoubleAI()) {
-				//This is for the Single-AI-Game - it's not necessary to check the update, because the update will send anyway from the Server
-				if(this.playerNumber == playerType) {
-					this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], playerType);
-				}
-			}
+			this.changeTurn(fields, player1, player2, towersP1, towersP2, fields[newX][newY], playerType);
 		}
 		else if(LoginModel.getSingleAI()) {
 			if ((playerType == 1 && model.getPlayer1().isOnTurn() && towersP1[oldX][oldY].getColor().equals(lastField.getColor()))
@@ -1254,7 +1237,56 @@ public class Tower extends Button {
 			}
 		}
 		else if(LoginModel.getDoubleAI()) {
-				//Friends-Game
+				//Double-AI-Game
+			if (firstMove == false || (playerType == 1 && model.getPlayer1().isOnTurn() && towersP1[oldX][oldY].getColor().equals(lastField.getColor()))
+					|| (playerType == 2 && model.getPlayer2().isOnTurn()) && towersP2[oldX][oldY].getColor().equals(lastField.getColor())) {
+				if (!fields[newX][newY].isEmpty() && this.getGems() >= 2 && this.saveSumoMove == 3){
+					this.sumo3Move(fields, gameBoard, player1, player2, fields[newX][newY], towersP1, towersP2);
+				}
+				
+				else if (!fields[newX][newY].isEmpty() && this.getGems() >= 2 && this.saveSumoMove == 2){
+					this.sumo2Move(fields, gameBoard, player1, player2, fields[newX][newY], towersP1, towersP2);
+				}
+				
+				else if (!fields[newX][newY].isEmpty() && this.getGems() >= 1){
+					this.saveSumoMove = 1;
+					this.sumo1Move(fields, gameBoard, player1, player2, fields[newX][newY], towersP1, towersP2);
+				}
+				
+				int newColumnGridPane = GridPane.getColumnIndex(fields[newX][newY]);
+				int newRowGridPane = GridPane.getRowIndex(fields[newX][newY]);
+
+				// The old field is empty and the new field is busy
+				fields[oldX][oldY].setEmpty(true);
+				fields[newX][newY].setEmpty(false);
+
+				// The coordinates of the tower will be changed
+				this.setxPosition(newX);
+				this.setyPosition(newY);
+
+				// The Tower will be moved on the GridPane
+				GridPane.setColumnIndex(this, newColumnGridPane);
+				GridPane.setRowIndex(this, newRowGridPane);
+
+				// The tower will be set on the right position in the tower array
+				if (playerType == 1) {
+					towersP1[newX][newY] = this;
+					towersP1[oldX][oldY] = null;
+				}
+
+				if (playerType == 2) {
+					towersP2[newX][newY] = this;
+					towersP2[oldX][oldY] = null;
+				}
+
+				// The turn is finished, disable all fields
+				Field.disableFields(fields);
+
+				// After the first move the boolean gameStart is false
+				model.gameStart = false;
+				
+				lastField = fields[newX][newY];	
+			} else {
 				if (!fields[newX][newY].isEmpty() && this.getGems() >= 2 && this.saveSumoMove == 3){
 					this.sumo3Move(fields, gameBoard, player1, player2, fields[newX][newY], towersP1, towersP2);
 				}
@@ -1299,7 +1331,12 @@ public class Tower extends Button {
 
 				// After the first move the boolean gameStart is false
 				model.gameStart = false;
+				
+				lastField = fields[newX][newY];	
+				firstMove = false;
+			}
 		}
+
 	}
 
 	
