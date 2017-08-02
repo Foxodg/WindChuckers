@@ -27,7 +27,7 @@ public class ServerView {
         this.model = model;
         this.txtLog = txtLog;
         
-        stage.setTitle("SimpleXML message server");
+        stage.setTitle("WindChuckers Kamisado-Server");
         
         BorderPane root = new BorderPane();
 

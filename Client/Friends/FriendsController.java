@@ -49,6 +49,8 @@ public class FriendsController extends Controller<GameMenu_Model, FriendsView> {
 		view.menuFileExitFriends.setOnAction(e -> {
 			view.stop();
 			addview.stop();
+			WindChuckers windChuckers = WindChuckers.getWindChuckers();
+			windChuckers.startMainMenuView();
 		});
 
 		/**

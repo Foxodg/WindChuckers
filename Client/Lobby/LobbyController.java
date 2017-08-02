@@ -27,6 +27,8 @@ public class LobbyController extends Controller<GameMenu_Model, LobbyView> {
 		 */
 		view.menuFileExitLobby.setOnAction(e -> {
 			view.stop();
+			WindChuckers windChuckers = WindChuckers.getWindChuckers();
+			windChuckers.startMainMenuView();
 		});
 		
 		// Send-Button send Message to Server
@@ -45,6 +47,11 @@ public class LobbyController extends Controller<GameMenu_Model, LobbyView> {
 				model.messageConstructorForBuildCapsule(FriendsController.getHashCode(), input);
 				view.txtChat.clear();
 			}
+		});
+		
+		view.menuFileClientLobby.setOnAction(e -> {
+			WindChuckers windChuckers = WindChuckers.getWindChuckers();
+			windChuckers.getStartetClient();
 		});
 		
 		// Watch the client for ChatMessage

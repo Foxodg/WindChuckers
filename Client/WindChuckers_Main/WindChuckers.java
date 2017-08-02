@@ -31,10 +31,7 @@ import Tutorial.TutorialView;
 import UserMenu.UserMenuController;
 import UserMenu.UserMenuView;
 import WindChuckers_Main.Model_Extend.Board;
-import WindChuckers_Main.Model_Extend.Movement;
 import WindChuckers_Main.Model_Extend.Player;
-import WindChuckers_Main.Model_Extend.Position;
-import WindChuckers_Main.Model_Extend.SumoTower;
 import commonClasses.ServiceLocator;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -80,8 +77,6 @@ public class WindChuckers extends Application {
     
     //Model extended
     private Board board;
-    private Movement movement;
-    private Position position;
     private Player player;
     
     
@@ -181,8 +176,8 @@ public class WindChuckers extends Application {
         // can only be initialized now, because they may depend on the
         // resources initialized by the splash screen
         model = GameMenu_Model.getGameModel();
-        view = new GameMenu_View(appStage, model,board,movement,position, player);
-        controller = new GameMenu_Controller(model, view, newRoundView, board,movement,position, player);
+        view = new GameMenu_View(appStage, model,board, player);
+        controller = new GameMenu_Controller(model, view, newRoundView, board,player);
         
         // Resources are now initialized
         serviceLocator = ServiceLocator.getServiceLocator();

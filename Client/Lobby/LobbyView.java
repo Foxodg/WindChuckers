@@ -30,6 +30,7 @@ public class LobbyView extends View<GameMenu_Model> {
     private Stage stage;
     
 	private Menu menuFileLobby;
+	protected MenuItem menuFileClientLobby;
 	protected MenuItem menuFileExitLobby;
 	
 	protected TitledPane chatPanel;
@@ -58,6 +59,7 @@ public class LobbyView extends View<GameMenu_Model> {
 		
 		MenuBar menuBar = new MenuBar();
 		menuFileLobby = new Menu();
+		menuFileClientLobby = new MenuItem();
 		menuFileExitLobby = new MenuItem();
 		menuBar.getMenus().add(menuFileLobby);
 		
@@ -83,7 +85,7 @@ public class LobbyView extends View<GameMenu_Model> {
 		chatPanel.setText("Chat");
 		chatPanel.setContent(chatBox);
 		
-		menuFileLobby.getItems().add(menuFileExitLobby);
+		menuFileLobby.getItems().addAll(menuFileClientLobby, menuFileExitLobby);
 		
 		GridPane root = new GridPane();
 		root.add(menuBar, 0, 0);
@@ -103,6 +105,7 @@ public class LobbyView extends View<GameMenu_Model> {
 		// Menu strings
 		menuFileLobby.setText(t.getString("lobby.menu.file"));
 		menuFileExitLobby.setText(t.getString("lobby.menu.file.exit"));
+		menuFileClientLobby.setText(t.getString("program.menu.clientGUI"));
 		
 		//Button
 		btnSend.setText(t.getString("program.btn.btnSend"));

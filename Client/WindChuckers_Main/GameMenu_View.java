@@ -7,10 +7,7 @@ import Client.ClientThreadForServer;
 import WindChuckers_Main.Model_Extend.Board;
 import WindChuckers_Main.Model_Extend.Field;
 import WindChuckers_Main.Model_Extend.Tower;
-import WindChuckers_Main.Model_Extend.Movement;
 import WindChuckers_Main.Model_Extend.Player;
-import WindChuckers_Main.Model_Extend.Position;
-import WindChuckers_Main.Model_Extend.SumoTower;
 import abstractClasses.View;
 import commonClasses.ServiceLocator;
 import commonClasses.Translator;
@@ -45,8 +42,6 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	protected Stage stage;
 	
 	private Board board;
-	private Movement movement;
-	private Position position;
 	private Player player;
 	
 	private Menu menuFile;
@@ -96,12 +91,10 @@ public class GameMenu_View extends View<GameMenu_Model> {
 	protected Tower[][] towersP1;
 	protected Tower[][] towersP2;
 
-	public GameMenu_View(Stage stage, GameMenu_Model model, Board board, Movement movement, Position position, Player player) {
+	public GameMenu_View(Stage stage, GameMenu_Model model, Board board, Player player) {
 		super(stage, model);
 		this.stage = stage;
 		this.board = board;
-		this.movement = movement;
-		this.position = position;
 		this.player = player;
 		
 		stage.setTitle("WindChuckers Kamisado");

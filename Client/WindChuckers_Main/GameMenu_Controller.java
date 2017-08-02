@@ -22,12 +22,9 @@ import Message.Message.MessageType;
 import WindChuckers_Main.WindChuckers;
 import WindChuckers_Main.Model_Extend.Board;
 import WindChuckers_Main.Model_Extend.Field;
-import WindChuckers_Main.Model_Extend.Movement;
 import WindChuckers_Main.Model_Extend.Player;
-import WindChuckers_Main.Model_Extend.Position;
 import WindChuckers_Main.Model_Extend.Tower;
 import WindChuckers_Main.newRoundPopup.newRoundView;
-import WindChuckers_Main.Model_Extend.SumoTower;
 import abstractClasses.Controller;
 import commonClasses.ServiceLocator;
 import commonClasses.Translator;
@@ -63,22 +60,16 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	private Translator t;
 	private WindChuckers windChuckers;
 	private Board board;
-	private Movement movement;
 	private Tower tower;
-	private SumoTower SumoTower;
-	private Position position;
 	private Player player;
 	private ClientThreadForServer clientServer;
 	private HashMap<Integer, ArrayList<String>> userMap;
 	private long stopTimer;
 	private static int roundCounter = 0;
 
-	public GameMenu_Controller(GameMenu_Model model, GameMenu_View view, newRoundView newRoundView, Board board,
-			Movement movement, Position position, Player player) {
+	public GameMenu_Controller(GameMenu_Model model, GameMenu_View view, newRoundView newRoundView, Board board, Player player) {
 		super(model, view);
 		this.board = board;
-		this.movement = movement;
-		this.position = position;
 		this.player = player;
 		this.clientServer = ClientThreadForServer.getClientServer();
 		serviceLocator = ServiceLocator.getServiceLocator();
