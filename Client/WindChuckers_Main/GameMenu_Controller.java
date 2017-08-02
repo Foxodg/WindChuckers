@@ -501,17 +501,20 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 				}
 			}
 		});
-
+		/**
+		 * For Tutorial
+		 * @author L.Weber
+		 */
 		view.menuTutorial.setOnAction(e -> {
 			serviceLocator.getLogger().info("Start Tutorial");
 			windChuckers = WindChuckers.getWindChuckers();
 			windChuckers.startTutorial();
 		});
-
-		// Anmerkung LKu Hier müssen wir noch die Fälle nach einer neuen Runde
-		// implementieren.
-		// Immer der Verlierer beginnt
-
+		
+		/**
+		 * Build Round
+		 * 
+		 */
 		if (LoginModel.getWithoutServer()) {
 			if (FriendsController.getRandomStart() == 1) {
 				model.getPlayer1().setOnTurn(true);
@@ -581,6 +584,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 				}
 			}
 		} else {
+			//@autor L.Weber
 			if (LoginModel.getForcePlayer()) {
 				FriendsController.setRandomStart(1);
 			}
@@ -964,6 +968,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 				view.fields[x][view.towersP2.length - view.towersP2.length].setEmpty(false);
 			}
 		} else {
+			//@autor L.Weber
 			//Count the rounds
 			if(!view.tfRoundMax.getText().isEmpty()) {
 				int roundMax = Integer.parseInt(view.tfRoundMax.getText());
@@ -1122,6 +1127,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			win = win + winsBefore;
 			model.messageConstructorForWin(win, LoginModel.getUserName());
 		} else {
+			//@autor L.Weber
 			windChuckers = WindChuckers.getWindChuckers();
 			Alert winMessage = new Alert(AlertType.INFORMATION);
 			winMessage.setTitle("Gratulation!");

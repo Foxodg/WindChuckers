@@ -903,6 +903,7 @@ public class Tower extends Button {
 			}
 			this.saveSumoMove = 0;
 		} else {
+			//@autor L.Weber
 			//For the Game with the Server
 			if(model.getPlayer1().isOnTurn()) {
 				//player 1 is on turn
@@ -1074,7 +1075,7 @@ public class Tower extends Button {
 			}
 		});
 
-		
+		//@autor L.Weber
 		if(!LoginModel.getSingleAI() && !LoginModel.getDoubleAI()) {
 			//For the Single Friends-Game - send it to the other client
 			ServiceLocator.getServiceLocator().getLogger().info("Update Client: Friends-Game - send the update-Message to the other Client");
@@ -1127,6 +1128,7 @@ public class Tower extends Button {
 	 * @param endColumn
 	 * @param endRow
 	 * @param playerType
+	 * @author L.Weber
 	 */
 	public void move(Field[][] fields, GridPane gameBoard, Player player1, Player player2, Tower[][] towersP1, Tower[][] towersP2, int oldX, int oldY, int newX, int newY, int playerType) {
 		if(!LoginModel.getSingleAI() && !LoginModel.getDoubleAI()) {
