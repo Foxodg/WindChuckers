@@ -382,13 +382,7 @@ public class WindChuckers extends Application {
     @Override
     public void stop() {
         serviceLocator.getConfiguration().save();
-        if (view != null) {
-            // Make the view invisible
         	Platform.exit();
-        }
-
-        // More cleanup code as needed
-
         serviceLocator.getLogger().info("Application terminated");
     }
 

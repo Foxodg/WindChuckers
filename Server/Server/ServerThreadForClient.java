@@ -24,6 +24,7 @@ import Message.Message.MessageType;
 import Message.Message.Value;
 
 public class ServerThreadForClient extends Thread {
+	private volatile boolean runner = true;
 	private final Logger logger = Logger.getLogger("");
 	private Socket clientSocket;
 	private Kamisado kamisado;
@@ -46,7 +47,7 @@ public class ServerThreadForClient extends Thread {
 	 */
 	@Override
 	public void run() {
-		while (true) {
+		while (runner) {
 			Message.MessageType lastMessageType = null;
 			logger.info("Request from client " + clientSocket.getInetAddress().toString() + " for server "
 					+ clientSocket.getLocalAddress().toString());
@@ -444,6 +445,10 @@ public class ServerThreadForClient extends Thread {
 					}
 				}
 			}
+		else if(message.getMessageType() == MessageType.End) {
+			//end the server
+			runner = false;
+		}
 		else {
 			logger.info("Server" + "Error-Message: ");
 			// Else must be an Error-Message

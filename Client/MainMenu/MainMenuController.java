@@ -2,9 +2,11 @@ package MainMenu;
 
 import com.sun.media.jfxmedia.logging.Logger;
 
+import Client.ClientThreadForServer;
 import Friends.FriendsController;
 import Friends.FriendsView;
 import Login.LoginModel;
+import Server.ServerThreadForClient;
 import WindChuckers_Main.GameMenu_Controller;
 import WindChuckers_Main.GameMenu_Model;
 import WindChuckers_Main.WindChuckers;
@@ -118,6 +120,12 @@ public class MainMenuController extends Controller<GameMenu_Model, MainMenuView>
 			model.setEnableFriendsGame(true);
 			ServiceLocator.getServiceLocator().getLogger().info("Friends start for a Friend-Game set edits in game");
 			model.setEnableFriendsGame(false);
+		});
+		
+		view.btnEnd.setOnAction(e -> {
+			main.stop();
+			model.messageConstructorForEnd();
+			ClientThreadForServer.setRunner(false);
 		});
 		
 	}

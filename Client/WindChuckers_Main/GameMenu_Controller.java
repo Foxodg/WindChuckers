@@ -71,6 +71,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	private ClientThreadForServer clientServer;
 	private HashMap<Integer, ArrayList<String>> userMap;
 	private long stopTimer;
+	private static int roundCounter = 0;
 
 	public GameMenu_Controller(GameMenu_Model model, GameMenu_View view, newRoundView newRoundView, Board board,
 			Movement movement, Position position, Player player) {
@@ -962,6 +963,17 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 				view.fields[x][view.towersP2.length - view.towersP2.length].setEmpty(false);
 			}
 		} else {
+			//Count the rounds
+			if(!view.tfRoundMax.getText().isEmpty()) {
+				int roundMax = Integer.parseInt(view.tfRoundMax.getText());
+				roundCounter = roundCounter + 1;
+				if(roundCounter <= Integer.parseInt(view.tfRoundMax.getText())) {
+					view.tfRound.setText(Integer.toString(roundCounter));
+				} else {
+					//disable all when the counter equals or bigger then the max
+					this.disableAll();
+				}
+			}
 			Tower[][] towersP1Temp = new Tower[model.DIMENSION][model.DIMENSION];
 			Tower[][] towersP2Temp = new Tower[model.DIMENSION][model.DIMENSION];
 			Tower[][] towersP1 = view.getTowersP1();

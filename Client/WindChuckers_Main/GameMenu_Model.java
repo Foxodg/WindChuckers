@@ -307,6 +307,15 @@ public class GameMenu_Model extends Model {
 		Message message = new Message(MessageType.DBMessage, db, id, friendId);
 		sendMessage(message);
 	}
+	
+	/**
+	 * End the server
+	 * @author L.Weber
+	 */
+	public void messageConstructorForEnd() {
+		Message message = new Message(MessageType.End);
+		sendMessage(message);
+	}
 
 	/**
 	 * For the Error-Message

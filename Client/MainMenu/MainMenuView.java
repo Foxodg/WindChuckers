@@ -31,6 +31,7 @@ public class MainMenuView extends View <GameMenu_Model>{
 	protected Button btnLongGame;
 	protected Button btnMarathonGame;
 	protected Button btnFriends;
+	protected Button btnEnd;
 	
 	public MainMenuView (Stage stage, GameMenu_Model model){
 		super(stage,model);
@@ -61,12 +62,14 @@ public class MainMenuView extends View <GameMenu_Model>{
 		btnLongGame = new Button();
 		btnMarathonGame = new Button();
 		btnFriends = new Button();
+		btnEnd = new Button();
 		
 		btnSingleGame.setPrefWidth(175);
 		btnStandardGame.setPrefWidth(175);
 		btnLongGame.setPrefWidth(175);
 		btnMarathonGame.setPrefWidth(175);
 		btnFriends.setPrefWidth(175);
+		btnEnd.setPrefWidth(175);
 		
 		
 		//Add buttons to menubox
@@ -75,6 +78,7 @@ public class MainMenuView extends View <GameMenu_Model>{
 		menuBox.getChildren().add(btnLongGame);
 		menuBox.getChildren().add(btnMarathonGame);
 		menuBox.getChildren().add(btnFriends);
+		menuBox.getChildren().add(btnEnd);
 		
 		
 		//Attach menubar and menubox to gridpane
@@ -105,6 +109,7 @@ public class MainMenuView extends View <GameMenu_Model>{
 		btnLongGame.setText(t.getString("btnLongGame"));
 		btnMarathonGame.setText(t.getString("btnMarathonGame"));
 		btnFriends.setText(t.getString("btnFriends"));
+		btnEnd.setText(t.getString("btnEnd"));
 		
 	}
 

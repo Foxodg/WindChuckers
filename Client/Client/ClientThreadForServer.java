@@ -24,6 +24,7 @@ public class ClientThreadForServer extends Thread {
 	private final Logger logger = serviceLocator.getLogger();
 	private Socket serverSocket;
 	private ClientController controller;
+	private static volatile boolean runner = true;
 	private int startColumn;
 	private int startRow;
 	private int endColumn;
@@ -106,7 +107,7 @@ public class ClientThreadForServer extends Thread {
 	 */
 	@Override
 	public void run() {
-		while (true) {
+		while (runner) {
 			Message.MessageType lastMessageType = null;
 			logger.info("Request from server " + serverSocket.getInetAddress().toString() + " for server "
 					+ serverSocket.getLocalAddress().toString());
@@ -424,6 +425,10 @@ public class ClientThreadForServer extends Thread {
 	
 	public void setPlayer(int player) {
 		this.player = player;
+	}
+	
+	public static void setRunner(boolean run) {
+		runner = run;
 	}
 
 }
