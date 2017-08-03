@@ -39,6 +39,7 @@ public class FriendsView extends View<GameMenu_Model>{
     
 	@Override
 	protected Scene create_GUI() {
+		//@autor T.Bosshard
 		ServiceLocator sl = ServiceLocator.getServiceLocator();
 		Logger logger = sl.getLogger();
 		Translator t = sl.getTranslator();
@@ -112,6 +113,7 @@ public class FriendsView extends View<GameMenu_Model>{
 	}
 	
 	protected void updateTexts() {
+		//@autor T.Bosshard
 		Translator t = ServiceLocator.getServiceLocator().getTranslator();
 
 		// Menu strings
