@@ -18,6 +18,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+/**
+ * 
+ * @author T.Bosshard
+ *
+ */
 public class AddFriendsView extends View<GameMenu_Model> {
 	private GameMenu_Model model;
 	private Stage stage;

@@ -16,6 +16,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+/**
+ * 
+ * @author T.Bosshard
+ *
+ */
 public class FriendsView extends View<GameMenu_Model>{
 	private GameMenu_Model model;
     private Stage stage;
@@ -36,10 +41,11 @@ public class FriendsView extends View<GameMenu_Model>{
 		stage.setTitle("Friends");
 
 	}
-    
+    /**
+     * @author T.Bosshard
+     */
 	@Override
 	protected Scene create_GUI() {
-		//@autor T.Bosshard
 		ServiceLocator sl = ServiceLocator.getServiceLocator();
 		Logger logger = sl.getLogger();
 		Translator t = sl.getTranslator();
@@ -112,8 +118,10 @@ public class FriendsView extends View<GameMenu_Model>{
 		return scene;
 	}
 	
+	/**
+	 * @author T.Bosshard
+	 */
 	protected void updateTexts() {
-		//@autor T.Bosshard
 		Translator t = ServiceLocator.getServiceLocator().getTranslator();
 
 		// Menu strings

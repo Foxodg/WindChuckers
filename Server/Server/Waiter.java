@@ -1,5 +1,10 @@
 package Server;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class Waiter extends Thread{
 	private long hash1;
 	private long hash2;

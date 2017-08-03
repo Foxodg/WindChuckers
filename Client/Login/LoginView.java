@@ -18,6 +18,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class LoginView extends View <GameMenu_Model>{
 	private GameMenu_Model model;
 	private Stage stage;

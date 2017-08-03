@@ -26,6 +26,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class UserMenuView extends View<GameMenu_Model> {
 
 	//Menu

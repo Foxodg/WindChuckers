@@ -2,6 +2,11 @@ package AI;
 
 import java.util.ArrayList;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class MiniMaxAlphaBetaThead extends Thread{
 	
 	private PlayerType playerType;

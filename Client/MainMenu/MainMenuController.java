@@ -13,6 +13,11 @@ import WindChuckers_Main.WindChuckers;
 import abstractClasses.Controller;
 import commonClasses.ServiceLocator;
 
+/**
+ * 
+ * @author Cyrill Füglister
+ *
+ */
 public class MainMenuController extends Controller<GameMenu_Model, MainMenuView> {
 	private GameMenu_Model model;
 	private MainMenuView view;
@@ -21,9 +26,6 @@ public class MainMenuController extends Controller<GameMenu_Model, MainMenuView>
 	public MainMenuController(final WindChuckers main, GameMenu_Model model, MainMenuView view) {
 		super(model,view);
 		
-		/**
-		 * @author Cyrill Füglister
-		 */
 		view.menuFileExitMainMenu.setOnAction(e -> {
 			view.getStage().hide();
 			main.getLoginView().getStage().show();

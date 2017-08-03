@@ -8,6 +8,11 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableStringValue;
 import javafx.concurrent.Task;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class LoginModel extends Model {
 	private ServiceLocator serviceLocator;
 	private String realPassword;

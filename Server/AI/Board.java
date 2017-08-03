@@ -10,6 +10,11 @@ import Server.ServerThreadForClient;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class Board {
 	public static final int a = 0, b = 1, c = 2, d = 3, e = 4, f = 5, g = 6, h = 7;
 	private Tile[][] board;

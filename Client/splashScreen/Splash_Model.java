@@ -53,6 +53,7 @@ public class Splash_Model extends Model {
             this.updateProgress(5,  6);
             
             // First, take some time, update progress
+            // This is wanted, otherwise the loading process goes so short, that this GUI does not appear at all
             Integer i = 0;
             for (; i < 10000000; i++) {
                 if ((i % 10000) == 0)

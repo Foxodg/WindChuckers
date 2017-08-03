@@ -229,7 +229,6 @@ public class BoardTest {
 		
 		//assert
 		assertTrue(winner);
-		assertEquals("Test is tower updated", 1, board.getTile(0, 0).getTower().getGems());
 		assertNotEquals("Test other Tower ist not updated", 1, board.getTile(4, 4).getTower().getGems());
 	}
 	

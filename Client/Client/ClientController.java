@@ -13,6 +13,11 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.WindowEvent;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class ClientController {
 
 	private ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();

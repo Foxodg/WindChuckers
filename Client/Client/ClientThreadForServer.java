@@ -18,6 +18,11 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class ClientThreadForServer extends Thread {
 	private static ClientThreadForServer clientServer;
 	

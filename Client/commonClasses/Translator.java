@@ -6,7 +6,11 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import commonClasses.ServiceLocator;
-
+/**
+ * 
+ * @author Brad Richards
+ *
+ */
 public class Translator {
     private ServiceLocator sl = ServiceLocator.getServiceLocator();
     private Logger logger = sl.getLogger();

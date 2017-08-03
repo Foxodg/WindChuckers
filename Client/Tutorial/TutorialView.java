@@ -25,6 +25,11 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class TutorialView extends View<GameMenu_Model> {
 	private TutorialModel tutorialModel;
 

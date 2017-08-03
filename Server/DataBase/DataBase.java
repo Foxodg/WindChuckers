@@ -13,6 +13,11 @@ import org.h2.tools.DeleteDbFiles;
 
 import WindChuckers_Main.WindChuckers;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class DataBase {
 
 	private static Logger logger = Logger.getLogger("");

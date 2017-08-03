@@ -70,6 +70,15 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 	private static int roundCounter = 0;
 	private static boolean updateAlreadyDone = false;
 
+	/**
+	 * 
+	 * @param model
+	 * @param view
+	 * @param newRoundView
+	 * @param board
+	 * @param player
+	 * @author L.Weber
+	 */
 	public GameMenu_Controller(GameMenu_Model model, GameMenu_View view, newRoundView newRoundView, Board board, Player player) {
 		super(model, view);
 		this.board = board;
@@ -272,6 +281,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 
 		/**
 		 * Set the randomStart Integer for start the game
+		 * @author L.Weber
 		 */
 		clientServer.getRandomStart().addListener((observable, oldValue, newValue) -> {
 			if (FriendsController.getRandomStart() == 0) {
@@ -513,7 +523,7 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		
 		/**
 		 * Build Round
-		 * 
+		 * @author Robin
 		 */
 		if (LoginModel.getWithoutServer()) {
 			if (FriendsController.getRandomStart() == 1) {
@@ -794,6 +804,10 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 		});
 	}
 
+	/**
+	 * Fills the person List
+	 * @author L.Weber
+	 */
 	public void fillPersonList() {
 		// Platform.runLater(() -> {
 		for (Entry<Integer, ArrayList<String>> ee : userMap.entrySet()) {
@@ -835,7 +849,11 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 			super.stop();
 			fraction = System.currentTimeMillis() - timestamp;
 		}
-
+		/**
+		 * For the clock-handle count the seconds
+		 * inspirated by https://stackoverflow.com
+		 * @author L.Weber
+		 */
 		@Override
 		public void handle(long now) {
 			long newTime = System.currentTimeMillis();

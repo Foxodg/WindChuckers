@@ -10,6 +10,7 @@ import javafx.stage.Stage;
  * The code for this web server is identical to WebServer_v0, except that we
  * actually send files, rather than just echoing requests. This only involves
  * changes in the Model.
+ * @author L.Weber
  */
 public class Server extends Application {
     private ServerView view;

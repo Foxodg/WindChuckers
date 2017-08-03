@@ -16,6 +16,7 @@ import javafx.scene.control.TextArea;
  * 
  * Adapted from:
  * http://stackoverflow.com/questions/10785560/write-logger-message-to-file-and-textarea-while-maintaining-default-behaviour-in
+ * @author L.Weber
  */
 public class TextAreaHandler extends Handler {
 

@@ -2,6 +2,11 @@ package AI;
 
 import javafx.beans.property.SimpleBooleanProperty;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class Kamisado {
 	private static Kamisado kamisado;
 	private Move move;

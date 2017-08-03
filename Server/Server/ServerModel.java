@@ -18,6 +18,11 @@ import Message.Message.Value;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Task;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class ServerModel {
 	private Integer port;
 	private final Logger logger = Logger.getLogger("");

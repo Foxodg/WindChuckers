@@ -19,6 +19,11 @@ import Message.Message;
 import Message.Message.MessageType;
 import Message.Message.Value;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class ServerController {
     
     final private ServerModel model;

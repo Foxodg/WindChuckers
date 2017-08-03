@@ -211,6 +211,9 @@ public class AI_Controller extends Controller<GameMenu_Model, AI_View> {
 			}
 		});
 		
+		/**
+		 * @author L.Weber
+		 */
 		view.tfDepth.focusedProperty().addListener((oberservable, oldValue, newValue)-> {
 			if(newValue){
 			} else {
@@ -218,6 +221,10 @@ public class AI_Controller extends Controller<GameMenu_Model, AI_View> {
 				model.messageConstructorForDBUpdate(90, Integer.parseInt(view.tfDepth.getText()));
 			}
 		});
+		
+		/**
+		 * @author L.Weber
+		 */
 		view.tfDepth.textProperty().addListener((observable, oldValue, newValue)-> {
 			if(!newValue.matches("\\d")) {
 				view.tfDepth.setText(newValue.replaceAll("[^\\d]", ""));

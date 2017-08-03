@@ -28,6 +28,11 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class MarathonView extends View<GameMenu_Model> {
 	protected Label lblHeaderMarathon;
 	protected Label lblBodyMarathon1;

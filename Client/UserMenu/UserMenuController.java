@@ -25,6 +25,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class UserMenuController extends Controller<GameMenu_Model, UserMenuView> {
 	ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
 	Logger logger = serviceLocator.getLogger();

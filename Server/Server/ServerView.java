@@ -13,6 +13,11 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class ServerView {
     private ServerModel model;
     private Stage stage;

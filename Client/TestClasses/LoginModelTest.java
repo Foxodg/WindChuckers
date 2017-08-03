@@ -11,7 +11,7 @@ public class LoginModelTest {
 	@Test
 	public void testPassword() {
 		LoginModel model = new LoginModel();
-		String password = "test";
+		model.setPassword("test");
 		assertEquals("Test the Password", true, model.passwordCheck("test"));
 	}
 

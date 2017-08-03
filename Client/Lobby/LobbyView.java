@@ -23,6 +23,11 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class LobbyView extends View<GameMenu_Model> {
 	private static LobbyView lobbyView;
 	

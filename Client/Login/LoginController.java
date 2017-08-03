@@ -17,7 +17,11 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 
 
-
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class LoginController extends Controller<GameMenu_Model, LoginView> {
 
 	private GameMenu_Model model;

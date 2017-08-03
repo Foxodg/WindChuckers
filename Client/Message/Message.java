@@ -22,6 +22,8 @@ import Message.Message.MessageType;
  * 
  * Each message is uniquely identified with an ID and a timestamp. This can be useful, for example,
  * if you want to keep a log of messages.
+ * @author L.Weber
+ * Vorlage: Aus dem Kurs SWE 2
  */
 @Root
 public class Message {

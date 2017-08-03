@@ -5,6 +5,11 @@ package AI;
 
 import java.util.ArrayList;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class Tower {
 	public Color color;
 	public Type type;

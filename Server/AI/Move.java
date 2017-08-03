@@ -1,5 +1,10 @@
 package AI;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class Move {
 	private int x1, y1, x2, y2, depth;
 	private boolean prov = false; //prov. Move for check the posibilities - true prov / false real

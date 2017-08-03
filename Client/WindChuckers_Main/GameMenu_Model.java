@@ -119,6 +119,13 @@ public class GameMenu_Model extends Model {
 	//SimpleBooleanProperty for enable the game edits when start a FriendsGame
 	public SimpleBooleanProperty enableFriendsgame = new SimpleBooleanProperty();
 
+	/**
+	 * 
+	 * @param ipAddress
+	 * @param port
+	 * @return
+	 * @author L.Weber
+	 */
 	public boolean connect(String ipAddress, Integer port) {
 		boolean success = false;
 		try {
@@ -143,6 +150,12 @@ public class GameMenu_Model extends Model {
 		playerList.add(player);
 	}
 	
+	/**
+	 * Set the player to the right place with the hascodes
+	 * @param hashCode
+	 * @param hashCodeFriend
+	 * @author L.Weber
+	 */
 	public void setPlayer(long hashCode, long hashCodeFriend) {
 		
 		Player playerFriend = new Player(hashCodeFriend);
@@ -405,6 +418,11 @@ public class GameMenu_Model extends Model {
 		sendMessage(message);
 	}
 	
+	/**
+	 * This is for the waiter at server
+	 * @param hash
+	 * @author L.Weber
+	 */
 	public void messageConstructorForWaiter(long hash) {
 		Message message = new Message(MessageType.Waiter, hash);
 		sendMessage(message);
@@ -453,7 +471,7 @@ public class GameMenu_Model extends Model {
 	}
 
 	/**
-	 * 
+	 * Fill the Friends
 	 * @return
 	 * @author L.Weber / T.Bosshard
 	 */
@@ -471,7 +489,7 @@ public class GameMenu_Model extends Model {
 	}
 
 	/**
-	 * 
+	 * Get all Requests
 	 * @return
 	 * @author L.Weber / T.Bosshard
 	 */
@@ -493,7 +511,7 @@ public class GameMenu_Model extends Model {
 	}
 
 	/**
-	 * 
+	 * When a Player is searched
 	 * @param searchString
 	 * @author L.Weber / T.Bosshard
 	 */
@@ -522,7 +540,7 @@ public class GameMenu_Model extends Model {
 	}
 
 	/**
-	 * 
+	 * accept a Friend Request
 	 * @param friend
 	 * @author L.Weber / T.Bosshard
 	 */
@@ -548,7 +566,7 @@ public class GameMenu_Model extends Model {
 	}
 
 	/**
-	 * 
+	 * Refuse a Request
 	 * @param friend
 	 * @author L.Weber / T.Bosshard
 	 */
@@ -567,7 +585,7 @@ public class GameMenu_Model extends Model {
 	}
 
 	/**
-	 * 
+	 * remove a friend
 	 * @param friend
 	 * @author T.Bosshard
 	 */
@@ -586,7 +604,7 @@ public class GameMenu_Model extends Model {
 	}
 
 	/**
-	 * 
+	 * make a request to a friend
 	 * @param friend
 	 * @author T.Bosshard
 	 */
@@ -607,7 +625,11 @@ public class GameMenu_Model extends Model {
 		serviceLocator.getLogger().info("Friend added: " + self + " : " + friend);
 	}
 
-	// set a new move
+	/**
+	 * Set a new Move
+	 * @param newValue
+	 * @author L.Weber
+	 */
 	public void setMoveProperty(Boolean newValue) {
 		try {
 			this.moveProperty.setValue(newValue);

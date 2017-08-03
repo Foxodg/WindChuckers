@@ -15,13 +15,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+/**
+ * 
+ * @author Cyrill Füglister
+ *
+ */
 public class MainMenuView extends View <GameMenu_Model>{
 	private GameMenu_Model model;
     private Stage stage;
-	
-    /**
-     * @author Cyrill Füglister
-     */
     
 	private Menu menuFileMainMenu;
 	protected MenuItem menuFileExitMainMenu;

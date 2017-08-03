@@ -145,6 +145,7 @@ public class WindChuckers extends Application {
      * for the application takes place. The controller updates a progress-bar in
      * the view, and (after initialization is finished) calls the startApp()
      * method in this class.
+     * @author L.Weber
      */
     @Override
     public void start(Stage primaryStage) {
@@ -168,6 +169,7 @@ public class WindChuckers extends Application {
      * Splash_Controller, which means that it is on the JavaFX Application
      * Thread, which means that it is allowed to work with GUI components.
      * http://docs.oracle.com/javafx/2/threads/jfxpub-threads.htm
+     * @author L.Weber
      */
     public void startApp() {
         Stage appStage = new Stage();
@@ -373,6 +375,7 @@ public class WindChuckers extends Application {
      * 
      * Make the GUI invisible first. This prevents the user from taking any
      * actions while the program is ending.
+     * @author L.Weber
      */
     @Override
     public void stop() {

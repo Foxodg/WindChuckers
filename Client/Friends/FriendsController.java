@@ -17,6 +17,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
+/**
+ * 
+ * @author T.Bosshard
+ *
+ */
 public class FriendsController extends Controller<GameMenu_Model, FriendsView> {
 	private GameMenu_Model model;
 	private FriendsView view;

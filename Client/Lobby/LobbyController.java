@@ -11,6 +11,11 @@ import commonClasses.ServiceLocator;
 import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class LobbyController extends Controller<GameMenu_Model, LobbyView> {
 	private GameMenu_Model model;
 	private LobbyView view;

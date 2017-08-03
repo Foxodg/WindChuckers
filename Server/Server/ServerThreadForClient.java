@@ -23,6 +23,11 @@ import Message.Message;
 import Message.Message.MessageType;
 import Message.Message.Value;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class ServerThreadForClient extends Thread {
 	private volatile boolean runner = true;
 	private final Logger logger = Logger.getLogger("");

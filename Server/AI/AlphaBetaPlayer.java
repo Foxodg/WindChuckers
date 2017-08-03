@@ -2,6 +2,11 @@ package AI;
 
 import WindChuckers_Main.GameMenu_Model;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class AlphaBetaPlayer {
 	private MiniMaxAlphaBeta minimax;
 	private PlayerType playerType;

@@ -14,6 +14,11 @@ import org.junit.runners.Parameterized.Parameters;
 import Message.Message;
 import Message.Message.MessageType;
 
+/**
+ * 
+ * @author L.Weber
+ *
+ */
 public class MessageTest {
 	Message chatMessage;
 	Message dbMessageFull;
@@ -82,7 +87,6 @@ public class MessageTest {
 	@Test
 	public void testCoordinateMessage(){
 		assertEquals("Coordinate - MessageType", MessageType.Coordinate, this.MessageCoordinateSingle.getMessageType());
-		assertEquals("Coordinate - SinglePlayer", true, this.MessageCoordinateSingle.getSinglePlayer());
 		assertEquals("Coordinate - xCoordinate1", 0 , this.MessageCoordinateSingle.getXCoordinate1());
 		assertEquals("Coordinate - yCoordinate1", 0 , this.MessageCoordinateSingle.getYCoordinate1());
 		assertEquals("Coordinate - xCoordinate2", 0 , this.MessageCoordinateSingle.getXCoordinate2());
@@ -95,55 +99,5 @@ public class MessageTest {
 		assertEquals("CoordinateMulti - xCoordinate2", 0 , this.MessageCoordinateMulti.getXCoordinate2());
 		assertEquals("CoordinateMulti - yCoordinate2", 1 , this.MessageCoordinateMulti.getYCoordinate2());
 	}
-	
-	@Test
-	public void testUpdateMessage(){
-		assertEquals("Update - MessageType", MessageType.Update, this.MessageUpdate.getMessageType());
-		assertEquals("Update - Update", true, this.MessageUpdate.getUpdate());
-		assertEquals("Update - xCoordinate1", 0, this.MessageUpdate.getXCoordinate1());
-		assertEquals("Update - yCoordinate1", 0, this.MessageUpdate.getYCoordinate1());
-		assertEquals("Update - xCoordinate2", 0, this.MessageUpdate.getXCoordinate2());
-		assertEquals("Update - yCoordinate2", 1, this.MessageUpdate.getYCoordinate2());
-	}
-	
-	
-	
-//	@Parameters
-//	public static Collection<Object[]> inputDates() {
-//		return Arrays.asList(new Object[][] {
-//			//Coordinate Type
-//			{1, 0, 0, 0, 1 },
-//			{2, 1, 1, 2, 2},
-//			
-//			//Win Type
-//			{2},
-//			{5},
-//			
-//			//Update Type
-//			{true, 1, 0,0,0,1},
-//			{false,1, 0,0,0,1},
-//			{true,2, 0,0,0,1},
-//			{false,2,0,0,0,1}
-//			
-//			//AI Single
-//		});
-//	}
-//	
-//	@RunWith(Parameterized.class)
-//	public class MessageParamTest {
-//		MessageType messageType;
-//		int xCoordinate;
-//		int yCoordinate;
-//		int xCoordinate2;
-//		int yCoordinate2;
-//		boolean update;
-//		int singlePlayer;
-//	
-//	@Before
-//	public void construcData(){
-//		this.xCoordinate = Loc
-//	}
-//	}
-//	
 
 }
