@@ -202,7 +202,9 @@ public class UserMenuController extends Controller<GameMenu_Model, UserMenuView>
 		});
 
 		model.getDBRequest().addListener((observable, oldValue, newValue) -> {
-			fillPersonList();
+			Platform.runLater(() -> {
+				fillPersonList();
+			});
 		});
 
 		view.btnGetAll.setOnAction(e -> {

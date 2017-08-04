@@ -88,6 +88,15 @@ public class ServerThreadForClient extends Thread {
 			}
 			
 			else if (this.wantAI) {
+				if(message.getPlayer() == 9) {
+					//if a Pat-Message is incoming - make a Pat-Move
+					Move movePat = kamisado.setPlayConfiguration(true, 5, message.getXCoordinate1());
+					PlayerType playerTypePat = board.getTile(movePat.getX2(), movePat.getY2()).getTower().getPlayerType();
+					Message messagePat = new Message(MessageType.Coordinate, movePat.getX1(), movePat.getY1(), movePat.getX2(),
+							movePat.getY2(), ServerController.playerConverter(playerTypePat));
+					sendMessageBackToClient(messagePat);	
+					logger.info("Server: Player Pat - do a move again" + messagePat.getXCoordinate1() + " "  + messagePat.getYCoordinate2() + " " + messagePat.getXCoordinate2() + " " + messagePat.getYCoordinate2() + " " + messagePat.getPlayer());
+				}
 				//This is a Single-AI-Game make the move on the board here and send back to the clinet
 				logger.info("Server Single-AI-Game: " + "x-Coordinates1: " + message.getXCoordinate1() + " y-Coordinates1: "
 						+ message.getYCoordinate1() + " x-Coordinates2: " + message.getXCoordinate2() + " y-Coordinates2: "

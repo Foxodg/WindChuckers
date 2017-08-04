@@ -1417,6 +1417,9 @@ public class Tower extends Button {
 		return this.sumoTower;
 		
 }
+	public static void setLastField(Field field) {
+		lastField = field;
+	}
 
 
 }

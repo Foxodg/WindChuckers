@@ -248,8 +248,8 @@ public class GameMenu_Controller extends Controller<GameMenu_Model, GameMenu_Vie
 										towerUpgrade.upgradeTower(view.getFields(), towerUpgrade,
 												clientServer.getXCoordinateUpgrade(), clientServer.getYCoordinateUpgrade(),
 												clientServer.getGems(), view.getTowersP1(), view.getTowersP2());
+										towerUpgrade.setLastField(fields[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()]);
 									});
-//									towerUpgrade.changeTurn(fields, player1, player2, view.getTowersP1(), view.getTowersP2(), fields[clientServer.getXCoordinateUpgrade()][clientServer.getYCoordinateUpgrade()], clientServer.getPlayerType());
 								}
 							}
 						}
